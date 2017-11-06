@@ -1,4 +1,4 @@
-import * as composeWithMongoose from 'graphql-compose-mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { GQC } from 'graphql-compose';
 
 const customizationOptions = {}; // left it empty for simplicity, described below
