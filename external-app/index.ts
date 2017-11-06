@@ -3,4 +3,6 @@ import * as models from './model/models';
 
 const PORT = +(process.env.PORT || 9000);
 
-const server = initChestnut({port: PORT, models: models });
+initChestnut({ port: PORT, models: models, mongoDb: 'mongodb://localhost:27017/external-app' }).then(() =>
+    console.log('started')
+);
