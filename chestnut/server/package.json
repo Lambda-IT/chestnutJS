@@ -14,14 +14,15 @@
   "dependencies": {
     "@types/cors": "^2.8.1",
     "apollo-server-express": "^1.2.0",
+    "bluebird": "^3.5.1",
     "cuid": "^1.3.8",
     "express": "^4.16.2",
     "graphql": "^0.11.7",
-    "graphql-subscriptions": "^0.5.4",
-    "subscriptions-transport-ws": "^0.9.1",
     "graphql-compose": "^2.9.6",
     "graphql-compose-mongoose": "^1.9.4",
-    "mongoose": "^4.13.0"
+    "graphql-subscriptions": "^0.5.4",
+    "mongoose": "^4.13.0",
+    "subscriptions-transport-ws": "^0.9.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

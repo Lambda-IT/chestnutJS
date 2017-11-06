@@ -1,7 +1,12 @@
-// import { composeWithMongoose } from "graphql-compose-mongoose";
-const { composeWithMongoose } = require('graphql-compose-mongoose');
+import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { GQC } from 'graphql-compose';
+
+// import * as bluePromise from 'bluebird';
+// import * as mongoose from 'mongoose';
+
 const customizationOptions = {}; // left it empty for simplicity, described below
+
+// mongoose.Promise = bluePromise;
 
 export function initGraphQLSchema(models: any) {
     Object.keys(models).forEach(key => {
@@ -10,6 +15,11 @@ export function initGraphQLSchema(models: any) {
 
         const mongooseModel = new model().getModelForClass(model); // Typegoose to Mongoose
         const modelComposition = composeWithMongoose(mongooseModel, customizationOptions); // Mongoose to GraphQL
+
+        // console.log(mongooseModel, 'mongooseModel');
+        // console.log(modelComposition, 'modelComposition');
+        // console.log(modelComposition.getResolver('findById'), 'findById');
+
         GQC.rootQuery().addFields({
             [modelName + 'ById']: modelComposition.getResolver('findById'),
             [modelName + 'ByIds']: modelComposition.getResolver('findByIds'),
