@@ -1,12 +1,14 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-
-import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-import { initGraphQLSchema } from './app/schema';
-const WS_GQL_PATH = '/subscriptions';
 import * as mongoose from 'mongoose';
 import * as bluePromise from 'bluebird';
 
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+
+import { initGraphQLSchema } from './schema';
+import { createMetadataController } from './controller';
+
+const WS_GQL_PATH = '/subscriptions';
 (<any>mongoose).Promise = bluePromise;
 
 export type ChestnutOptions = {
@@ -17,6 +19,7 @@ export type ChestnutOptions = {
 
 export type Chestnut = {
     expressApp: any;
+    models: any;
 };
 
 export async function initChestnut(options: ChestnutOptions): Promise<Chestnut> {
@@ -37,14 +40,14 @@ export async function initChestnut(options: ChestnutOptions): Promise<Chestnut> 
         /* other options */
     });
 
-    console.log(connection, 'mongoose connection');
+    const { schema, models } = initGraphQLSchema(options.models, connection);
 
-    const schema = initGraphQLSchema(options.models, connection);
+    createMetadataController(app, options.models);
 
     app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
     app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
     app.listen(options.port, () => console.log(`chestnut-server listening on port ${options.port}`));
 
-    return { expressApp: app };
+    return { expressApp: app, models: models };
 }
