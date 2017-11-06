@@ -7,14 +7,12 @@ const WS_GQL_PATH = '/subscriptions';
 import * as mongoose from 'mongoose';
 import * as bluePromise from 'bluebird';
 
-mongoose.Promise = bluePromise;
+(<any>mongoose).Promise = bluePromise;
 
 export type ChestnutOptions = {
     port: number;
     models: any;
     mongoDb: string;
-    // connection string for mongo
-    // read in typegoose for mongo connection
 };
 
 export type Chestnut = {
@@ -34,12 +32,14 @@ export async function initChestnut(options: ChestnutOptions): Promise<Chestnut> 
         }
     });
 
-    await mongoose.createConnection(options.mongoDb, {
+    const connection = await mongoose.createConnection(options.mongoDb, {
         useMongoClient: true,
         /* other options */
     });
 
-    const schema = initGraphQLSchema(options.models);
+    console.log(connection, 'mongoose connection');
+
+    const schema = initGraphQLSchema(options.models, connection);
 
     app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
     app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

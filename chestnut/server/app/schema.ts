@@ -1,24 +1,23 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { GQC } from 'graphql-compose';
 
-// import * as bluePromise from 'bluebird';
-// import * as mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 
 const customizationOptions = {}; // left it empty for simplicity, described below
 
-// mongoose.Promise = bluePromise;
-
-export function initGraphQLSchema(models: any) {
+export function initGraphQLSchema(models: any, connection: mongoose.Connection) {
     Object.keys(models).forEach(key => {
         const model = models[key]; // Typegoose
         const modelName = key.toLowerCase();
 
-        const mongooseModel = new model().getModelForClass(model); // Typegoose to Mongoose
+        const mongooseModel: mongoose.Model<any> = new model().getModelForClass(model, {
+            existingConnection: connection,
+        }); // Typegoose to Mongoose
         const modelComposition = composeWithMongoose(mongooseModel, customizationOptions); // Mongoose to GraphQL
 
         // console.log(mongooseModel, 'mongooseModel');
         // console.log(modelComposition, 'modelComposition');
-        // console.log(modelComposition.getResolver('findById'), 'findById');
+        //console.log(modelComposition.getResolver('createOne'), 'createOne');
 
         GQC.rootQuery().addFields({
             [modelName + 'ById']: modelComposition.getResolver('findById'),
@@ -29,6 +28,8 @@ export function initGraphQLSchema(models: any) {
             [modelName + 'Connection']: modelComposition.getResolver('connection'),
             [modelName + 'Pagination']: modelComposition.getResolver('pagination'),
         });
+
+        const createOne = user => mongooseModel.create(user);
 
         GQC.rootMutation().addFields({
             [modelName + 'Create']: modelComposition.getResolver('createOne'),
