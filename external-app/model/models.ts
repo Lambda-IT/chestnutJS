@@ -5,6 +5,17 @@ export class User extends Typegoose {
 
     @prop({ required: true })
     age: number;
+
+    @prop({ default: 'test' })
+    description?: string;
+
+    @prop({ default: '<test>hm</test>' })
+    webText?: string;
+
+    @prop() createdAt?: Date;
+
+    @prop({ enum: ['completed', 'started'] })
+    state?: string;
 }
 
 export class Todo extends Typegoose {

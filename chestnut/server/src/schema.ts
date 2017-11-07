@@ -1,11 +1,16 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { GQC } from 'graphql-compose';
-
+import { GraphQLSchema } from 'graphql';
 import * as mongoose from 'mongoose';
 
 const customizationOptions = {}; // left it empty for simplicity, described below
 
-export function initGraphQLSchema(models: any, connection: mongoose.Connection) {
+export function initGraphQLSchema(
+    models: any,
+    connection: mongoose.Connection
+): { schema: GraphQLSchema; models: any } {
+    const mongooseModels = {};
+
     Object.keys(models).forEach(key => {
         const model = models[key]; // Typegoose
         const modelName = key.toLowerCase();
@@ -13,6 +18,9 @@ export function initGraphQLSchema(models: any, connection: mongoose.Connection) 
         const mongooseModel: mongoose.Model<any> = new model().getModelForClass(model, {
             existingConnection: connection,
         }); // Typegoose to Mongoose
+
+        mongooseModels[key] = mongooseModel;
+
         const modelComposition = composeWithMongoose(mongooseModel, customizationOptions); // Mongoose to GraphQL
 
         // console.log(mongooseModel, 'mongooseModel');
@@ -42,5 +50,5 @@ export function initGraphQLSchema(models: any, connection: mongoose.Connection) 
         });
     });
     const graphqlSchema = GQC.buildSchema();
-    return graphqlSchema;
+    return { schema: graphqlSchema, models: mongooseModels };
 }
