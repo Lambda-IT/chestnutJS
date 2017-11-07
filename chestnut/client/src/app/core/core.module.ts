@@ -14,7 +14,7 @@ import { ModelCollectionPageComponent } from '../models/containers/models-collec
     imports: [
         CommonModule,
         RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
-        StoreModule.forFeature('todos', reducers),
+        StoreModule.forFeature('models', reducers),
         EffectsModule.forFeature([ModelsEffects]),
     ],
     exports: [AppComponent, NotFoundPageComponent],
