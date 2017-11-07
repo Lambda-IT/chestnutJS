@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+import { HttpModule } from '@angular/http';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 
@@ -20,6 +21,7 @@ import { AppComponent } from './core/containers/app.component';
         RouterModule.forRoot(routes),
         StoreRouterConnectingModule,
         CoreModule.forRoot(),
+        HttpModule,
     ],
     providers: [{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }],
     bootstrap: [AppComponent],

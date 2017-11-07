@@ -1,5 +1,8 @@
 <ul>
     <li *ngFor="let model of models">
-        {{model.name}}
+        <strong>{{model.name}}</strong>
+        <p *ngFor="let prop of model.properties">
+            {{prop.name}} {{prop.type}}
+        </p>
     </li>
 </ul>

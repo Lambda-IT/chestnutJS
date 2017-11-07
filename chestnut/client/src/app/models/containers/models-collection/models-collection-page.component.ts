@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, EventEmitter } f
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/observable';
 import { takeUntil, tap } from 'rxjs/operators';
-
-// import * as fromTodos from '../../reducers';
-// import * as todos from '../../actions/todos.actions';
-// import { Todo } from '../../../models';
+import { ModelDescription } from '../../../../../../common/metadata';
+import * as fromModels from '../../reducers';
+import * as models from '../../actions/models.actions';
 
 @Component({
     selector: 'models-collection-page',
@@ -13,7 +12,7 @@ import { takeUntil, tap } from 'rxjs/operators';
     templateUrl: 'models-collection-page.html',
 })
 export class ModelCollectionPageComponent implements OnInit, OnDestroy {
-    public models$: Observable<Model[]>;
+    public models$: Observable<ModelDescription[]>;
 
     private onDestroy$ = new EventEmitter();
 
