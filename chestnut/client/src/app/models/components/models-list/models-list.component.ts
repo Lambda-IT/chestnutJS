@@ -7,6 +7,9 @@ import { ModelDescription } from '../../../../../../common/metadata';
 })
 export class ModelsListComponent {
     @Input() models: ModelDescription[];
-
+    @Output() modelNameClicked = new EventEmitter();
+    clickModelName(model: ModelDescription) {
+        this.modelNameClicked.emit(model);
+    }
     constructor() {}
 }

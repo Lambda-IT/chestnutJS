@@ -1,8 +1,8 @@
 <ul>
     <li *ngFor="let model of models">
-        <strong>{{model.name}}</strong>
-        <p *ngFor="let prop of model.properties">
+        <a href="javascript:" (click)="clickModelName(model)">{{model.name}}</a>
+        <!-- <p *ngFor="let prop of model.properties">
             {{prop.name}} {{prop.type}}
-        </p>
+        </p> -->
     </li>
 </ul>

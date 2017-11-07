@@ -1,0 +1,8 @@
+<h1>{{ model.name }}</h1>
+<table border="1">
+    <tbody>
+        <th *ngFor="let prop of model.properties">
+            {{prop.name}}
+        </th>
+    </tbody>
+</table>
