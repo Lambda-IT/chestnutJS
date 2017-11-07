@@ -1,9 +1,8 @@
 import { Action } from '@ngrx/store';
 
-import { Todo } from '../../models';
 import * as todos from '../actions/todos.actions';
 
-export type State = Todo[];
+export type State = Model[];
 
 const initialState = [];
 
