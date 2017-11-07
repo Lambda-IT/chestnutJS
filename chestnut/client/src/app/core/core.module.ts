@@ -10,6 +10,9 @@ import { AppComponent } from './containers/app.component';
 import { NotFoundPageComponent } from './containers/not-found-page.component';
 import { ModelsListComponent } from '../models/components/models-list/models-list.component';
 import { ModelCollectionPageComponent } from '../models/containers/models-collection/models-collection-page.component';
+import { ModelviewPageComponent } from '../models/containers/model-view/model-view-page.component';
+import { ModelViewComponent } from '../models/components/model-view/model-view.component';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -18,7 +21,14 @@ import { ModelCollectionPageComponent } from '../models/containers/models-collec
         EffectsModule.forFeature([ModelsEffects]),
     ],
     exports: [AppComponent, NotFoundPageComponent],
-    declarations: [AppComponent, NotFoundPageComponent, ModelCollectionPageComponent, ModelsListComponent],
+    declarations: [
+        AppComponent,
+        NotFoundPageComponent,
+        ModelCollectionPageComponent,
+        ModelsListComponent,
+        ModelviewPageComponent,
+        ModelViewComponent,
+    ],
 })
 export class CoreModule {
     static forRoot() {
