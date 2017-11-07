@@ -19,13 +19,17 @@ const client = new ApolloClient({
 
 @Injectable()
 export class ModelsEffects {
-    private baseUri = 'http://localhost:9000/';
+    private baseUri = 'http://localhost:9000/chestnut/';
     constructor(private actions$: Actions, private http: Http) {}
 
     @Effect()
     loadModels$ = this.actions$
         .ofType<models.LoadModels>(models.LOAD_MODELS)
-        .pipe(flatMap(() => this.get('metadata')), map(res => new models.LoadModelsSuccess(res.json()['models'])));
+        .pipe(
+            flatMap(() => this.get('metadata')),
+            tap(res => console.log('res', res.json()['models'][0].name)),
+            map(res => new models.LoadModelsSuccess(res.json()['models']))
+        );
 
     // Old Effect with graphql
     // @Effect()

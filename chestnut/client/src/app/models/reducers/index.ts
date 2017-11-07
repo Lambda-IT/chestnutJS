@@ -5,6 +5,6 @@ export type State = fromModels.State;
 
 export const reducers = fromModels.reducer;
 
-export const getModelsState = createFeatureSelector<State>('models');
+export const getModelsState = createFeatureSelector<State>('modelsReducer');
 
 export const getModels = createSelector(getModelsState, fromModels.getModels);
