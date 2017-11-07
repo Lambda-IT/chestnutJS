@@ -13,6 +13,7 @@ import { Log } from '../typings/log';
 import { createLogger } from './logger';
 import { initGraphQLSchema } from './schema';
 import { createMetadataController } from './controller';
+import { correlationId, registerGlobalExceptionHandler, resultProcessor, Response, Request } from './middleware';
 
 const BASE_URL = '/chestnut';
 const WS_GQL_PATH = '/subscriptions';
@@ -21,7 +22,7 @@ const MongoStore = connectMongo(session);
 
 export type ChestnutOptions = {
     port: number;
-    models: any;
+    models: { [name: string]: any };
     mongoDb: string;
     modelPrefix?: string;
     publicFolder?: string;
@@ -29,8 +30,8 @@ export type ChestnutOptions = {
 };
 
 export type Chestnut = {
-    expressApp: any;
-    models: any;
+    expressApp: express.Express;
+    models: { [name: string]: mongoose.Model<any> };
     logger: Log;
 };
 
@@ -38,14 +39,20 @@ export async function initChestnut(
     options: ChestnutOptions,
     initMiddleware?: (app) => Promise<void>
 ): Promise<Chestnut> {
-    const app = express();
     const logger = createLogger();
+    registerGlobalExceptionHandler(logger);
+
+    const app = express();
 
     app.use(helmet());
+
+    app.use(correlationId);
+    app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
     app.use(BASE_URL + '/admin', express.static(__dirname + '../../client/dist'));
 
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(cookieParser());
 
@@ -85,7 +92,11 @@ export async function initChestnut(
     app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
-    app.use(csrf({ cookie: true }));
+    app.use(csrf({ cookie: false }));
+    app.use((req: any, res, next) => {
+        res.locals.csrfToken = req.csrfToken();
+        next();
+    });
 
     await app.listen(options.port);
 
