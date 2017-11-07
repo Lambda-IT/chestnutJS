@@ -1,21 +1,18 @@
 import { Action } from '@ngrx/store';
+import { ModelDescription } from '../../../../../common/metadata';
+import * as models from '../actions/models.actions';
 
-import * as todos from '../actions/todos.actions';
-
-export type State = Model[];
+export type State = ModelDescription[];
 
 const initialState = [];
 
-export function reducer(state: State = initialState, action: todos.Actions): State {
+export function reducer(state: State = initialState, action: models.Actions): State {
     switch (action.type) {
-        case todos.LOAD_TODOS_SUCCESS: {
+        case models.LOAD_MODELS_SUCCESS: {
             return action.payload;
-        }
-        case todos.SET_COMPLETED_SUCCESS: {
-            return state.map(t => (t.id === action.payload.id ? action.payload : t));
         }
     }
     return state;
 }
 
-export const getTodos = (state: State) => state;
+export const getModels = (state: State) => state;

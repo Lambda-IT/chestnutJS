@@ -1,5 +1,5 @@
 import { Request, Response, Express } from 'express';
-import { ModelDescription, PropertyDescription } from '../../common/metadata';
+import { ModelDescription, PropertyDescription } from '../../../common/metadata';
 
 export function createMetadataController(app: Express, models: Object) {
     app.get('/metadata', (req: Request, res: Response) => {

@@ -1,10 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromTodos from './todos.reducer';
+import * as fromModels from './models.reducer';
 
-export type State = fromTodos.State;
+export type State = fromModels.State;
 
-export const reducers = fromTodos.reducer;
+export const reducers = fromModels.reducer;
 
-export const getTodosState = createFeatureSelector<State>('todos');
+export const getModelsState = createFeatureSelector<State>('models');
 
-export const getTodos = createSelector(getTodosState, fromTodos.getTodos);
+export const getModels = createSelector(getModelsState, fromModels.getModels);
