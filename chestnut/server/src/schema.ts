@@ -3,11 +3,10 @@ import { GQC } from 'graphql-compose';
 import { GraphQLSchema } from 'graphql';
 import * as mongoose from 'mongoose';
 
-const customizationOptions = {}; // left it empty for simplicity, described below
-
 export function initGraphQLSchema(
     models: any,
-    connection: mongoose.Connection
+    connection: mongoose.Connection,
+    prefix?: string
 ): { schema: GraphQLSchema; models: any } {
     const mongooseModels = {};
 
@@ -21,7 +20,10 @@ export function initGraphQLSchema(
 
         mongooseModels[key] = mongooseModel;
 
-        const modelComposition = composeWithMongoose(mongooseModel, customizationOptions); // Mongoose to GraphQL
+        const options: any = {};
+        if (prefix) options.schemaOptions = { collection: `${prefix}_${modelName}s` };
+
+        const modelComposition = composeWithMongoose(mongooseModel, options); // Mongoose to GraphQL
 
         // console.log(mongooseModel, 'mongooseModel');
         // console.log(modelComposition, 'modelComposition');
