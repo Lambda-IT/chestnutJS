@@ -1,7 +1,0 @@
-<ul>
-    <li *ngFor="let todo of todos">
-        <input type="checkbox" (click)="setCompleted.next({ id: todo.id, completed: !todo.completed })" [checked]="todo.completed"> {{ todo.description }}
-        <button class="edit-todo">edit</button>
-        <button class="delete-todo">delete</button>
-    </li>
-</ul>
