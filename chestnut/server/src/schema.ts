@@ -14,16 +14,14 @@ export function initGraphQLSchema(
         const model = models[key]; // Typegoose
         const modelName = key.toLowerCase();
 
-        const mongooseModel: mongoose.Model<any> = new model().getModelForClass(model, {
-            existingConnection: connection,
-        }); // Typegoose to Mongoose
+        const options: any = { existingConnection: connection };
+        if (prefix) options.schemaOptions = { collection: `${prefix}_${modelName}s` };
+
+        const mongooseModel: mongoose.Model<any> = new model().getModelForClass(model, options); // Typegoose to Mongoose
 
         mongooseModels[key] = mongooseModel;
 
-        const options: any = {};
-        if (prefix) options.schemaOptions = { collection: `${prefix}_${modelName}s` };
-
-        const modelComposition = composeWithMongoose(mongooseModel, options); // Mongoose to GraphQL
+        const modelComposition = composeWithMongoose(mongooseModel, {}); // Mongoose to GraphQL
 
         // console.log(mongooseModel, 'mongooseModel');
         // console.log(modelComposition, 'modelComposition');

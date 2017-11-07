@@ -6,15 +6,18 @@ import * as helmet from 'helmet';
 import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as csrf from 'csurf';
-
+import * as connectMongo from 'connect-mongo';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 
+import { Log } from '../typings/log';
+import { createLogger } from './logger';
 import { initGraphQLSchema } from './schema';
 import { createMetadataController } from './controller';
 
 const BASE_URL = '/chestnut';
 const WS_GQL_PATH = '/subscriptions';
 (<any>mongoose).Promise = bluePromise;
+const MongoStore = connectMongo(session);
 
 export type ChestnutOptions = {
     port: number;
@@ -28,6 +31,7 @@ export type ChestnutOptions = {
 export type Chestnut = {
     expressApp: any;
     models: any;
+    logger: Log;
 };
 
 export async function initChestnut(
@@ -35,6 +39,7 @@ export async function initChestnut(
     initMiddleware?: (app) => Promise<void>
 ): Promise<Chestnut> {
     const app = express();
+    const logger = createLogger();
 
     app.use(helmet());
 
@@ -43,7 +48,6 @@ export async function initChestnut(
 
     app.use(bodyParser.json());
     app.use(cookieParser());
-    app.use(csrf({ cookie: true }));
 
     if (initMiddleware) await initMiddleware(app);
 
@@ -68,6 +72,9 @@ export async function initChestnut(
         session({
             secret: options.sessionSecret,
             name: 'chestnut.sessionId',
+            resave: false,
+            saveUninitialized: false,
+            store: new MongoStore({ mongooseConnection: connection }),
         })
     );
 
@@ -76,9 +83,13 @@ export async function initChestnut(
     createMetadataController(app, options.models, BASE_URL);
 
     app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema }));
-    app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: '/graphql' }));
+    app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
-    app.listen(options.port, () => console.log(`chestnut-server listening on port ${options.port}`));
+    app.use(csrf({ cookie: true }));
 
-    return { expressApp: app, models: models };
+    await app.listen(options.port);
+
+    logger.info(`chestnut-server listening on port ${options.port}`);
+
+    return { expressApp: app, models: models, logger: logger };
 }
