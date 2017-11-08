@@ -18,7 +18,7 @@ export function reducer(state: State = initialState, action: models.Actions): St
         case models.LOAD_MODELS_SUCCESS: {
             return Object.assign({}, state, { models: action.payload });
         }
-        case models.LOAD_ONE_MODEL: {
+        case models.LOAD_ONE_MODEL_SUCCESS: {
             return Object.assign({}, state, { modelView: action.payload });
         }
     }

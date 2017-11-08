@@ -20,12 +20,12 @@ export class ModelCollectionPageComponent implements OnInit, OnDestroy {
         this.models$ = this.store.select(fromModels.getModels);
     }
 
-    modelNameClick(model: ModelDescription) {
+    modelNameClick(model: string) {
         // go to store, route in effect
-        this.store.dispatch(new models.LoadOneModel(model));
+        this.store.dispatch(new models.ClickModelName(model));
     }
     ngOnInit(): void {
-        this.store.dispatch(new models.LoadModels());
+        // this.store.dispatch(new models.LoadModels());
     }
 
     ngOnDestroy(): void {

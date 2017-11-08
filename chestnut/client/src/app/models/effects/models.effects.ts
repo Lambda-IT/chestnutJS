@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
-import { delay, flatMap, tap, map } from 'rxjs/operators';
+import { delay, flatMap, tap, map, withLatestFrom, filter, take } from 'rxjs/operators';
 import { Http, Response, Headers, RequestOptions, RequestMethod, Request } from '@angular/http';
 import * as urlJoin from 'url-join';
 import { Router } from '@angular/router';
@@ -9,7 +9,8 @@ import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
-
+import { Store } from '@ngrx/store';
+import * as fromModels from '../reducers';
 import * as models from '../actions/models.actions';
 
 const client = new ApolloClient({
@@ -20,7 +21,17 @@ const client = new ApolloClient({
 @Injectable()
 export class ModelsEffects {
     private baseUri = 'http://localhost:9000/chestnut/';
-    constructor(private actions$: Actions, private http: Http, private router: Router) {}
+    constructor(
+        private actions$: Actions,
+        private http: Http,
+        private router: Router,
+        private store: Store<fromModels.State>
+    ) {}
+    private models$ = this.store.select(fromModels.getModels).pipe(filter(x => x !== null));
+
+    modelNameClicked$ = this.actions$
+        .ofType<models.ClickModelName>(models.CLICK_MODEL_NAME)
+        .subscribe(action => this.router.navigate([`modelview/${action.payload}`]));
 
     @Effect()
     loadModels$ = this.actions$
@@ -28,12 +39,30 @@ export class ModelsEffects {
         .pipe(flatMap(() => this.get('metadata')), map(res => new models.LoadModelsSuccess(res.json()['models'])));
 
     @Effect()
-    loadOneModel$ = this.actions$
-        .ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL)
-        .pipe(
-            flatMap(x => this.router.navigate([`modelview/${x.payload.name}`]).then(() => x)),
-            map(x => new models.LoadOneModelSuccess(x.payload))
-        );
+    loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(
+        map(action => action.payload),
+        flatMap(modelName =>
+            this.models$.pipe(
+                take(1),
+                map(allModels => ({
+                    modelName,
+                    allModels,
+                }))
+            )
+        ),
+        map(x => {
+            const modelview = x.allModels.find(m => m.name === x.modelName);
+            return new models.LoadOneModelSuccess(modelview);
+        })
+    );
+
+    // @Effect()
+    // loadOneModel$ = this.actions$
+    //     .ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL)
+    //     .pipe(
+    //         flatMap(x => this.router.navigate([`modelview/${x.payload.name}`]).then(() => x)),
+    //         map(x => new models.LoadOneModelSuccess(x.payload))
+    //     );
     // Old Effect with graphql
     // @Effect()
     // loadModels$ = this.actions$.ofType<models.LoadModels>(models.LOAD_MODELS).pipe(
