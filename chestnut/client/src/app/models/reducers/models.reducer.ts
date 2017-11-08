@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { ModelDescription } from '../../../../../common/metadata';
 import * as models from '../actions/models.actions';
-
+import { ModelViewData } from '../../shared/model-view-data';
 export interface State {
     models: ModelDescription[];
     modelView: ModelDescription;
@@ -19,6 +19,7 @@ export function reducer(state: State = initialState, action: models.Actions): St
             return Object.assign({}, state, { models: action.payload });
         }
         case models.LOAD_ONE_MODEL_SUCCESS: {
+            // TODO: rename action
             return Object.assign({}, state, { modelView: action.payload });
         }
     }

@@ -3,11 +3,20 @@ import { Effect, Actions } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
 import { delay, flatMap, tap, map, withLatestFrom, filter, take } from 'rxjs/operators';
 import { Http, Response, Headers, RequestOptions, RequestMethod, Request } from '@angular/http';
+import { ApolloClient } from 'apollo-client';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import gql from 'graphql-tag';
 import * as urlJoin from 'url-join';
+import { ModelDescription } from '../../../../../common/metadata';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromModels from '../reducers';
 import * as models from '../actions/models.actions';
+const client = new ApolloClient({
+    link: new HttpLink({ uri: 'http://localhost:9000/chestnut/graphql' }),
+    cache: new InMemoryCache(),
+});
 
 @Injectable()
 export class ModelsEffects {
@@ -41,11 +50,20 @@ export class ModelsEffects {
                 }))
             )
         ),
-        map(x => {
+        flatMap(x => {
             const modelview = x.allModels.find(m => m.name === x.modelName);
-            return new models.LoadOneModelSuccess(modelview);
-        })
+            const modelName = x.modelName.toLowerCase();
+            return client
+                .query({
+                    query: this.composeManyQuery(modelview, modelName),
+                })
+                .then(res => ({ res, modelName }));
+        }),
+        map(x => new models.LoadOneModelSuccess(x.res.))
+
+        // return new models.LoadOneModelSuccess(modelview);
     );
+
     // Model only header loading
     // @Effect()
     // loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(
@@ -64,7 +82,16 @@ export class ModelsEffects {
     //         return new models.LoadOneModelSuccess(modelview);
     //     })
     // );
-
+    private composeManyQuery(model: ModelDescription, modelName): string {
+        const fields = model.properties.map(p => p.name);
+        const query = gql`
+            query get${modelName} {
+                ${modelName}Many {
+                    ${[...fields]}
+                }
+            }`;
+        return query;
+    }
     // -- API CALLS-----
     private get(endpoint: string) {
         return this.http.get(urlJoin(this.baseUri, endpoint)); // returns modelDescriptions
