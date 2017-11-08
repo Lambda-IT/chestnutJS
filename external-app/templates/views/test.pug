@@ -1,0 +1,17 @@
+extends ../layouts/default
+
+block content
+    h1 Test
+    p= testText
+
+    ul
+        each user in users
+            li
+                span= user.name
+                span= user.age
+
+    form(method="POST")
+        input(type="hidden", name="_csrf", value=`${csrfToken}`)
+        input(type="text", name="test-input")
+        input(type="text", name="server-input", value=`${testText}`)
+        button(type="submit") CLICK
