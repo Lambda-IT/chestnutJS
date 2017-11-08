@@ -16,7 +16,7 @@ export class ModelCollectionPageComponent implements OnInit, OnDestroy {
 
     private onDestroy$ = new EventEmitter();
 
-    constructor(private store: Store<fromModels.State>) {
+    constructor(private store: Store<fromModels.ModelsState>) {
         this.models$ = this.store.select(fromModels.getModels);
     }
 

@@ -5,18 +5,9 @@ import { delay, flatMap, tap, map, withLatestFrom, filter, take } from 'rxjs/ope
 import { Http, Response, Headers, RequestOptions, RequestMethod, Request } from '@angular/http';
 import * as urlJoin from 'url-join';
 import { Router } from '@angular/router';
-import { ApolloClient } from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import gql from 'graphql-tag';
 import { Store } from '@ngrx/store';
 import * as fromModels from '../reducers';
 import * as models from '../actions/models.actions';
-
-const client = new ApolloClient({
-    link: new HttpLink({ uri: 'http://localhost:9000/graphql' }),
-    cache: new InMemoryCache(),
-});
 
 @Injectable()
 export class ModelsEffects {
@@ -25,7 +16,7 @@ export class ModelsEffects {
         private actions$: Actions,
         private http: Http,
         private router: Router,
-        private store: Store<fromModels.State>
+        private store: Store<fromModels.ModelsState>
     ) {}
     private models$ = this.store.select(fromModels.getModels).pipe(filter(x => x !== null));
 
@@ -55,31 +46,26 @@ export class ModelsEffects {
             return new models.LoadOneModelSuccess(modelview);
         })
     );
-
+    // Model only header loading
     // @Effect()
-    // loadOneModel$ = this.actions$
-    //     .ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL)
-    //     .pipe(
-    //         flatMap(x => this.router.navigate([`modelview/${x.payload.name}`]).then(() => x)),
-    //         map(x => new models.LoadOneModelSuccess(x.payload))
-    //     );
-    // Old Effect with graphql
-    // @Effect()
-    // loadModels$ = this.actions$.ofType<models.LoadModels>(models.LOAD_MODELS).pipe(
-    //     flatMap(() =>
-    //         client.query({
-    //             query: gql`
-    //                 query Models {
-    //                     models {
-    //                         id
-    //                     }
-    //                 }
-    //             `,
-    //         })
+    // loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(
+    //     map(action => action.payload),
+    //     flatMap(modelName =>
+    //         this.models$.pipe(
+    //             take(1),
+    //             map(allModels => ({
+    //                 modelName,
+    //                 allModels,
+    //             }))
+    //         )
     //     ),
-    //     map(x => new models.LoadModelsSuccess(x.data['models']))
+    //     map(x => {
+    //         const modelview = x.allModels.find(m => m.name === x.modelName);
+    //         return new models.LoadOneModelSuccess(modelview);
+    //     })
     // );
 
+    // -- API CALLS-----
     private get(endpoint: string) {
         return this.http.get(urlJoin(this.baseUri, endpoint)); // returns modelDescriptions
     }

@@ -7,6 +7,6 @@ import { ModelDescription } from '../../../../../../common/metadata';
 })
 export class ModelViewComponent {
     @Input() model: ModelDescription;
-
+    @Input() modelData: any;
     constructor() {}
 }

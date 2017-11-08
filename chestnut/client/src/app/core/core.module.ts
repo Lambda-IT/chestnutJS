@@ -6,6 +6,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { reducers } from '../reducers';
 import { ModelsEffects } from '../models/effects/models.effects';
+import { ModelDataEffects } from '../models/effects/model-data.effects';
 import { AppComponent } from './containers/app.component';
 import { NotFoundPageComponent } from './containers/not-found-page.component';
 import { ModelsListComponent } from '../models/components/models-list/models-list.component';
@@ -18,7 +19,7 @@ import { ModelViewComponent } from '../models/components/model-view/model-view.c
         CommonModule,
         RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
         StoreModule.forFeature('reducers', reducers),
-        EffectsModule.forFeature([ModelsEffects]),
+        EffectsModule.forFeature([ModelsEffects, ModelDataEffects]),
     ],
     exports: [AppComponent, NotFoundPageComponent],
     declarations: [
