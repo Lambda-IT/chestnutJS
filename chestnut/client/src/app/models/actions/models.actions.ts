@@ -1,4 +1,5 @@
 import { ModelDescription } from '../../../../../common/metadata';
+import { ModelViewData } from '../../shared/model-view-data';
 
 export const LOAD_MODELS = '[Models] Load';
 export const LOAD_MODELS_SUCCESS = '[Models] Load Success';
@@ -23,7 +24,7 @@ export class LoadOneModel {
 
 export class LoadOneModelSuccess {
     readonly type = LOAD_ONE_MODEL_SUCCESS;
-    constructor(public payload: ModelDescription) {}
+    constructor(public payload: ModelViewData) {}
 }
 
 export class ClickModelName {

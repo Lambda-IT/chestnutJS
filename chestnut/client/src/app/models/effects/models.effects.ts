@@ -36,7 +36,11 @@ export class ModelsEffects {
     @Effect()
     loadModels$ = this.actions$
         .ofType<models.LoadModels>(models.LOAD_MODELS)
-        .pipe(flatMap(() => this.get('metadata')), map(res => new models.LoadModelsSuccess(res.json()['models'])));
+        .pipe(
+            flatMap(() => this.get('metadata')),
+            tap(res => console.log('get', res)),
+            map(res => new models.LoadModelsSuccess(res.json()['models']))
+        );
 
     @Effect()
     loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(
@@ -51,15 +55,17 @@ export class ModelsEffects {
             )
         ),
         flatMap(x => {
-            const modelview = x.allModels.find(m => m.name === x.modelName);
+            const modelView = x.allModels.find(m => m.name === x.modelName);
             const modelName = x.modelName.toLowerCase();
             return client
                 .query({
-                    query: this.composeManyQuery(modelview, modelName),
+                    query: this.composeManyQuery(modelView, modelName),
                 })
-                .then(res => ({ res, modelName }));
+                .then(res => ({ res, modelName, modelView }));
         }),
-        map(x => new models.LoadOneModelSuccess(x.res.))
+        map(
+            x => new models.LoadOneModelSuccess({ modelView: x.modelView, modelData: x.res.data[x.modelName + 'Many'] })
+        )
 
         // return new models.LoadOneModelSuccess(modelview);
     );

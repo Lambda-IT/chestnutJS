@@ -1,12 +1,19 @@
-<h1>{{ model.name }}</h1>
+<h1>{{ modelView.name }}</h1>
 <table border="1">
-    <tbody>
-        <th *ngFor="let prop of model.properties">
+    <thead>
+        <th *ngFor="let prop of modelView.properties">
             {{prop.name}}
         </th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let entry of modelData">
+            <td *ngFor="let prop of modelView.properties">
+                <a *ngIf="prop.name === '_id'; else row" href="javascript:">{{entry[prop.name]}}</a>
+                <ng-template #row>
+                    {{entry[prop.name]}}
+                </ng-template>
+            </td>
+        </tr>
     </tbody>
 
 </table>
-<p *ngFor="let data of modelData">
-    {{data}}
-</p>

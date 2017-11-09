@@ -6,7 +6,7 @@ import { ModelDescription } from '../../../../../../common/metadata';
     styleUrls: ['model-view.scss'],
 })
 export class ModelViewComponent {
-    @Input() model: ModelDescription;
+    @Input() modelView: ModelDescription;
     @Input() modelData: any;
     constructor() {}
 }
