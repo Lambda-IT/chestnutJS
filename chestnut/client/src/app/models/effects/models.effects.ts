@@ -11,7 +11,7 @@ import * as urlJoin from 'url-join';
 import { ModelDescription } from '../../../../../common/metadata';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as fromModels from '../reducers';
+import * as fromRoot from '../reducers';
 import * as models from '../actions/models.actions';
 const client = new ApolloClient({
     link: new HttpLink({ uri: 'http://localhost:9000/chestnut/graphql' }),
@@ -25,9 +25,9 @@ export class ModelsEffects {
         private actions$: Actions,
         private http: Http,
         private router: Router,
-        private store: Store<fromModels.ModelsState>
+        private store: Store<fromRoot.State>
     ) {}
-    private models$ = this.store.select(fromModels.getModels).pipe(filter(x => x !== null));
+    private models$ = this.store.select(fromRoot.getModels).pipe(filter(x => x !== null));
 
     modelNameClicked$ = this.actions$
         .ofType<models.ClickModelName>(models.CLICK_MODEL_NAME)

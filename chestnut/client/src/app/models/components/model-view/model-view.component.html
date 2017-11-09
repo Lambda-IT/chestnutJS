@@ -6,6 +6,7 @@
             <span *ngIf="!prop.hidden">✓ </span>{{prop.name}}</option>
     </select>
 </div>
+
 <h1>{{ modelView.name }}</h1>
 <table border="1">
     <thead>
@@ -16,7 +17,7 @@
     <tbody>
         <tr *ngFor="let entry of modelData">
             <td *ngFor="let prop of modelView.properties" [hidden]="prop.hidden">
-                <a *ngIf="prop.name === '_id'; else row" href="javascript:">{{entry[prop.name]}}</a>
+                <a *ngIf="prop.name === '_id'; else row" [routerLink]="[entry[prop.name]]">{{entry[prop.name]}}</a>
                 <ng-template #row>
                     {{entry[prop.name]}}
                 </ng-template>

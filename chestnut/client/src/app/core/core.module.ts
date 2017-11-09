@@ -11,7 +11,9 @@ import { NotFoundPageComponent } from './containers/not-found-page.component';
 import { ModelsListComponent } from '../models/components/models-list/models-list.component';
 import { ModelCollectionPageComponent } from '../models/containers/models-collection/models-collection-page.component';
 import { ModelviewPageComponent } from '../models/containers/model-view/model-view-page.component';
+import { ModelDataViewPageComponent } from '../models/containers/model-data-view/model-data-view-page.component';
 import { ModelViewComponent } from '../models/components/model-view/model-view.component';
+import { ModelDataViewComponent } from '../models/components/model-data-view/model-data-view.component';
 
 @NgModule({
     imports: [
@@ -28,6 +30,8 @@ import { ModelViewComponent } from '../models/components/model-view/model-view.c
         ModelsListComponent,
         ModelviewPageComponent,
         ModelViewComponent,
+        ModelDataViewPageComponent,
+        ModelDataViewComponent,
     ],
 })
 export class CoreModule {

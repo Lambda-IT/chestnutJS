@@ -33,19 +33,6 @@ export function reducer(state: State = initialState, action: models.Actions): St
                     }),
                 }),
             });
-            // return {
-            //     ...state,
-            //     modelView: {
-            //         ...state.modelView.modelView,
-            //         modelView: {
-            //             ...properties,
-            //             properties: state.modelView.modelView.properties.map(
-            //                 prop =>
-            //                     prop.name === propertyName ? Object.assign({}, prop, { hidden: !prop.hidden }) : prop
-            //             ),
-            //         },
-            //     },
-            // };
         }
         default:
             return state;

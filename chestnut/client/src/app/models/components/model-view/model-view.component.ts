@@ -15,8 +15,5 @@ export class ModelViewComponent implements OnInit {
     }
 
     constructor() {}
-    ngOnInit(): void {
-        // this.modelView.properties.forEach(x => Object.assign(x, { hidden: false }));
-        // console.log('prop', this.modelView.properties);
-    }
+    ngOnInit(): void {}
 }
