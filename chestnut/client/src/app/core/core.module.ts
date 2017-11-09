@@ -17,7 +17,7 @@ import { ModelViewComponent } from '../models/components/model-view/model-view.c
     imports: [
         CommonModule,
         RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
-        StoreModule.forFeature('reducers', reducers),
+        // StoreModule.forFeature('reducers', reducers),
         EffectsModule.forFeature([ModelsEffects]),
     ],
     exports: [AppComponent, NotFoundPageComponent],

@@ -66,28 +66,8 @@ export class ModelsEffects {
         map(
             x => new models.LoadOneModelSuccess({ modelView: x.modelView, modelData: x.res.data[x.modelName + 'Many'] })
         )
-
-        // return new models.LoadOneModelSuccess(modelview);
     );
 
-    // Model only header loading
-    // @Effect()
-    // loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(
-    //     map(action => action.payload),
-    //     flatMap(modelName =>
-    //         this.models$.pipe(
-    //             take(1),
-    //             map(allModels => ({
-    //                 modelName,
-    //                 allModels,
-    //             }))
-    //         )
-    //     ),
-    //     map(x => {
-    //         const modelview = x.allModels.find(m => m.name === x.modelName);
-    //         return new models.LoadOneModelSuccess(modelview);
-    //     })
-    // );
     private composeManyQuery(model: ModelDescription, modelName): string {
         const fields = model.properties.map(p => p.name);
         const query = gql`

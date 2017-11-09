@@ -17,6 +17,7 @@ export interface PropertyDescription {
     reference?: string;
     enumValues?: string[];
     regExp?: string;
+    hidden?: boolean;
 }
 
 export interface ModelDescription {
