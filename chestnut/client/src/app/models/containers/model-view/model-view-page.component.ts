@@ -28,7 +28,6 @@ export class ModelviewPageComponent implements OnInit, OnDestroy {
     }
 
     setPropertyVisibility(prop: string) {
-        console.log('before dispatch');
         this.store.dispatch(new models.ClickPropertyVisibility(prop));
     }
 

@@ -36,11 +36,7 @@ export class ModelsEffects {
     @Effect()
     loadModels$ = this.actions$
         .ofType<models.LoadModels>(models.LOAD_MODELS)
-        .pipe(
-            flatMap(() => this.get('metadata')),
-            tap(res => console.log('get', res)),
-            map(res => new models.LoadModelsSuccess(res.json()['models']))
-        );
+        .pipe(flatMap(() => this.get('metadata')), map(res => new models.LoadModelsSuccess(res.json()['models'])));
 
     @Effect()
     loadOneModel$ = this.actions$.ofType<models.LoadOneModel>(models.LOAD_ONE_MODEL).pipe(

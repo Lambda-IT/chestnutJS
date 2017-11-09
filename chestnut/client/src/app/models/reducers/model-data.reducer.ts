@@ -11,11 +11,9 @@ const initialState: State = {
 
 export function reducer(state: State = initialState, action: modelDataAction.Actions): State {
     switch (action.type) {
-    // case modelDataAction: {
-    // }
-
-    // default:
-    //     return state;
+        case modelDataAction.LOAD_MODEL_DATA_SUCCESS: {
+            return { ...state, modelData: action.payload };
+        }
     }
     return state;
 }

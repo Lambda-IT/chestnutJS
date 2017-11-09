@@ -1,1 +1,15 @@
-<p>hallo</p>
+<table border="1">
+    <thead>
+        <th *ngFor="let prop of modelView.properties">
+            {{prop.name}}
+        </th>
+    </thead>
+    <tbody>
+        <tr>
+            <td *ngFor="let prop of modelView.properties">
+                {{modelData[prop.name]}}
+            </td>
+        </tr>
+    </tbody>
+
+</table>

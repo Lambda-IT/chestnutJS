@@ -1,1 +1,1 @@
-<model-data-view></model-data-view>
+<model-data-view *ngIf="modelData$ | async" [modelData]="modelData$ | async" [modelView]="modelView$ | async"></model-data-view>
