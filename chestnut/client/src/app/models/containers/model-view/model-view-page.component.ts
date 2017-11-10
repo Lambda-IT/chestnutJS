@@ -10,7 +10,7 @@ import * as models from '../../actions/models.actions';
 import { State } from '../../../reducers';
 @Component({
     selector: 'model-view-page',
-    changeDetection: ChangeDetectionStrategy.OnPush, // TODO: what is this?
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'model-view-page.html',
 })
 export class ModelviewPageComponent implements OnInit, OnDestroy {

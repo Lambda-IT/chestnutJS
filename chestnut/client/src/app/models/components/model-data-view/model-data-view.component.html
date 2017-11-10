@@ -1,15 +1,13 @@
-<table border="1">
-    <thead>
-        <th *ngFor="let prop of modelView.properties">
-            {{prop.name}}
-        </th>
-    </thead>
-    <tbody>
-        <tr>
-            <td *ngFor="let prop of modelView.properties">
-                {{modelData[prop.name]}}
-            </td>
-        </tr>
-    </tbody>
-
-</table>
+<form [formGroup]="form$ | async">
+    <div *ngFor="let property of modelView.properties">
+        <div class="form-group">
+            <label for="{{property.name}}">{{property.name}}</label>
+            <div [ngSwitch]="property.type">
+                <input *ngSwitchCase="'String'" type="text" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
+                <input *ngSwitchCase="'ObjectID'" type="text" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"
+                    readonly>
+                <textarea *ngSwitchCase="'html'" rows="10" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

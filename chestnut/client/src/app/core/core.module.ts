@@ -15,6 +15,7 @@ import { ModelviewPageComponent } from '../models/containers/model-view/model-vi
 import { ModelDataViewPageComponent } from '../models/containers/model-data-view/model-data-view-page.component';
 import { ModelViewComponent } from '../models/components/model-view/model-view.component';
 import { ModelDataViewComponent } from '../models/components/model-data-view/model-data-view.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { ModelDataViewComponent } from '../models/components/model-data-view/mod
         RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
         // StoreModule.forFeature('reducers', reducers),
         EffectsModule.forFeature([ModelsEffects, ModelDataEffects]),
+        ReactiveFormsModule,
     ],
     exports: [AppComponent, NotFoundPageComponent],
     declarations: [
