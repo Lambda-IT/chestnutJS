@@ -42,7 +42,16 @@ export class ModelDataViewPageComponent implements OnInit, OnDestroy {
             map(x =>
                 x.model.modelView.properties.reduce(
                     (acc, cur, index) => {
-                        acc[cur.name] = this.formBuilder.control(x.data[cur.name]);
+                        const required = cur.required;
+                        // const data = x.data[cur.name];
+                        // const dateFormatted =
+                        //     cur.type === 'Date' || cur.type === 'dateTime' ? new Date('2011-09-29') : null;
+
+                        // data = dateFormatted !== null ? dateFormatted : x.data[cur.name];
+                        acc[cur.name] = this.formBuilder.control(
+                            x.data[cur.name],
+                            required ? Validators.required : null
+                        );
                         return acc;
                     },
                     {} as FormGroup

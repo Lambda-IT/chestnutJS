@@ -14,6 +14,7 @@ export class ModelDataViewComponent extends ReactiveComponent implements OnInit 
     formConfig$: Observable<FormGroup>;
     @Input() modelView: ModelDescription;
     @Input() formConfig: FormGroup;
+    @Output() saveChanges$ = new EventEmitter();
 
     constructor(private formBuilder: FormBuilder) {
         super();

@@ -1,4 +1,4 @@
-<form [formGroup]="form$ | async">
+<form [formGroup]="form$ | async" (ngSubmit)="saveChanges$.emit()">
     <div *ngFor="let property of modelView.properties">
         <div class="form-group">
             <label for="{{property.name}}">{{property.name}}</label>
@@ -7,7 +7,10 @@
                 <input *ngSwitchCase="'ObjectID'" type="text" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"
                     readonly>
                 <textarea *ngSwitchCase="'html'" rows="10" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"></textarea>
+                <input *ngSwitchCase="'Boolean'" type="checkbox" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
+                <input *ngSwitchCase="'Date' || 'dateTime'" type="datetime" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
             </div>
         </div>
     </div>
+    <button type="submit">Save changes</button>
 </form>
