@@ -1,4 +1,10 @@
-import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+
+export class Task extends Typegoose {
+    @prop() description: string;
+
+    @prop() completed: boolean;
+}
 
 export class User extends Typegoose {
     @prop() name?: string;
@@ -16,6 +22,9 @@ export class User extends Typegoose {
 
     @prop({ enum: ['completed', 'started'] })
     state?: string;
+
+    @arrayProp({ itemsRef: Task })
+    Task: Task[];
 }
 
 export class Todo extends Typegoose {

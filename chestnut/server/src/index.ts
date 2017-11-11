@@ -11,11 +11,13 @@ import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 
 import { Log } from '../typings/log';
 import { createLogger } from './logger';
+import { createStoreAsync, Store } from './store';
 import { initGraphQLSchema } from './schema';
 import { createMetadataController } from './controller';
 import { correlationId, registerGlobalExceptionHandler, resultProcessor, Response, Request } from './middleware';
 
-const BASE_URL = '/chestnut';
+export const BASE_URL = '/chestnut';
+
 const WS_GQL_PATH = '/subscriptions';
 (<any>mongoose).Promise = bluePromise;
 const MongoStore = connectMongo(session);
@@ -31,7 +33,7 @@ export type ChestnutOptions = {
 
 export type Chestnut = {
     expressApp: express.Express;
-    models: { [name: string]: mongoose.Model<any> };
+    store: Store;
     logger: Log;
 };
 
@@ -68,10 +70,15 @@ export async function initChestnut(
         }
     });
 
-    const connection = await mongoose.createConnection(options.mongoDb, {
-        useMongoClient: true,
-        /* other options */
-    });
+    const store = await createStoreAsync(
+        options.models,
+        options.mongoDb,
+        {
+            useMongoClient: true,
+            /* other options */
+        },
+        options.modelPrefix
+    );
 
     // session stuff after static middleware
     app.set('trust proxy', 1); // trust first proxy
@@ -81,13 +88,12 @@ export async function initChestnut(
             name: 'chestnut.sessionId',
             resave: false,
             saveUninitialized: false,
-            store: new MongoStore({ mongooseConnection: connection }),
+            store: new MongoStore({ mongooseConnection: store.connection }),
         })
     );
 
-    const { schema, models } = initGraphQLSchema(options.models, connection, options.modelPrefix);
-
-    createMetadataController(app, options.models, BASE_URL);
+    const schema = initGraphQLSchema(store, options.modelPrefix);
+    createMetadataController(app, store, BASE_URL);
 
     app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
@@ -102,5 +108,5 @@ export async function initChestnut(
 
     logger.info(`chestnut-server listening on port ${options.port}`);
 
-    return { expressApp: app, models: models, logger: logger };
+    return { expressApp: app, store: store, logger: logger };
 }

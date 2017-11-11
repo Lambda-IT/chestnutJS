@@ -1,15 +1,13 @@
 import { Request, Response, Express } from 'express';
+import { Model } from 'mongoose';
 import { ModelDescription, PropertyDescription } from '../../../common/metadata';
+import { Store } from '../store';
 
-export function createMetadataController(app: Express, models: Object, baseUrl: string) {
+export function createMetadataController(app: Express, store: Store, baseUrl: string) {
     app.get(baseUrl + '/metadata', (req: Request, res: Response) => {
-        const modelDescriptions = Object.keys(models).map(key => {
-            const model = models[key]; // Typegoose
+        const modelDescriptions = Object.keys(store.models).map(key => {
+            const mongooseModel = store.models[key] as any; // mongooseModel
             const modelName = key.toLowerCase();
-
-            const mongooseModel = new model().getModelForClass(model);
-
-            // console.log(mongooseModel.schema, 'mongooseModel');
 
             const properties = Object.keys(mongooseModel.schema.paths)
                 .filter(k => k !== '__v')

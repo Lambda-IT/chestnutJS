@@ -2,30 +2,23 @@ import { composeWithMongoose } from 'graphql-compose-mongoose';
 import { GQC } from 'graphql-compose';
 import { GraphQLSchema } from 'graphql';
 import * as mongoose from 'mongoose';
+import * as camelcase from 'camelcase';
+import { Store } from './store';
 
-export function initGraphQLSchema(
-    models: any,
-    connection: mongoose.Connection,
-    prefix?: string
-): { schema: GraphQLSchema; models: any } {
-    const mongooseModels = {};
+export function initGraphQLSchema(store: Store, prefix?: string): GraphQLSchema {
+    const compositions: any = {};
 
-    Object.keys(models).forEach(key => {
-        const model = models[key]; // Typegoose
-        const modelName = key.toLowerCase();
-
-        const options: any = { existingConnection: connection };
-        if (prefix) options.schemaOptions = { collection: `${prefix}_${modelName}s` };
-
-        const mongooseModel: mongoose.Model<any> = new model().getModelForClass(model, options); // Typegoose to Mongoose
-
-        mongooseModels[key] = mongooseModel;
-
+    Object.keys(store.models).forEach(key => {
+        const mongooseModel = store.models[key] as any; // mongooseModel
+        const modelName = camelcase(key);
         const modelComposition = composeWithMongoose(mongooseModel, {}); // Mongoose to GraphQL
 
-        // console.log(mongooseModel, 'mongooseModel');
-        // console.log(modelComposition, 'modelComposition');
-        //console.log(modelComposition.getResolver('createOne'), 'createOne');
+        compositions[modelName] = modelComposition;
+
+        console.log('compose', {
+            key: key,
+            modelName: modelName,
+        });
 
         GQC.rootQuery().addFields({
             [modelName + 'ById']: modelComposition.getResolver('findById'),
@@ -37,18 +30,64 @@ export function initGraphQLSchema(
             [modelName + 'Pagination']: modelComposition.getResolver('pagination'),
         });
 
-        const createOne = user => mongooseModel.create(user);
-
         GQC.rootMutation().addFields({
             [modelName + 'Create']: modelComposition.getResolver('createOne'),
             [modelName + 'UpdateById']: modelComposition.getResolver('updateById'),
-            [modelName + 'UpdateOne']: modelComposition.getResolver('updateOne'),
-            [modelName + 'UpdateMany']: modelComposition.getResolver('updateMany'),
+            // [modelName + 'UpdateOne']: modelComposition.getResolver('updateOne'),
+            // [modelName + 'UpdateMany']: modelComposition.getResolver('updateMany'),
             [modelName + 'RemoveById']: modelComposition.getResolver('removeById'),
-            [modelName + 'RemoveOne']: modelComposition.getResolver('removeOne'),
-            [modelName + 'RemoveMany']: modelComposition.getResolver('removeMany'),
+            // [modelName + 'RemoveOne']: modelComposition.getResolver('removeOne'),
+            // [modelName + 'RemoveMany']: modelComposition.getResolver('removeMany'),
         });
     });
+
+    Object.keys(store.models).forEach(key => {
+        const mongooseModel = store.models[key] as any; // mongooseModel
+        const modelName = camelcase(key);
+
+        Object.keys(mongooseModel.schema.paths)
+            .filter(k => k !== '__v')
+            .forEach(p => {
+                const property = mongooseModel.schema.paths[p];
+                const objProperty = mongooseModel.schema.obj[p];
+
+                if (objProperty && objProperty.ref) {
+                    const refName = camelcase(objProperty.ref);
+
+                    console.log('addParentRelation', {
+                        reference: objProperty ? objProperty.ref : null,
+                        name: p,
+                        refName: refName,
+                        modelName: modelName,
+                    });
+
+                    compositions[modelName].addRelation(refName + 'Ref', {
+                        resolver: compositions[refName].getResolver('findById'),
+                        prepareArgs: {
+                            _id: (source: any) => source[refName],
+                        },
+                        projection: { [refName]: 1 },
+                    });
+                } else if (objProperty && Array.isArray(objProperty) && objProperty.length > 0) {
+                    console.log('addChildRelation', {
+                        reference: objProperty[0].ref,
+                        name: p,
+                        modelName: modelName,
+                    });
+
+                    const refName = camelcase(objProperty[0].ref);
+
+                    compositions[modelName].addRelation(refName + 'Refs', {
+                        resolver: compositions[refName].getResolver('findByIds'),
+                        prepareArgs: {
+                            _ids: (source: any) => source[refName],
+                        },
+                        projection: { [refName]: 1 },
+                    });
+                }
+            });
+    });
+
     const graphqlSchema = GQC.buildSchema();
-    return { schema: graphqlSchema, models: mongooseModels };
+    return graphqlSchema;
 }
