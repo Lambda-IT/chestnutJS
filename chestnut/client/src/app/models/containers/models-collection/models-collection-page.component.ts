@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/observable';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ModelDescription } from '../../../../../../common/metadata';
-import * as fromModels from '../../reducers';
+import * as fromRoot from '../../reducers';
 import * as models from '../../actions/models.actions';
 
 @Component({
@@ -16,16 +16,16 @@ export class ModelCollectionPageComponent implements OnInit, OnDestroy {
 
     private onDestroy$ = new EventEmitter();
 
-    constructor(private store: Store<fromModels.State>) {
-        this.models$ = this.store.select(fromModels.getModels);
+    constructor(private store: Store<fromRoot.State>) {
+        this.models$ = this.store.select(fromRoot.getModels);
     }
 
-    modelNameClick(model: ModelDescription) {
+    modelNameClick(model: string) {
         // go to store, route in effect
-        this.store.dispatch(new models.LoadOneModel(model));
+        this.store.dispatch(new models.ClickModelName(model));
     }
     ngOnInit(): void {
-        this.store.dispatch(new models.LoadModels());
+        // this.store.dispatch(new models.LoadModels());
     }
 
     ngOnDestroy(): void {
