@@ -1,8 +1,11 @@
-<ul>
+<!-- <button mat-menu-item *ngFor="let model of models" (click)="clickModelName(model.name)"> {{model.name}} </button> -->
+<!-- <button mat-menu-item> Help </button> -->
+<!-- <ul>
     <li *ngFor="let model of models">
         <a href="javascript:" (click)="clickModelName(model.name)">{{model.name}}</a>
-        <!-- <p *ngFor="let prop of model.properties">
-            {{prop.name}} {{prop.type}}
-        </p> -->
     </li>
-</ul>
+</ul> -->
+<mat-nav-list>
+    <h2 mat-subheader>Models</h2>
+    <a mat-list-item *ngFor="let model of models" href="javascript:" (click)="clickModelName(model.name)">{{model.name}}</a>
+</mat-nav-list>
