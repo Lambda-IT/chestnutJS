@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ModelDescription, PropertyDescription } from '../../../../../../common/metadata';
 import { MatTableDataSource, MatSort } from '@angular/material';
-
+import { sortBy } from 'lodash';
 @Component({
     selector: 'model-view',
     templateUrl: 'model-view.component.html',
@@ -24,6 +24,7 @@ export class ModelViewComponent implements OnInit, OnDestroy, OnChanges, AfterVi
 
     propColumns: string[];
     tableData;
+
     @ViewChild(MatSort) sort: MatSort;
 
     setColumnVisible(propertyName: string) {
@@ -32,8 +33,9 @@ export class ModelViewComponent implements OnInit, OnDestroy, OnChanges, AfterVi
 
     constructor() {}
     ngOnInit(): void {
+        // this. modelView.properties = sortBy(this.modelView.properties, p => p.name);
         this.tableData = new MatTableDataSource(this.modelData);
-        this.propColumns = this.modelView.properties.filter(p => !p.hidden).map(p => p.name);
+        this.loadPropColumns();
     }
 
     ngAfterViewInit() {
@@ -42,6 +44,13 @@ export class ModelViewComponent implements OnInit, OnDestroy, OnChanges, AfterVi
     ngOnDestroy(): void {}
 
     ngOnChanges() {
-        this.propColumns = this.modelView.properties.filter(p => !p.hidden).map(p => p.name);
+        console.log('onchange');
+        this.loadPropColumns();
+    }
+
+    loadPropColumns() {
+        this.propColumns = sortBy(this.modelView.properties, p => p.name)
+            .filter(p => !p.hidden)
+            .map(p => p.name);
     }
 }
