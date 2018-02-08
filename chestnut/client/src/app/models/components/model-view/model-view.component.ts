@@ -33,7 +33,6 @@ export class ModelViewComponent implements OnInit, OnDestroy, OnChanges, AfterVi
 
     constructor() {}
     ngOnInit(): void {
-        // this. modelView.properties = sortBy(this.modelView.properties, p => p.name);
         this.tableData = new MatTableDataSource(this.modelData);
         this.loadPropColumns();
     }

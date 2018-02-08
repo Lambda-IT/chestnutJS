@@ -4,23 +4,25 @@ import { ModelDescription, PropertyDescription } from '../../../../../../common/
 import { ReactiveComponent } from '../../../shared/reactive-component';
 import { Observable } from 'rxjs/Observable';
 import { filter, map, publishReplay, refCount } from 'rxjs/operators';
+import { MatFormFieldModule } from '@angular/material';
+
 @Component({
-    selector: 'model-data-view',
-    templateUrl: 'model-data-view.component.html',
-    styleUrls: ['model-data-view.scss'],
+  selector: 'model-data-view',
+  templateUrl: 'model-data-view.component.html',
+  styleUrls: ['model-data-view.scss'],
 })
 export class ModelDataViewComponent extends ReactiveComponent implements OnInit {
-    form$: Observable<FormGroup>;
-    formConfig$: Observable<FormGroup>;
-    @Input() modelView: ModelDescription;
-    @Input() formConfig: FormGroup;
-    @Output() saveChanges$ = new EventEmitter();
+  form$: Observable<FormGroup>;
+  formConfig$: Observable<FormGroup>;
+  @Input() modelView: ModelDescription;
+  @Input() formConfig: FormGroup;
+  @Output() saveChanges$ = new EventEmitter();
 
-    constructor(private formBuilder: FormBuilder) {
-        super();
-        this.formConfig$ = this.observePropertyCurrentValue<FormGroup>('formConfig').pipe(filter(x => !!x));
-        this.form$ = this.formConfig$.pipe(map(x => this.formBuilder.group(x)), publishReplay(1), refCount());
-    }
+  constructor(private formBuilder: FormBuilder) {
+    super();
+    this.formConfig$ = this.observePropertyCurrentValue<FormGroup>('formConfig').pipe(filter(x => !!x));
+    this.form$ = this.formConfig$.pipe(map(x => this.formBuilder.group(x)), publishReplay(1), refCount());
+  }
 
-    ngOnInit(): void {}
+  ngOnInit(): void {}
 }

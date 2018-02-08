@@ -18,6 +18,26 @@ import { ModelDataViewComponent } from '../models/components/model-data-view/mod
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
+  MatButtonModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatMenuModule,
+  MatListModule,
+  MatSidenavModule,
+  MatSelectModule,
+  MatTableModule,
+  MatSortModule,
+  MatInputModule,
+  MatCheckboxModule,
+} from '@angular/material';
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
+    // StoreModule.forFeature('reducers', reducers),
+    EffectsModule.forFeature([ModelsEffects, ModelDataEffects]),
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
@@ -27,39 +47,23 @@ import {
     MatSelectModule,
     MatTableModule,
     MatSortModule,
-} from '@angular/material';
-@NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild([{ path: '', component: ModelCollectionPageComponent }]),
-        // StoreModule.forFeature('reducers', reducers),
-        EffectsModule.forFeature([ModelsEffects, ModelDataEffects]),
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatMenuModule,
-        MatListModule,
-        MatSidenavModule,
-        MatSelectModule,
-        MatTableModule,
-        MatSortModule,
-    ],
-    exports: [AppComponent, NotFoundPageComponent],
-    declarations: [
-        AppComponent,
-        NotFoundPageComponent,
-        ModelCollectionPageComponent,
-        ModelsListComponent,
-        ModelviewPageComponent,
-        ModelViewComponent,
-        ModelDataViewPageComponent,
-        ModelDataViewComponent,
-    ],
+    MatInputModule,
+    MatCheckboxModule,
+  ],
+  exports: [AppComponent, NotFoundPageComponent],
+  declarations: [
+    AppComponent,
+    NotFoundPageComponent,
+    ModelCollectionPageComponent,
+    ModelsListComponent,
+    ModelviewPageComponent,
+    ModelViewComponent,
+    ModelDataViewPageComponent,
+    ModelDataViewComponent,
+  ],
 })
 export class CoreModule {
-    static forRoot() {
-        return { ngModule: CoreModule };
-    }
+  static forRoot() {
+    return { ngModule: CoreModule };
+  }
 }

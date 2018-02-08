@@ -1,16 +1,26 @@
+<a mat-button color="primary" [routerLink]="['..']">
+    <mat-icon>navigate_before</mat-icon>Back to {{modelView.name}}</a>
 <form [formGroup]="form$ | async" (ngSubmit)="saveChanges$.emit()">
     <div *ngFor="let property of modelView.properties">
-        <div class="form-group">
-            <label for="{{property.name}}">{{property.name}}</label>
+        <div>
+            <!-- <label for="{{property.name}}">{{property.name}}</label> -->
             <div [ngSwitch]="property.type">
-                <input *ngSwitchCase="'String'" type="text" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
-                <input *ngSwitchCase="'ObjectID'" type="text" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"
-                    readonly>
-                <textarea *ngSwitchCase="'html'" rows="10" class="form-control" id="{{property.name}}" formControlName="{{property.name}}"></textarea>
-                <input *ngSwitchCase="'Boolean'" type="checkbox" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
-                <input *ngSwitchCase="'Date' || 'dateTime'" type="datetime" class="form-control" id="{{property.name}}" formControlName="{{property.name}}">
+                <mat-form-field *ngSwitchCase="'String'">
+                    <input matInput placeholder="{{property.name}}" type="text" id="{{property.name}}" formControlName="{{property.name}}">
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'ObjectID'">
+                    <input matInput placeholder="{{property.name}}" type="text" id="{{property.name}}" formControlName="{{property.name}}" readonly>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'html'">
+                    <textarea placeholder="{{property.name}}" rows="10" id="{{property.name}}" formControlName="{{property.name}}"></textarea>
+                </mat-form-field>
+                <mat-checkbox *ngSwitchCase="'Boolean'" id="{{property.name}}" formControlName="{{property.name}}">{{property.name}}</mat-checkbox>
+                <mat-form-field *ngSwitchCase="'Date' || 'dateTime'">
+                    <input matInput placeholder="{{property.name}}" type="datetime" id="{{property.name}}" formControlName="{{property.name}}">
+                </mat-form-field>
+
             </div>
         </div>
     </div>
-    <button type="submit">Save changes</button>
+    <button mat-raised-button type="submit">Save changes</button>
 </form>
