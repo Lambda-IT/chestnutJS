@@ -5,9 +5,7 @@ import * as models from '../../models/actions/models.actions';
 
 @Component({
     selector: 'app-root',
-    template: `
-        <router-outlet></router-outlet>
-    `,
+    templateUrl: 'app.component.html',
 })
 export class AppComponent {
     constructor(private store: Store<fromModels.State>) {

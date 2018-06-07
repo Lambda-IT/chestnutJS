@@ -16,7 +16,18 @@ import { ModelDataViewPageComponent } from '../models/containers/model-data-view
 import { ModelViewComponent } from '../models/components/model-view/model-view.component';
 import { ModelDataViewComponent } from '../models/components/model-data-view/model-data-view.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatListModule,
+    MatSidenavModule,
+    MatSelectModule,
+    MatTableModule,
+    MatSortModule,
+} from '@angular/material';
 @NgModule({
     imports: [
         CommonModule,
@@ -24,6 +35,16 @@ import { ReactiveFormsModule } from '@angular/forms';
         // StoreModule.forFeature('reducers', reducers),
         EffectsModule.forFeature([ModelsEffects, ModelDataEffects]),
         ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
+        MatListModule,
+        MatSidenavModule,
+        MatSelectModule,
+        MatTableModule,
+        MatSortModule,
     ],
     exports: [AppComponent, NotFoundPageComponent],
     declarations: [

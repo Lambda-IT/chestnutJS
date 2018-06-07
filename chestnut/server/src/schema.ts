@@ -59,20 +59,22 @@ export function initGraphQLSchema(store: Store, prefix?: string): GraphQLSchema 
                         name: p,
                         refName: refName,
                         modelName: modelName,
+                        propertyName: p,
                     });
 
                     compositions[modelName].addRelation(refName + 'Ref', {
                         resolver: compositions[refName].getResolver('findById'),
                         prepareArgs: {
-                            _id: (source: any) => source[refName],
+                            _id: (source: any) => source[p],
                         },
-                        projection: { [refName]: 1 },
+                        projection: { [p]: 1 },
                     });
                 } else if (objProperty && Array.isArray(objProperty) && objProperty.length > 0) {
                     console.log('addChildRelation', {
                         reference: objProperty[0].ref,
                         name: p,
                         modelName: modelName,
+                        propertyName: p,
                     });
 
                     const refName = camelcase(objProperty[0].ref);
@@ -80,9 +82,9 @@ export function initGraphQLSchema(store: Store, prefix?: string): GraphQLSchema 
                     compositions[modelName].addRelation(refName + 'Refs', {
                         resolver: compositions[refName].getResolver('findByIds'),
                         prepareArgs: {
-                            _ids: (source: any) => source[refName],
+                            _ids: (source: any) => source[p],
                         },
-                        projection: { [refName]: 1 },
+                        projection: { [p]: 1 },
                     });
                 }
             });

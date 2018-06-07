@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, EventEmitter } f
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/observable';
-import { filter, map, tap, withLatestFrom, publishReplay, refCount } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom, publishReplay, refCount, combineLatest } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as fromRoot from '../../reducers';
 import * as modelDataAction from '../../actions/modeldata.actions';
@@ -38,7 +38,8 @@ export class ModelDataViewPageComponent implements OnInit, OnDestroy {
         this.modelData$ = this.store.select(fromRoot.getModelData).pipe(filter(x => !!x));
 
         this.form$ = this.modelView$.pipe(
-            withLatestFrom(this.modelData$, (model, data) => ({ model, data })),
+            combineLatest(this.modelData$, (model, data) => ({ model, data })),
+            tap(x => console.log('modeldata:', x.data)),
             map(x =>
                 x.model.modelView.properties.reduce(
                     (acc, cur, index) => {
@@ -57,8 +58,7 @@ export class ModelDataViewPageComponent implements OnInit, OnDestroy {
                     {} as FormGroup
                 )
             ),
-            filter(x => !!x),
-            tap(x => console.log('selected', x))
+            filter(x => !!x)
         );
     }
 

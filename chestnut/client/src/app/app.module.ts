@@ -11,7 +11,6 @@ import { reducers, metaReducers } from './reducers';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { CoreModule } from './core/core.module';
 import { AppComponent } from './core/containers/app.component';
-
 @NgModule({
     imports: [
         BrowserModule,
