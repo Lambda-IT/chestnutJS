@@ -89,7 +89,7 @@ const toPopulation = (obj: any) =>
             else res.push({ path: key });
         },
         [],
-        obj
+        obj,
     );
 
 /**
@@ -213,7 +213,7 @@ export function createApi(app, store, logger: Log) {
                     query.population,
                     query.page,
                     query.perPage,
-                    query.sort
+                    query.sort,
                 );
                 logger.info(dbResponse);
                 response.status(dbResponse.status).send(dbResponse.body);
@@ -238,7 +238,7 @@ export function createApi(app, store, logger: Log) {
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            }
+            },
         );
 
         app.post(
@@ -251,7 +251,7 @@ export function createApi(app, store, logger: Log) {
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            }
+            },
         );
 
         app.post(
@@ -264,7 +264,7 @@ export function createApi(app, store, logger: Log) {
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            }
+            },
         );
 
         app.delete(
@@ -277,7 +277,7 @@ export function createApi(app, store, logger: Log) {
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            }
+            },
         );
     });
 }
@@ -294,7 +294,7 @@ export class Mongooser<T extends mongoose.Document> {
     getOne(
         id: any,
         projection?: any,
-        population?: mongoose.ModelPopulateOptions | Array<mongoose.ModelPopulateOptions>
+        population?: mongoose.ModelPopulateOptions | Array<mongoose.ModelPopulateOptions>,
     ): Promise<HttpResponse> {
         const query$ = this.model
             .findOne({ _id: id }, projection)
@@ -332,7 +332,7 @@ export class Mongooser<T extends mongoose.Document> {
         page?: number | any,
         perPage?: number | any,
         sort?: string | any,
-        showInactive?: boolean | any
+        showInactive?: boolean | any,
     ): Promise<HttpResponse> {
         const count$ = this.model.find(criteria, projection).count();
 

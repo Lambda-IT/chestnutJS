@@ -40,7 +40,7 @@ export type Chestnut = {
 
 export async function initChestnut(
     options: ChestnutOptions,
-    initMiddleware?: (app) => Promise<void>
+    initMiddleware?: (app) => Promise<void>,
 ): Promise<Chestnut> {
     const logger = createLogger();
     registerGlobalExceptionHandler(logger);
@@ -78,7 +78,7 @@ export async function initChestnut(
             useMongoClient: true,
             /* other options */
         },
-        options.modelPrefix
+        options.modelPrefix,
     );
 
     await createApi(app, store, logger);
@@ -92,7 +92,7 @@ export async function initChestnut(
             resave: false,
             saveUninitialized: false,
             store: new MongoStore({ mongooseConnection: store.connection }),
-        })
+        }),
     );
 
     const schema = initGraphQLSchema(store, options.modelPrefix);

@@ -17,7 +17,7 @@ export function createRefreshTokenStrategy(store: Store, app: express.Express) {
             validateUserAsync(username, password, store)
                 .then(done)
                 .catch(done);
-        })
+        }),
     );
 
     passport.serializeUser((user, done) => done(null, user.id));
@@ -58,6 +58,6 @@ export function createRefreshTokenStrategy(store: Store, app: express.Express) {
                     });
                 }
             });
-        })
+        }),
     );
 }
