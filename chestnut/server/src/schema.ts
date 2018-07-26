@@ -1,4 +1,4 @@
-import { composeWithMongoose } from 'graphql-compose-mongoose';
+import { composeWithMongoose } from 'graphql-compose-mongoose'; // Plugin from graphql-compose toolkit
 import { GQC } from 'graphql-compose';
 import { GraphQLSchema } from 'graphql';
 import * as mongoose from 'mongoose';
@@ -19,7 +19,7 @@ export function initGraphQLSchema(store: Store, prefix?: string): GraphQLSchema 
             key: key,
             modelName: modelName,
         });
-
+        // queries and mutations from graphql-compose ...
         GQC.rootQuery().addFields({
             [modelName + 'ById']: modelComposition.getResolver('findById'),
             [modelName + 'ByIds']: modelComposition.getResolver('findByIds'),

@@ -24,7 +24,7 @@ const MongoStore = connectMongo(session);
 
 export type ChestnutOptions = {
     port: number;
-    models: { [name: string]: any };
+    models: { [name: string]: any }; // Typegoose Models
     mongoDb: string;
     modelPrefix?: string;
     publicFolder?: string;
