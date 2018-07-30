@@ -1,0 +1,62 @@
+<mat-sidenav-container>
+
+    <mat-sidenav #sidenav mode="push">
+        <div class="branding">
+            <img src="assets/img/535chestnut_100849.png" height="40px" />
+            <mat-icon svgIcon="chestnut-logo"></mat-icon>
+            <span>ChestnutJS</span>
+        </div>
+        <mat-nav-list>
+            <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" >
+                {{item.label}}
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-toolbar color="primary">
+        <!-- <button mat-icon-button (click)="sidenav.open()">
+            <mat-icon>menu</mat-icon>
+        </button> -->
+
+        <div class="branding">
+            <span class="branding__icon">
+                <img src="assets/img/535chestnut_100849.png" height="40px" />
+                <!-- <mat-icon>mood</mat-icon> TODO: svg icon -->
+            </span>
+        
+            <span class="branding__name">ChestnutJS</span>
+        </div>
+
+        <span class="toolbar_navitems__navitem">
+            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]" routerLinkActive="active">
+                {{item.label}}
+            </button>
+        </span>
+        
+        <button mat-button class="toolbar__sign-in-button" *ngIf="!isAuthenticated" (click)="loginClicked.emit()">
+            Sign in
+        </button>
+
+        <button *ngIf="isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu">
+            <mat-icon>person</mat-icon>
+        </button>
+        <mat-menu #toolbarUserMenu="matMenu">
+            <button mat-menu-item (click)="logoutClicked.emit()">
+                <mat-icon>power_off</mat-icon>
+                <span>Logout</span>
+            </button>
+      </mat-menu>
+
+    
+        <!-- <button mat-icon-button [mat-menu-trigger-for]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button> -->
+
+        <!-- <mat-menu x-position="before" #menu="matMenu">
+            <button mat-menu-item>Option 1</button>
+            <button mat-menu-item>Option 2</button>
+        </mat-menu> -->
+    </mat-toolbar>
+
+    <ng-content></ng-content>
+</mat-sidenav-container>

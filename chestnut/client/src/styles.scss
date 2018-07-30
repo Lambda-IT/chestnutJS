@@ -1,2 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import 'themes/default-theme.scss';
+
+@import 'app/core/header/header.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+    @include app-header-component-theme($theme);
+}
+
+@include angular-material-theme($app-theme);
+@include custom-components-theme($app-theme);
+
+body { 
+    margin: 0 
+}
+
+.content {
+    height: calc(100vh - 80px);
+    margin: 20px;
+}
+

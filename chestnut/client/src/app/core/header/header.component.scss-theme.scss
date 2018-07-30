@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+
+@mixin app-header-component-theme($theme) {
+
+    $accent: map-get($theme, accent);
+
+    mat-toolbar {
+        button {
+            &.active {
+                color: mat-color($accent, default-contrast);
+                background-color: mat-color($accent);
+            }
+        }
+    }    
+}

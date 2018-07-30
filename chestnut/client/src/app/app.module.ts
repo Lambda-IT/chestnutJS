@@ -1,37 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    MatListModule,
-    MatSidenavModule,
-    MatSelectModule,
-    MatTableModule,
-    MatSortModule,
-    MatInputModule,
-    MatCheckboxModule,
-} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, PreloadAllModules } from '@angular/router';
+import { CoreModule } from '@core/core.module';
 import { AppComponent } from './app.component';
+import { SharedModule } from '@shared/shared.module';
+import { appRoutes } from './app.routing';
 
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserModule,
-        NoopAnimationsModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatMenuModule,
-        MatListModule,
-        MatSidenavModule,
-        MatSelectModule,
-        MatTableModule,
-        MatSortModule,
-        MatInputModule,
-        MatCheckboxModule,
+        BrowserAnimationsModule,
+        CoreModule,
+        SharedModule,
+        RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules }),
     ],
     providers: [],
     bootstrap: [AppComponent],
