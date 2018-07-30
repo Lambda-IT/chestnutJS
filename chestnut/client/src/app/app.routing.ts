@@ -15,4 +15,8 @@ export const appRoutes: Routes = [
         path: 'static',
         loadChildren: 'app/static/static.module#StaticModule',
     },
+    {
+        path: 'catalog',
+        loadChildren: 'app/catalog/catalog.module#CatalogModule'
+    }
 ];

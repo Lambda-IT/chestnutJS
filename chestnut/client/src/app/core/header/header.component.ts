@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ChangeDetectionStrategy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
     selector: 'app-header',
