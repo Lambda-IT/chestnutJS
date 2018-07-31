@@ -12,9 +12,11 @@ import {
     MatSortModule,
     MatInputModule,
     MatCheckboxModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
+import { NgxFpTsModule } from 'ngx-fp-ts';
 
 @NgModule({
     imports: [
@@ -31,7 +33,9 @@ import { RouterModule } from '@angular/router';
         MatInputModule,
         MatCheckboxModule,
         MatCardModule,
-        RouterModule
+        MatProgressSpinnerModule,
+        RouterModule,
+        NgxFpTsModule
     ],
     exports: [
       CommonModule,
@@ -47,7 +51,9 @@ import { RouterModule } from '@angular/router';
       MatInputModule,
       MatCheckboxModule,
       MatCardModule,
-      RouterModule],
+      MatProgressSpinnerModule,
+      RouterModule,
+      NgxFpTsModule],
     declarations: [],
 })
 export class SharedModule {}

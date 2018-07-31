@@ -1,60 +1,85 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RouterNavigationAction, ROUTER_NAVIGATION } from '@ngrx/router-store';
 import { RouterStateSnapshot } from '@angular/router';
 import { CatalogPageComponent } from '../containers/catalog-page/catalog-page.component';
-import { map, startWith, mergeMap, tap } from 'rxjs/operators';
+import { map, startWith, mergeMap, filter, catchError } from 'rxjs/operators';
 import { findSnapshot } from '@shared/effects-helper';
 import { AppConfigService } from '@shared/services/app-config.service';
 import { Action } from '@ngrx/store';
 import * as t from 'io-ts';
 import { createOptionFromNullable } from 'io-ts-types/lib/fp-ts/createOptionFromNullable';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
+import { right, left, Either } from 'fp-ts/lib/Either';
+import { jsonDecodeString } from 'decode-ts';
+import { ErrorType, CatalogDataLoading, CatalogDataLoaded } from './catalog.reducer';
 
 
 const PropertiesInDtoRT = t.type({
     name: t.string,
-    type: t.string, // "String" | "Number" | "Boolean" | "Date" | "ObjectID"
-    required: t.boolean, // can be undefined
-    enumValues: t.array(t.string), // can be undefined
-    regExp: createOptionFromNullable(t.string), // can be undefined
-    default: t.boolean, // can be undefined
-    reference: t.string // can be undefined
+    type: t.union([t.literal('String'), t.literal('Number'), t.literal('Boolean'), t.literal('Date'), t.literal('ObjectID')]),
+    required: t.union([t.boolean, t.undefined]),
+    enumValues: t.union([t.array(t.string), t.undefined]),
+    regExp: t.union([createOptionFromNullable(t.string), t.undefined]),
+    default: t.union([t.boolean, t.undefined]),
+    reference: t.union([t.string, t.undefined]),
 });
-
 
 const ModelInDtoRT = t.type({
     name: t.string,
-    properties: t.array(PropertiesInDtoRT)
+    properties: t.array(PropertiesInDtoRT),
 });
 
 const MetadataInDtoRT = t.type({
-    models: t.array(ModelInDtoRT)
+    models: t.array(ModelInDtoRT),
 });
 
-export interface PropertiesInDto extends t.TypeOf<typeof PropertiesInDtoRT> {}
-export interface ModelInDto extends t.TypeOf<typeof ModelInDtoRT> {}
-export interface MetadataInDto extends t.TypeOf<typeof MetadataInDtoRT> {}
-
+export interface PropertiesInDto extends t.TypeOf<typeof PropertiesInDtoRT> { }
+export interface ModelInDto extends t.TypeOf<typeof ModelInDtoRT> { }
+export interface MetadataInDto extends t.TypeOf<typeof MetadataInDtoRT> { }
 
 @Injectable()
 export class CatalogEffects {
-
-    constructor(private actions$: Actions, private http: HttpClient, appConfig: AppConfigService) {}
+    constructor(private actions$: Actions, private http: HttpClient, private appConfig: AppConfigService) { }
 
     @Effect()
-    onInitModule$ = this.actions$
-        .ofType<RouterNavigationAction<RouterStateSnapshot>>(ROUTER_NAVIGATION)
-        .pipe(
-            map(a => findSnapshot(CatalogPageComponent, a.payload.routerState.root)),
-            mergeMap(option => option.isSome() ?
-                loadCatalog(this.http).pipe(
-                    map(result =>  <Action>{ type: 'Successfull'}),
-                    startWith<Action>(<Action>{ type: 'loading' })
-                ) : of(<Action>{ type: 'dfsdg'})
+    onInitModule$ = this.actions$.ofType<RouterNavigationAction<RouterStateSnapshot>>(ROUTER_NAVIGATION).pipe(
+        map(a => findSnapshot(CatalogPageComponent, a.payload.routerState.root)),
+        filter(x => x.isSome()),
+        // map(x => right<ErrorType, ActivatedRouteSnapshot>(x.toNullable())), // for put calls
+        mergeMap(_ =>
+            bindRemoteCall(() => loadCatalog(this.http, this.appConfig)).pipe(
+                // map(x => bindDecode(MetadataInDtoRT, jsonDecodeString)(x)),
+                map(x => x.map(r => JSON.parse(r) as MetadataInDto)), // without validation
+                map((result: Either<ErrorType, MetadataInDto>) => new CatalogDataLoaded(result)),
+                startWith<Action>(new CatalogDataLoading())
             )
-        );
+        )
+    );
 }
 
-const loadCatalog = (http: HttpClient) => http.get<MetadataInDto>('http://localhost:9000/chestnut/metadata');
+const bindDecode = <A, O>(type: t.Type<A, O>, f: jsonDecodeString) => (either: Either<ErrorType, string>) =>
+    either.fold(left, r => f(type)(r).mapLeft(err => ErrorType.DecodeError({ decodeError: err })));
+
+
+const bindRemoteCall = (f: () => Observable<string>): Observable<Either<ErrorType, string>> =>
+    f().pipe(
+        map(x => right<ErrorType, string>(x)),
+        catchError((err: HttpErrorResponse) =>
+            of(
+                left<ErrorType, string>(
+                    ErrorType.APIErrorResponse({
+                        apiErrorResponse: {
+                            status: err.status,
+                            statusText: err.statusText,
+                            error: err.error,
+                        },
+                    })
+                )
+            )
+        )
+    );
+
+const loadCatalog = (http: HttpClient, appConfig: AppConfigService) =>
+    http.get(appConfig.buildApiUrl('/metadata'), { responseType: 'text' });

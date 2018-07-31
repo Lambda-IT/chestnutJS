@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { CatalogEffects } from './state/catalog.effect';
 import { SharedModule } from '@shared/shared.module';
+import { reducer } from './state/catalog.reducer';
 
 @NgModule({
   imports: [
@@ -14,7 +15,7 @@ import { SharedModule } from '@shared/shared.module';
     SharedModule,
     RouterModule.forChild(catalogRoutes),
     EffectsModule.forFeature([CatalogEffects]),
-    // StoreModule.forFeature('rechnungenModule', reducers)
+    StoreModule.forFeature('catalog', reducer)
   ],
   declarations: [CatalogPageComponent]
 })

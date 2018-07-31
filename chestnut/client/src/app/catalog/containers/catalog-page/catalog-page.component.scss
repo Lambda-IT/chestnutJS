@@ -1,0 +1,14 @@
+.model_card__item {
+    width: 300px; 
+    display: inline-block; 
+    margin: 20px
+}
+
+.spinner_container {
+    display:flex;
+    height: 100%;
+
+    .spinner {
+        margin: auto;
+    }
+}
