@@ -12,11 +12,11 @@ export const appRoutes: Routes = [
         component: HomeComponent,
     },
     {
-        path: 'static',
-        loadChildren: 'app/static/static.module#StaticModule',
-    },
-    {
         path: 'catalog',
         loadChildren: 'app/catalog/catalog.module#CatalogModule'
-    }
+    },
+    {
+        path: '**',
+        redirectTo: 'about',
+    },
 ];

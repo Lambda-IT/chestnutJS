@@ -13,6 +13,7 @@ import { environment } from 'environments/environment';
 import { ActionReducerMap, StoreModule, ActionReducer } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { storeLogger } from 'ngrx-store-logger';
+import { StaticModule } from './static/static.module';
 
 
 export function logger(reducer: ActionReducer<any>): any {
@@ -39,6 +40,7 @@ export const reducers: ActionReducerMap<State> = {
         HttpClientModule,
         CoreModule,
         SharedModule,
+        StaticModule,
         RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules }),
         StoreRouterConnectingModule.forRoot({
             stateKey: 'router' // name of reducer key

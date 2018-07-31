@@ -12,5 +12,5 @@ export class HeaderComponent {
     @Output() loginClicked = new EventEmitter();
 
     navigationSideMenu = [{ label: 'Label 1' }, { label: 'Label2'}];
-    navigation = [{ label: 'Home', link: '/home' }, { label: 'About', link: 'static/about' }, { label: 'Catalog', link: '/catalog' }];
+    navigation = [{ label: 'Home', link: '/home' }, { label: 'About', link: '/about' }, { label: 'Catalog', link: '/catalog' }];
 }
