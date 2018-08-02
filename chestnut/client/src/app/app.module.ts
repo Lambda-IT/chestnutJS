@@ -18,6 +18,8 @@ import { NgrxCacheModule, NgrxCache, apolloReducer } from 'apollo-angular-cache-
 import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { AppConfigService } from '@shared/services/app-config.service';
+import { AppEffects } from './app.effect';
+import { AppState, appReducer } from './app.reducer';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -25,13 +27,13 @@ export function logger(reducer: ActionReducer<any>): any {
 const metaReducers = environment.production ? [] : [logger];
 
 export interface State {
-    // app: AppState;
+    app: AppState;
     router: RouterReducerState;
     apollo: any;
 }
 
 export const reducers: ActionReducerMap<State> = {
-    // app: appReducer,
+    app: appReducer,
     router: routerReducer,
     apollo: apolloReducer,
 };
@@ -53,7 +55,7 @@ export const reducers: ActionReducerMap<State> = {
         }),
         StoreModule.forRoot(reducers, { metaReducers }),
         NgrxCacheModule,
-        EffectsModule.forRoot([]),
+        EffectsModule.forRoot([AppEffects]),
         StoreDevtoolsModule.instrument({
             name: 'NgRx Starter Store DevTools',
             logOnly: environment.production,
@@ -65,9 +67,8 @@ export const reducers: ActionReducerMap<State> = {
 export class AppModule {
     constructor(apollo: Apollo, httpLink: HttpLink, ngrxCache: NgrxCache, configService: AppConfigService) {
         apollo.create({
-          link: httpLink.create({uri: configService.buildApiUrl('/graphql')}),
-          cache: ngrxCache.create({})
+            link: httpLink.create({ uri: configService.buildApiUrl('/graphql') }),
+            cache: ngrxCache.create({}),
         });
-      }
-
+    }
 }
