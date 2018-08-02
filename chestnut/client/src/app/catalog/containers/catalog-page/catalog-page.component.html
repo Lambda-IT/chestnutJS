@@ -1,7 +1,7 @@
 <ng-container *ifSome="model$ | async; else noneTemplate; let model">
   <ng-container *ngFor="let item of model.models">
     <mat-card class="model_card__item">
-        <mat-card-title><a href="">{{item.name}}</a></mat-card-title>
+        <mat-card-title class="model_card__item_title"><a href="model/{{item.name}}">{{item.name}}</a></mat-card-title>
         <mat-card-subtitle>
           67 Items
         </mat-card-subtitle>

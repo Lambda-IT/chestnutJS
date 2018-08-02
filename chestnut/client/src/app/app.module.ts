@@ -14,7 +14,10 @@ import { ActionReducerMap, StoreModule, ActionReducer } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { storeLogger } from 'ngrx-store-logger';
 import { StaticModule } from './static/static.module';
-
+import { NgrxCacheModule, NgrxCache, apolloReducer } from 'apollo-angular-cache-ngrx';
+import { ApolloModule, Apollo } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { AppConfigService } from '@shared/services/app-config.service';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -24,13 +27,14 @@ const metaReducers = environment.production ? [] : [logger];
 export interface State {
     // app: AppState;
     router: RouterReducerState;
-  }
+    apollo: any;
+}
 
 export const reducers: ActionReducerMap<State> = {
     // app: appReducer,
-    router: routerReducer
+    router: routerReducer,
+    apollo: apolloReducer,
 };
-
 
 @NgModule({
     declarations: [AppComponent],
@@ -38,14 +42,17 @@ export const reducers: ActionReducerMap<State> = {
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
+        ApolloModule,
+        HttpLinkModule,
         CoreModule,
         SharedModule,
         StaticModule,
         RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules }),
         StoreRouterConnectingModule.forRoot({
-            stateKey: 'router' // name of reducer key
+            stateKey: 'router', // name of reducer key
         }),
         StoreModule.forRoot(reducers, { metaReducers }),
+        NgrxCacheModule,
         EffectsModule.forRoot([]),
         StoreDevtoolsModule.instrument({
             name: 'NgRx Starter Store DevTools',
@@ -55,4 +62,12 @@ export const reducers: ActionReducerMap<State> = {
     providers: [],
     bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {
+    constructor(apollo: Apollo, httpLink: HttpLink, ngrxCache: NgrxCache, configService: AppConfigService) {
+        apollo.create({
+          link: httpLink.create({uri: configService.buildApiUrl('/graphql')}),
+          cache: ngrxCache.create({})
+        });
+      }
+
+}

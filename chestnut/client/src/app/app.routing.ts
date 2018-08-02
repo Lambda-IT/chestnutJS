@@ -16,6 +16,10 @@ export const appRoutes: Routes = [
         loadChildren: 'app/catalog/catalog.module#CatalogModule'
     },
     {
+        path: 'model',
+        loadChildren: 'app/model/model.module#ModelModule'
+    },
+    {
         path: '**',
         redirectTo: 'about',
     },

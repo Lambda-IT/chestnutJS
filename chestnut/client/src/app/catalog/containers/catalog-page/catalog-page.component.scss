@@ -1,7 +1,11 @@
 .model_card__item {
     width: 300px; 
     display: inline-block; 
-    margin: 20px
+    margin: 20px;
+
+    .model_card__item_title {
+        text-transform: capitalize;
+    }
 }
 
 .spinner_container {
