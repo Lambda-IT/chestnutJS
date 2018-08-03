@@ -13,8 +13,8 @@
 @include angular-material-theme($app-theme);
 @include custom-components-theme($app-theme);
 
-body { 
-    margin: 0 
+body {
+    margin: 0;
 }
 
 .content {
@@ -22,3 +22,6 @@ body {
     margin: 20px;
 }
 
+.mat-card-subtitle {
+    color: inherit;
+}

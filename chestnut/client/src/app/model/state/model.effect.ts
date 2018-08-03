@@ -10,23 +10,28 @@ import gql from 'graphql-tag';
 
 @Injectable()
 export class ModelEffects {
-    constructor(
-        private actions$: Actions,
-        private apollo: Apollo) { }
+    constructor(private actions$: Actions, private apollo: Apollo) {}
 
     @Effect({ dispatch: false })
     onInitModule$ = this.actions$.ofType<RouterNavigationAction<RouterStateSnapshot>>(ROUTER_NAVIGATION).pipe(
         map(a => findSnapshot(ModelPageComponent, a.payload.routerState.root)),
         filter(x => x.isSome()),
         map(s => s.map(a => a.params['id'])),
-        tap(x => console.log('sdkfhsdjhghdshgh', x['value'])),
-        mergeMap(x => this.apollo.watchQuery({
-            query: gql` { todoMany {
-                description
-                completed
-                user
-              }}`
-        }).valueChanges)
+        tap(x => console.log('model selected', x['value'])),
+        mergeMap(
+            x =>
+                this.apollo.watchQuery({
+                    query: gql`
+                        {
+                            todoMany {
+                                description
+                                completed
+                                user
+                            }
+                        }
+                    `,
+                }).valueChanges
+        )
         // query graphql
     );
 }

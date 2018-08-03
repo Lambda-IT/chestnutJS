@@ -5,7 +5,8 @@ export enum PropertyType {
     date = 'Date',
     objectID = 'ObjectID',
     dateTime = 'dateTime',
-    number = 'number',
+    number = 'Number',
+    array = 'Array',
 }
 
 export interface PropertyDescription {

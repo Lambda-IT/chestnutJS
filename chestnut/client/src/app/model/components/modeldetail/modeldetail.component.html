@@ -1,0 +1,17 @@
+<a style="padding-left: 0; margin-bottom: 20px" mat-button color="primary" [routerLink]="['..']">
+    <mat-icon>navigate_before</mat-icon>Back to Todos</a>
+
+<mat-card style="width: 800px; margin-right: auto">
+    <mat-card-title class="model_card__item_title">
+        Todo
+    </mat-card-title>
+    <mat-card-subtitle>
+        <form [formGroup]="form" (ngSubmit)="submit(model)">
+            <formly-form [form]="form" [fields]="fields" [model]="model">
+                <button mat-raised-button color="primary" type="submit">Save changes</button>
+                <button style="margin-left: 5px" mat-raised-button color="accent">Reset changes</button>
+            </formly-form>
+        </form>
+    </mat-card-subtitle>
+
+</mat-card>
