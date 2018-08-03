@@ -22,3 +22,9 @@ export const composeCountQuery = (modelName: string): DocumentNode =>
     query get${modelName}Count {
         ${modelName}Count
     }`;
+
+export const composeCreateMutation = (modelName: string, model: any): DocumentNode =>
+    gql`
+        mutation create${modelName}($model: model) {
+            ${modelName}Create(record: model)
+        }`;

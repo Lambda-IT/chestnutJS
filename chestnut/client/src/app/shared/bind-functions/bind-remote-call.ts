@@ -4,12 +4,12 @@ import { of, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
-export const bindRemoteCall = (f: () => Observable<string>): Observable<Either<ErrorType, string>> =>
+export const bindRemoteCall = <T>(f: () => Observable<T>): Observable<Either<ErrorType, T>> =>
     f().pipe(
-        map(x => right<ErrorType, string>(x)),
+        map(x => right<ErrorType, T>(x)),
         catchError((err: HttpErrorResponse) =>
             of(
-                left<ErrorType, string>(
+                left<ErrorType, T>(
                     ErrorType.APIErrorResponse({
                         apiErrorResponse: {
                             status: err.status,

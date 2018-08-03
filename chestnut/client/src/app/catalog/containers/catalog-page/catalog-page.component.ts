@@ -2,17 +2,16 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import { MetadataInDto } from '../../state/catalog.effect';
-import { catalogSelectors } from '../../state/catalog.reducer';
+import { catalogSelectors, CatalogModel } from '../../state/catalog.reducer';
+import { MetadataDto } from '@shared/actions';
 
 @Component({
     selector: 'app-catalog-page',
     templateUrl: './catalog-page.component.html',
-    styleUrls: ['./catalog-page.component.scss']
+    styleUrls: ['./catalog-page.component.scss'],
 })
 export class CatalogPageComponent {
-
-    model$: Observable<Option<MetadataInDto>>;
+    model$: Observable<Option<CatalogModel[]>>;
     loading$: Observable<boolean>;
 
     constructor(private store: Store<any>) {
