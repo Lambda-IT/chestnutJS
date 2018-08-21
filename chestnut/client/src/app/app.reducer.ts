@@ -1,4 +1,4 @@
-import { ReducerBuilder } from '@shared/ngx-tools';
+import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';

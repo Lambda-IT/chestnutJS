@@ -41,6 +41,7 @@
     "import": "0.0.6",
     "io-ts": "^1.2.1",
     "io-ts-types": "^0.3.8",
+    "ngrx-reducer-builder": "0.0.1",
     "ngrx-store-logger": "^0.2.2",
     "ngx-fp-ts": "0.0.2",
     "rxjs": "^6.0.0",

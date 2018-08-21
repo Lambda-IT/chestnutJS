@@ -1,5 +1,5 @@
 import { Option, none, some } from 'fp-ts/lib/Option';
-import { ReducerBuilder } from '@shared/ngx-tools';
+import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
