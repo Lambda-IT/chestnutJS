@@ -3,7 +3,7 @@ import { ModelPageComponent } from './containers/model-page/model-page.component
 
 export const modelRoutes: Routes = [
     {
-        path: ':id',
+        path: 'model/:id',
         component: ModelPageComponent,
-    }
+    },
 ];

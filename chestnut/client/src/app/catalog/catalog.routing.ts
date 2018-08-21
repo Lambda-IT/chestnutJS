@@ -3,7 +3,7 @@ import { CatalogPageComponent } from './containers/catalog-page/catalog-page.com
 
 export const catalogRoutes: Routes = [
     {
-        path: '',
+        path: 'catalog',
         component: CatalogPageComponent,
-    }
+    },
 ];
