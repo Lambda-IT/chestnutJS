@@ -10,6 +10,7 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { ModeldetailComponent } from './components/modeldetail/modeldetail.component';
 import { SharedModule } from '@shared/shared.module';
+import { ModellistComponent } from './components/modellist/modellist.component';
 
 @NgModule({
     imports: [
@@ -21,6 +22,6 @@ import { SharedModule } from '@shared/shared.module';
         RouterModule.forChild(modelRoutes),
         EffectsModule.forFeature([ModelEffects]),
     ],
-    declarations: [ModelPageComponent, ModeldetailComponent],
+    declarations: [ModelPageComponent, ModeldetailComponent, ModellistComponent],
 })
 export class ModelModule {}

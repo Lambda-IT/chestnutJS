@@ -13,6 +13,10 @@
 @include angular-material-theme($app-theme);
 @include custom-components-theme($app-theme);
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
 }

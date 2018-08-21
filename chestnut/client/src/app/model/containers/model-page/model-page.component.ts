@@ -265,7 +265,7 @@ export class ModelPageComponent {
                     return { ...acc, [model.name]: transformMetadataToForm(model) };
                 },
                 {} as FormlyFieldConfigMap
-            )['user']
+            )['todo']
         );
 
         this.model$ = of({
