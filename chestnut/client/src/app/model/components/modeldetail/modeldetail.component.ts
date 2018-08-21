@@ -8,8 +8,12 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
     styleUrls: ['./modeldetail.component.scss'],
 })
 export class ModeldetailComponent {
-    @Input() model: any;
-    @Input() fields: FormlyFieldConfig[];
+    @Input()
+    model: any;
+    @Input()
+    fields: FormlyFieldConfig[];
 
     form = new FormGroup({});
+
+    submit(model: any) {}
 }

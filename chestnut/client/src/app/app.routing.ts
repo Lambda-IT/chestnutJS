@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from '@core/home/home.component';
+import { catalogRoutes } from './catalog/catalog.routing';
+import { modelRoutes } from './model/model.routing';
 
 export const appRoutes: Routes = [
     {
         path: '',
         redirectTo: '/home',
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: 'home',
@@ -13,11 +15,13 @@ export const appRoutes: Routes = [
     },
     {
         path: 'catalog',
-        loadChildren: 'app/catalog/catalog.module#CatalogModule'
+        children: catalogRoutes,
+        // loadChildren: 'app/catalog/catalog.module#CatalogModule',
     },
     {
         path: 'model',
-        loadChildren: 'app/model/model.module#ModelModule'
+        // loadChildren: 'app/model/model.module#ModelModule',
+        children: modelRoutes,
     },
     {
         path: '**',

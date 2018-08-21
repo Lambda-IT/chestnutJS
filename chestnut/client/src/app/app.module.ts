@@ -20,7 +20,8 @@ import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { AppConfigService } from '@shared/services/app-config.service';
 import { AppEffects } from './app.effect';
 import { AppState, appReducer } from './app.reducer';
-import * as fromCatalog from './catalog/state/catalog.reducer';
+import { CatalogModule } from './catalog/catalog.module';
+import { ModelModule } from './model/model.module';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -31,14 +32,12 @@ export interface State {
     app: AppState;
     router: RouterReducerState;
     apollo: any;
-    catalog: fromCatalog.CatalogPageState;
 }
 
 export const reducers: ActionReducerMap<State> = {
     app: appReducer,
     router: routerReducer,
     apollo: apolloReducer,
-    catalog: fromCatalog.reducer,
 };
 
 @NgModule({
@@ -60,9 +59,11 @@ export const reducers: ActionReducerMap<State> = {
         NgrxCacheModule,
         EffectsModule.forRoot([AppEffects]),
         StoreDevtoolsModule.instrument({
-            name: 'NgRx Starter Store DevTools',
+            name: 'NgRx Chestnut Store DevTools',
             logOnly: environment.production,
         }),
+        CatalogModule,
+        ModelModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

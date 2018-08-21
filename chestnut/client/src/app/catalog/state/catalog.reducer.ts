@@ -1,6 +1,6 @@
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ReducerBuilder } from '@shared/ngx-tools';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
 import { Either } from 'fp-ts/lib/Either';
@@ -16,7 +16,7 @@ export interface CatalogPageState {
     error: Option<ErrorType>;
 }
 
-export const reducer = new ReducerBuilder<CatalogPageState>()
+const reducer = new ReducerBuilder<CatalogPageState>()
     .handle(MetadataLoading, state => ({ ...state, loading: true }))
     .handle(MetadataLoaded, (state, action) => {
         console.log('sdjfhsadjhkjhdsajghasdhkgh');
@@ -48,3 +48,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
             error: none,
         })
     );
+
+export function catalogReducer(state: CatalogPageState, action: Action): CatalogPageState {
+    return reducer(state, action);
+}

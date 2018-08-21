@@ -2,6 +2,7 @@ import { ReducerBuilder } from '@shared/ngx-tools';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
+import { Action } from '@ngrx/store';
 
 export interface AppState {
     loaded: boolean;
@@ -10,7 +11,7 @@ export interface AppState {
     model: Option<MetadataDto>;
 }
 
-export const appReducer = new ReducerBuilder<AppState>()
+export const reducer = new ReducerBuilder<AppState>()
     .handle(MetadataLoading, (state, action) => ({
         ...state,
         loading: true,
@@ -28,3 +29,7 @@ export const appReducer = new ReducerBuilder<AppState>()
         error: none,
         model: none,
     });
+
+export function appReducer(state: AppState, action: Action): AppState {
+    return reducer(state, action);
+}

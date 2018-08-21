@@ -2,7 +2,7 @@
     <ng-container *ngFor="let item of model">
         <mat-card class="model_card__item">
             <mat-card-title class="model_card__item_title">
-                <a href="model/{{item.name}}">{{item.name}}</a>
+                <a href="" [routerLink]="['/model', item.name]">{{item.name}}</a>
             </mat-card-title>
             <mat-card-subtitle>
                 67 Items
