@@ -16,12 +16,13 @@ export class ModelEffects {
     onInitModule$ = this.actions$.ofType<RouterNavigationAction<RouterStateSnapshot>>(ROUTER_NAVIGATION).pipe(
         map(a => findSnapshot(ModelPageComponent, a.payload.routerState.root)),
         fromFilteredSome(),
-        map(s => <string>s.params['id']),
+        // TODO: select params from store
+        map(s => ({ modelName: s.params['modelName'], id: s.params['id'] })),
         tap(x => console.log('model selected', x)),
         mergeMap(
             x =>
                 this.apollo.watchQuery({
-                    query: composeManyQuery(x, ['description']),
+                    query: composeManyQuery(x.modelName, ['description']),
                 }).valueChanges
         )
     );
