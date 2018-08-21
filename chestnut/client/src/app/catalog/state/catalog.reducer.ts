@@ -18,13 +18,10 @@ export interface CatalogPageState {
 
 const reducer = new ReducerBuilder<CatalogPageState>()
     .handle(MetadataLoading, state => ({ ...state, loading: true }))
-    .handle(MetadataLoaded, (state, action) => {
-        console.log('sdjfhsadjhkjhdsajghasdhkgh');
-        return {
-            ...state,
-            ...transformMetadata(action.payload),
-        };
-    })
+    .handle(MetadataLoaded, (state, action) => ({
+        ...state,
+        ...transformMetadata(action.payload),
+    }))
     .build({
         model: none,
         loaded: false, // indicate that data are ready
