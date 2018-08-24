@@ -1,7 +1,7 @@
 <ng-container *ifSome="model$ | async; else noneTemplate; let model">
     <ng-container *ngFor="let item of model">
-        <mat-card class="model_card__item">
-            <mat-card-title class="model_card__item_title">
+        <mat-card class="model-card__item">
+            <mat-card-title class="model-card__item_title">
                 <a href="" [routerLink]="['/model', item.name]">{{item.name}}</a>
             </mat-card-title>
             <mat-card-subtitle>
@@ -16,7 +16,7 @@
     </ng-container>
 </ng-container>
 <ng-template #noneTemplate>
-    <div class="spinner_container">
+    <div class="spinner-container">
         <mat-spinner class="spinner" *ngIf="loading$ | async"></mat-spinner>
     </div>
 </ng-template>

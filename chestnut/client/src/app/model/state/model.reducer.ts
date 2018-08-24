@@ -1,41 +1,66 @@
-import { ModelDescription, PropertyType } from '../../../../../common/metadata';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { ReducerBuilder } from 'ngrx-reducer-builder';
+import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
+import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
+import { Option, none, some } from 'fp-ts/lib/Option';
+import { ErrorType } from '@shared/bind-functions';
+import { Either } from 'fp-ts/lib/Either';
+import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
 
-interface FormMappingType {
-    type: 'input' | 'textarea' | 'checkbox';
-    templateType?: 'text' | 'date' | 'number' | 'datetime-local';
+export interface FormlyFieldConfigMap {
+    [key: string]: FormlyFieldConfig[];
+}
+export interface ModelState {
+    formFieldConfigMap: Option<FormlyFieldConfigMap>;
+    propertyMap: Option<{ [key: string]: string[] }>;
+    loaded: boolean;
+    loading: boolean;
+    error: Option<ErrorType>;
 }
 
-const typeMap: { [key in PropertyType]: FormMappingType } = {
-    [PropertyType.string]: { type: 'input', templateType: 'text' },
-    [PropertyType.html]: { type: 'textarea', templateType: 'text' },
-    [PropertyType.boolean]: { type: 'checkbox' },
-    [PropertyType.date]: { type: 'input', templateType: 'date' },
-    [PropertyType.dateTime]: { type: 'input', templateType: 'datetime-local' },
-    [PropertyType.number]: { type: 'input', templateType: 'number' },
-    [PropertyType.objectID]: { type: 'input', templateType: 'text' },
-    [PropertyType.array]: { type: 'input', templateType: 'text'}
+const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
+    metadata.fold<ModelState>(
+        l => ({ loaded: false, loading: false, error: some(l), formFieldConfigMap: none, propertyMap: none }),
+        r => ({
+            loaded: true,
+            loading: true,
+            formFieldConfigMap: some(
+                r.models.reduce(
+                    (acc, model) => {
+                        return { ...acc, [model.name]: transformMetadataToForm(model) };
+                    },
+                    {} as FormlyFieldConfigMap
+                )
+            ),
+            propertyMap: some(transformMetadataToProperties(r)),
+            error: none,
+        })
+    );
+
+export const reducer = new ReducerBuilder<ModelState>()
+    .handle(MetadataLoading, (state, action) => ({
+        ...state,
+        loading: true,
+    }))
+    .handle(MetadataLoaded, (state, action) => ({
+        ...state,
+        ...transformMetadata(action.payload),
+    }))
+    .build({
+        loaded: false,
+        loading: false,
+        error: none,
+        formFieldConfigMap: none,
+        propertyMap: none,
+    });
+
+export const getModelState = createFeatureSelector<ModelState>('model');
+export const modelSelectors = {
+    getFormFieldConfigMap: createSelector(getModelState, state => state.formFieldConfigMap),
+    isLoading: createSelector(getModelState, state => state.loading),
+    getProperties: createSelector(getModelState, state => state.propertyMap),
 };
 
-export const transformMetadataToForm = (model: ModelDescription) => {
-    return model.properties
-        .map(x => {
-            if (!typeMap[x.type]) {
-                console.log(`Property: ${x.name} has a wrong type!`, x);
-            }
-            return x;
-        })
-        .map(
-            p =>
-                <FormlyFieldConfig>{
-                    key: p.name,
-                    type: typeMap[p.type].type,
-                    templateOptions: {
-                        type: typeMap[p.type].templateType,
-                        label: p.name,
-                        disabled: p.type === 'ObjectID',
-                        required: p.required,
-                    },
-                }
-        );
-};
+export function modelReducer(state: ModelState, action: Action): ModelState {
+    return reducer(state, action);
+}

@@ -1,0 +1,10 @@
+<ng-container *ifSome="fieldMap$ | async; else noneTemplate; let fieldMap">
+    <ng-container *ngIf="model$ | async; else noneTemplate; let model">
+        <app-modeldetail [fields]="fieldMap" [model]="model"></app-modeldetail>
+    </ng-container>
+</ng-container>
+<ng-template #noneTemplate>
+    <div class="spinner-container">
+        <mat-spinner class="spinner" *ngIf="loading$ | async"></mat-spinner>
+    </div>
+</ng-template>

@@ -47,7 +47,7 @@ export const reducers: ActionReducerMap<State> = {
         BrowserAnimationsModule,
         HttpClientModule,
         ApolloModule,
-        HttpLinkModule,
+        HttpLinkModule, // Interceptor !! import from shared
         CoreModule,
         SharedModule,
         StaticModule,

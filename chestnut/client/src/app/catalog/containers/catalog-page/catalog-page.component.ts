@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
 import { catalogSelectors, CatalogModel } from '../../state/catalog.reducer';
-import { MetadataDto } from '@shared/actions';
 
 @Component({
     selector: 'app-catalog-page',
