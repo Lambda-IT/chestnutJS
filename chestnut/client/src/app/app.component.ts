@@ -4,7 +4,6 @@ import { ErrorType } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';
 import { Observable } from 'rxjs';
 import { modelSelectors } from './app.reducer';
-import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
@@ -17,8 +16,6 @@ export class AppComponent {
     error$: Observable<Option<ErrorType>>;
 
     constructor(private store: Store<any>) {
-        this.error$ = this.store
-            .select(modelSelectors.error)
-            .pipe(tap(x => console.log('----sadasdf-sdf-dsf--df-ds-', x)));
+        this.error$ = this.store.select(modelSelectors.error);
     }
 }

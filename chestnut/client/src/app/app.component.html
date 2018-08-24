@@ -1,7 +1,7 @@
 <app-header>
 
-    <div *ifSome="error$ | async">
-        TODO: Error
+    <div *ifSome="error$ | async; let error">
+        Error: {{error}}
     </div>
 
     <div class="content">
