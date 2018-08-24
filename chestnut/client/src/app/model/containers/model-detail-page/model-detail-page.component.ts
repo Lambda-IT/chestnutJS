@@ -40,7 +40,7 @@ export class ModelDetailPageComponent {
                         query: composeByIdQuery(idParam, modelNameParam, p),
                         fetchPolicy: 'cache-and-network',
                     })
-                    .valueChanges.pipe(bindToOptionData(modelNameParam))
+                    .valueChanges.pipe(bindToOptionData(modelNameParam, 'ById'))
             )
         );
     }

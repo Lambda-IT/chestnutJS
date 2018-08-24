@@ -1,21 +1,17 @@
 <div class="model-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 model-table">
 
-        <!-- TODO: *ngFor all properties -->
-
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef> description </th>
-            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-        </ng-container>
-        <ng-container matColumnDef="completed">
-            <th mat-header-cell *matHeaderCellDef> completed </th>
-            <td mat-cell *matCellDef="let element"> {{element.completed}} </td>
-        </ng-container>
-        <ng-container matColumnDef="_id">
-            <th mat-header-cell *matHeaderCellDef> _id </th>
-            <td mat-cell *matCellDef="let element">
-                <a [routerLink]="[element._id]">{{element._id}}</a>
-            </td>
+        <ng-container *ngFor="let col of displayedColumns; let i = index" matColumnDef="{{col}}">
+            <th mat-header-cell *matHeaderCellDef>{{col}}</th>
+            <ng-container *ngIf="col !== '_id'; else id">
+                <!--TODO: decide by ref col !!!!-->
+                <td mat-cell *matCellDef="let element">{{element[col]}}</td>
+            </ng-container>
+            <ng-template #id>
+                <td mat-cell *matCellDef="let element">
+                    <a [routerLink]="[element[col]]">{{element[col]}}</a>
+                </td>
+            </ng-template>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

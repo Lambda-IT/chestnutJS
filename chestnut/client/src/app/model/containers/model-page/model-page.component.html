@@ -1,9 +1,23 @@
-<!-- <ng-container *ifSome="fieldMap$ | async; else noneTemplate; let fieldMap">
-    <app-modellist></app-modellist>
+<ng-container *ngIf="model$ | async; let model">
+
+    <ng-container *ngIf="model.errors">
+        ERROR {{model.errors[0].message}}
+    </ng-container>
+
+    <ng-container *ifNone="model.data">
+        No data found
+    </ng-container>
+
+    <ng-container *ifSome="model.data; else noneTemplate; let data">
+        <ng-container *ifSome="properties$ | async; else noneTemplate; let properties">
+            <app-modellist [displayedColumns]="properties" [dataSource]="data"></app-modellist>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noneTemplate>
+        <div class="spinner-container">
+            <mat-spinner class="spinner" *ngIf="model.loading"></mat-spinner>
+        </div>
+    </ng-template>
+
 </ng-container>
-<ng-template #noneTemplate>
-    <div class="spinner-container">
-        <mat-spinner class="spinner" *ngIf="loading$ | async"></mat-spinner>
-    </div>
-</ng-template> -->
-<app-modellist></app-modellist>

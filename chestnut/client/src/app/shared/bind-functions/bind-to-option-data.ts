@@ -3,10 +3,10 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { fromNullable, Option, none } from 'fp-ts/lib/Option';
 
-export const bindToOptionData = <T>(modelNameParam: string) => (
+export const bindToOptionData = <T>(modelNameParam: string, suffix: string) => (
     source: Observable<ApolloQueryResult<T>>
 ): Observable<ApolloQueryResult<Option<T>>> =>
     source.pipe(
-        map(p => ({ ...p, data: fromNullable(p.data && p.data[modelNameParam + 'ById']) })),
+        map(p => ({ ...p, data: fromNullable(p.data && p.data[modelNameParam + suffix]) })),
         catchError(err => of({ errors: err.graphQLErrors, data: none }))
     ) as Observable<ApolloQueryResult<Option<T>>>;
