@@ -7,10 +7,14 @@ import { ErrorType } from '@shared/bind-functions';
 import { Either } from 'fp-ts/lib/Either';
 import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
 
-export interface FormlyFieldConfigMap {
-    [key: string]: FormlyFieldConfig[];
+export interface ModelPageModel {
+    displayedColumnMap: Option<{ [key: string]: string[] }>;
+    loaded: boolean;
+    loading: boolean;
+    error: Option<ErrorType>;
 }
-export interface ModelState {
+
+export interface ModelDetailPageModel {
     formFieldConfigMap: Option<FormlyFieldConfigMap>;
     propertyMap: Option<{ [key: string]: string[] }>;
     loaded: boolean;
@@ -18,22 +22,45 @@ export interface ModelState {
     error: Option<ErrorType>;
 }
 
+export interface FormlyFieldConfigMap {
+    [key: string]: FormlyFieldConfig[];
+}
+export interface ModelState {
+    modelDetailPageModel: ModelDetailPageModel;
+    modelDetailPage: ModelPageModel;
+}
+
 const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
     metadata.fold<ModelState>(
-        l => ({ loaded: false, loading: false, error: some(l), formFieldConfigMap: none, propertyMap: none }),
+        l => ({
+            modelDetailPageModel: {
+                loaded: false,
+                loading: false,
+                error: some(l),
+                formFieldConfigMap: none,
+                propertyMap: none,
+            },
+            modelDetailPage: {
+                loaded: false,
+                loading: false,
+                error: some(l),
+                displayedColumnMap: none,
+            },
+        }),
         r => ({
-            loaded: true,
-            loading: true,
-            formFieldConfigMap: some(
-                r.models.reduce(
-                    (acc, model) => {
-                        return { ...acc, [model.name]: transformMetadataToForm(model) };
-                    },
-                    {} as FormlyFieldConfigMap
-                )
-            ),
-            propertyMap: some(transformMetadataToProperties(r)),
-            error: none,
+            modelDetailPageModel: {
+                loaded: true,
+                loading: true,
+                formFieldConfigMap: some(transformMetadataToForm(r)),
+                propertyMap: some(transformMetadataToProperties(r)),
+                error: none,
+            },
+            modelDetailPage: {
+                loaded: true,
+                loading: true,
+                displayedColumnMap: some(transformMetadataToProperties(r)),
+                error: none,
+            },
         })
     );
 
@@ -47,18 +74,27 @@ export const reducer = new ReducerBuilder<ModelState>()
         ...transformMetadata(action.payload),
     }))
     .build({
-        loaded: false,
-        loading: false,
-        error: none,
-        formFieldConfigMap: none,
-        propertyMap: none,
+        modelDetailPageModel: {
+            loaded: false,
+            loading: false,
+            error: none,
+            formFieldConfigMap: none,
+            propertyMap: none,
+        },
+        modelDetailPage: {
+            loaded: false,
+            loading: false,
+            error: none,
+            displayedColumnMap: none,
+        },
     });
 
 export const getModelState = createFeatureSelector<ModelState>('model');
 export const modelSelectors = {
-    getFormFieldConfigMap: createSelector(getModelState, state => state.formFieldConfigMap),
-    isLoading: createSelector(getModelState, state => state.loading),
-    getProperties: createSelector(getModelState, state => state.propertyMap),
+    getFormFieldConfigMap: createSelector(getModelState, state => state.modelDetailPageModel.formFieldConfigMap),
+    isLoading: createSelector(getModelState, state => state.modelDetailPageModel.loading),
+    getProperties: createSelector(getModelState, state => state.modelDetailPageModel.propertyMap),
+    getModelPageModel: createSelector(getModelState, state => state.modelDetailPage),
 };
 
 export function modelReducer(state: ModelState, action: Action): ModelState {
