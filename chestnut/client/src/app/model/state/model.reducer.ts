@@ -95,10 +95,7 @@ export const reducer = new ReducerBuilder<ModelState>()
 export const getModelState = createFeatureSelector<ModelState>('model');
 export const modelSelectors = {
     getFormFieldConfigMap: createSelector(getModelState, state => state.modelDetailPageModel.formFieldConfigMap),
-    isLoading: createSelector(getModelState, state => state.modelDetailPageModel.loading),
     getProperties: createSelector(getModelState, state => state.modelDetailPageModel.propertyMap),
-    getModelPageModel: createSelector(getModelState, state => state.modelPageModel),
-    getModelDetailPageModel: createSelector(getModelState, state => state.modelDetailPageModel),
 };
 
 export function modelReducer(state: ModelState, action: Action): ModelState {
