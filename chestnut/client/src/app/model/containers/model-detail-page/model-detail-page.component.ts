@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { modelSelectors } from '../../state/model.reducer';
+import { modelSelectors, ModelDetailPageModel } from '../../state/model.reducer';
 import { Observable } from 'rxjs';
-import { Option } from 'fp-ts/lib/Option';
-import { mergeMap, map } from 'rxjs/operators';
+import { Option, some, none, fromNullable } from 'fp-ts/lib/Option';
+import { mergeMap, map, tap, withLatestFrom } from 'rxjs/operators';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { composeByIdQuery } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
+import { NetworkStatus, ApolloQueryResult } from 'apollo-client';
+import { bindToOptionData } from '@shared/bind-functions';
 
 @Component({
     selector: 'app-model-detail-page',
@@ -16,8 +18,7 @@ import { fromFilteredSome } from '@shared/effects-helper';
     styleUrls: ['./model-detail-page.component.scss'],
 })
 export class ModelDetailPageComponent {
-    fieldMap$: Observable<Option<FormlyFieldConfig[]>>;
-    loading$: Observable<boolean>;
+    fields$: Observable<Option<FormlyFieldConfig[]>>;
     properties$: Observable<Option<string[]>>;
     model$: Observable<any>;
 
@@ -25,11 +26,10 @@ export class ModelDetailPageComponent {
         const idParam = this.activatedRoute.snapshot.params['id'];
         const modelNameParam = this.activatedRoute.snapshot.params['modelName'];
 
-        this.fieldMap$ = this.store
-            .select(modelSelectors.getFormFieldConfigMap)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
-
-        this.loading$ = this.store.select(modelSelectors.isLoading);
+        this.fields$ = this.store.select(modelSelectors.getFormFieldConfigMap).pipe(
+            map(x => x.map(p => p[modelNameParam])),
+            tap(x => console.log('dfsdgfdshfgdfg--gf-j--j-fhd-jhj-', x))
+        );
 
         this.properties$ = this.store
             .select(modelSelectors.getProperties)
@@ -44,7 +44,7 @@ export class ModelDetailPageComponent {
                         fetchPolicy: 'cache-and-network',
                     }).valueChanges
             ),
-            map(p => (p.data && p.data[modelNameParam + 'ById']) || false)
+            bindToOptionData(modelNameParam)
         );
     }
 }

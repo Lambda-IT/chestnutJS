@@ -1,10 +1,19 @@
-<ng-container *ifSome="fieldMap$ | async; else noneTemplate; let fieldMap">
-    <ng-container *ngIf="model$ | async; else noneTemplate; let model">
-        <app-modeldetail [fields]="fieldMap" [model]="model"></app-modeldetail>
+<ng-container *ngIf="model$ | async; let model">
+
+    <ng-container *ngIf="model.error">
+        TODO: ERROR
     </ng-container>
+
+    <ng-container *ifSome="model.data; else noneTemplate; let data">
+        <ng-container *ifSome="fields$ | async; else noneTemplate; let fields">
+            <app-modeldetail [fields]="fields" [model]="data"></app-modeldetail>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noneTemplate>
+        <div class="spinner-container">
+            <mat-spinner class="spinner" *ngIf="model.loading"></mat-spinner>
+        </div>
+    </ng-template>
+
 </ng-container>
-<ng-template #noneTemplate>
-    <div class="spinner-container">
-        <mat-spinner class="spinner" *ngIf="loading$ | async"></mat-spinner>
-    </div>
-</ng-template>

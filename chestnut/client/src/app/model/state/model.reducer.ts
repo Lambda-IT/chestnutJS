@@ -27,7 +27,7 @@ export interface FormlyFieldConfigMap {
 }
 export interface ModelState {
     modelDetailPageModel: ModelDetailPageModel;
-    modelDetailPage: ModelPageModel;
+    modelPageModel: ModelPageModel;
 }
 
 const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
@@ -40,7 +40,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 formFieldConfigMap: none,
                 propertyMap: none,
             },
-            modelDetailPage: {
+            modelPageModel: {
                 loaded: false,
                 loading: false,
                 error: some(l),
@@ -50,14 +50,14 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
         r => ({
             modelDetailPageModel: {
                 loaded: true,
-                loading: true,
+                loading: false,
                 formFieldConfigMap: some(transformMetadataToForm(r)),
                 propertyMap: some(transformMetadataToProperties(r)),
                 error: none,
             },
-            modelDetailPage: {
+            modelPageModel: {
                 loaded: true,
-                loading: true,
+                loading: false,
                 displayedColumnMap: some(transformMetadataToProperties(r)),
                 error: none,
             },
@@ -65,12 +65,15 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
     );
 
 export const reducer = new ReducerBuilder<ModelState>()
-    .handle(MetadataLoading, (state, action) => ({
-        ...state,
-        loading: true,
-    }))
+    .handle(
+        MetadataLoading,
+        (state, action) =>
+            <ModelState>{
+                modelPageModel: { ...state.modelPageModel, loading: true },
+                modelDetailPageModel: { ...state.modelDetailPageModel, loading: true },
+            }
+    )
     .handle(MetadataLoaded, (state, action) => ({
-        ...state,
         ...transformMetadata(action.payload),
     }))
     .build({
@@ -81,7 +84,7 @@ export const reducer = new ReducerBuilder<ModelState>()
             formFieldConfigMap: none,
             propertyMap: none,
         },
-        modelDetailPage: {
+        modelPageModel: {
             loaded: false,
             loading: false,
             error: none,
@@ -94,7 +97,8 @@ export const modelSelectors = {
     getFormFieldConfigMap: createSelector(getModelState, state => state.modelDetailPageModel.formFieldConfigMap),
     isLoading: createSelector(getModelState, state => state.modelDetailPageModel.loading),
     getProperties: createSelector(getModelState, state => state.modelDetailPageModel.propertyMap),
-    getModelPageModel: createSelector(getModelState, state => state.modelDetailPage),
+    getModelPageModel: createSelector(getModelState, state => state.modelPageModel),
+    getModelDetailPageModel: createSelector(getModelState, state => state.modelDetailPageModel),
 };
 
 export function modelReducer(state: ModelState, action: Action): ModelState {

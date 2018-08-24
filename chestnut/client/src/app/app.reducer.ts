@@ -2,7 +2,7 @@ import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
-import { Action } from '@ngrx/store';
+import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AppState {
     loaded: boolean;
@@ -20,7 +20,7 @@ export const reducer = new ReducerBuilder<AppState>()
         ...state,
         ...action.payload.fold<AppState>(
             l => ({ loaded: false, loading: false, error: some(l), model: none }),
-            r => ({ loaded: true, loading: true, model: some(r), error: none })
+            r => ({ loaded: true, loading: false, model: some(r), error: none })
         ),
     }))
     .build({
@@ -29,6 +29,11 @@ export const reducer = new ReducerBuilder<AppState>()
         error: none,
         model: none,
     });
+
+export const getAppState = createFeatureSelector<AppState>('app');
+export const modelSelectors = {
+    error: createSelector(getAppState, state => state.error),
+};
 
 export function appReducer(state: AppState, action: Action): AppState {
     return reducer(state, action);

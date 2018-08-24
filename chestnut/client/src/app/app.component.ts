@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { ErrorType } from '@shared/bind-functions';
+import { Option } from 'fp-ts/lib/Option';
+import { Observable } from 'rxjs';
+import { modelSelectors } from './app.reducer';
+import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
@@ -7,4 +13,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
     title = 'client';
+
+    error$: Observable<Option<ErrorType>>;
+
+    constructor(private store: Store<any>) {
+        this.error$ = this.store
+            .select(modelSelectors.error)
+            .pipe(tap(x => console.log('----sadasdf-sdf-dsf--df-ds-', x)));
+    }
 }
