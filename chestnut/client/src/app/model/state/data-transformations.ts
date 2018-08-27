@@ -41,6 +41,7 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
                                     label: p.name,
                                     disabled: p.type === 'ObjectID',
                                     required: p.required,
+                                    pattern: p.regExp
                                 },
                             }
                     ),
