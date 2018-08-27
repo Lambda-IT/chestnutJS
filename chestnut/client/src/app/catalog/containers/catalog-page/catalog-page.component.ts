@@ -2,15 +2,10 @@ import { Component, OnDestroy, EventEmitter, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import {
-    catalogSelectors,
-    CatalogModel,
-    CountQueryExecuted,
-    AllCountQueriesExecuted,
-} from '../../state/catalog.reducer';
+import { catalogSelectors, CatalogModel, CountQueryExecuted } from '../../state/catalog.reducer';
 import { composeCountQuery } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
-import { mergeMap, tap, takeUntil, map, withLatestFrom, take } from 'rxjs/operators';
+import { mergeMap, takeUntil, map, take } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
 import { bindToOptionData } from '@shared/bind-functions';
 
@@ -35,8 +30,11 @@ export class CatalogPageComponent implements OnDestroy, OnInit {
             .pipe(
                 fromFilteredSome(),
                 take(1),
-                mergeMap(p => forkJoin(p.map(c => count(c.name)))),
-                map(x => this.store.dispatch(new AllCountQueriesExecuted())),
+                mergeMap(p =>
+                    forkJoin(p.map(c => count(c.name))).pipe(
+                        map(joined => this.store.dispatch(new CountQueryExecuted(joined)))
+                    )
+                ),
                 takeUntil(this.destroying$)
             )
             .subscribe();
@@ -61,7 +59,6 @@ export const countQuery = (apollo: Apollo, store: Store<any>) => (modelName: str
             bindToOptionData(modelName, 'Count'),
             map(x => x.data),
             fromFilteredSome(),
-            tap((p: number) => store.dispatch(new CountQueryExecuted({ modelName, count: p }))),
-            tap(x => console.log('-------------------------------', x)),
+            map((x: number) => ({ name: modelName, count: x })),
             take(1)
         );

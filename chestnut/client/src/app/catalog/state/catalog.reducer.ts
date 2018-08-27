@@ -19,12 +19,7 @@ export interface CatalogPageState {
 
 export class CountQueryExecuted {
     readonly type = 'COUNT_QUERY_EXECUTED';
-    constructor(public payload: { modelName: string; count: number }) {}
-}
-
-export class AllCountQueriesExecuted {
-    readonly type = 'ALL_COUNT_QUERIES_EXECUTED';
-    constructor() {}
+    constructor(public payload: { name: string; count: number }[]) {}
 }
 
 const reducer = new ReducerBuilder<CatalogPageState>()
@@ -35,17 +30,7 @@ const reducer = new ReducerBuilder<CatalogPageState>()
     }))
     .handle(CountQueryExecuted, (state, action) => ({
         ...state,
-        model: state.model.map(x => [
-            ...x
-                .filter(f => f.name === action.payload.modelName)
-                .map(c => ({ name: c.name, count: action.payload.count })),
-            ...x.filter(f => f.name !== action.payload.modelName),
-        ]),
-    }))
-    .handle(AllCountQueriesExecuted, (state, action) => ({
-        ...state,
-        loaded: true,
-        loading: false,
+        model: state.model.map(x => action.payload),
     }))
     .build({
         model: none,
