@@ -1,9 +1,9 @@
-<a style="padding-left: 0; margin-bottom: 20px" mat-button color="primary" [routerLink]="['..']">
+<a class="nav-back" mat-button color="primary" [routerLink]="['..']">
     <mat-icon>navigate_before</mat-icon>Back to Todos</a>
 
-<mat-card style="width: 800px; margin-right: auto">
-    <mat-card-title class="model_card__item_title">
-        Todo
+<mat-card class="model-card__item">
+    <mat-card-title class="model-card__item_title">
+        {{ modelName }}
     </mat-card-title>
     <mat-card-subtitle>
         <form [formGroup]="form" (ngSubmit)="submit(model)">

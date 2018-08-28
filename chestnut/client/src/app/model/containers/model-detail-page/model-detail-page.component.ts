@@ -19,28 +19,29 @@ import { bindToOptionData } from '@shared/bind-functions';
 export class ModelDetailPageComponent {
     fields$: Observable<Option<FormlyFieldConfig[]>>;
     model$: Observable<any>;
+    modelNameParam: string;
 
     constructor(private store: Store<any>, private activatedRoute: ActivatedRoute, private apollo: Apollo) {
         const idParam = this.activatedRoute.snapshot.params['id'];
-        const modelNameParam = this.activatedRoute.snapshot.params['modelName'];
+        this.modelNameParam = this.activatedRoute.snapshot.params['modelName'];
 
         const properties$ = this.store
             .select(modelSelectors.getProperties)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
+            .pipe(map(x => x.map(p => p[this.modelNameParam])));
 
         this.fields$ = this.store
             .select(modelSelectors.getFormFieldConfigMap)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
+            .pipe(map(x => x.map(p => p[this.modelNameParam])));
 
         this.model$ = properties$.pipe(
             fromFilteredSome(),
             mergeMap(p =>
                 this.apollo
                     .watchQuery({
-                        query: composeByIdQuery(idParam, modelNameParam, p),
+                        query: composeByIdQuery(idParam, this.modelNameParam, p),
                         fetchPolicy: 'cache-and-network',
                     })
-                    .valueChanges.pipe(bindToOptionData(modelNameParam, 'ById'))
+                    .valueChanges.pipe(bindToOptionData(this.modelNameParam, 'ById'))
             )
         );
     }

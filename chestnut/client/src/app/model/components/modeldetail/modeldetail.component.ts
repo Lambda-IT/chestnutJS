@@ -16,6 +16,9 @@ export class ModeldetailComponent {
     @Input()
     fields: FormlyFieldConfig[];
 
+    @Input()
+    modelName: string;
+
     form = new FormGroup({});
 
     submit(model: any) {}
