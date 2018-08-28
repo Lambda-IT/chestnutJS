@@ -1,18 +1,20 @@
-<ng-container *ifSome="model$ | async; else noneTemplate; let model">
-    <ng-container *ngFor="let item of model">
-        <mat-card class="model-card__item">
-            <mat-card-title class="model-card__item_title">
-                <a href="" [routerLink]="['/model', item.name]">{{item.name}}</a>
-            </mat-card-title>
-            <mat-card-subtitle>
-                {{item.count}} Item(s)
-            </mat-card-subtitle>
-            <mat-card-actions>
-                <a mat-button href="" target="_blank">
-                    <mat-icon>add_circle</mat-icon>
-                </a>
-            </mat-card-actions>
-        </mat-card>
+<ng-container *ngIf="loaded$ | async; else noneTemplate; let model">
+    <ng-container *ifSome="model$ | async; let model">
+        <ng-container *ngFor="let item of model">
+            <mat-card class="model-card__item">
+                <mat-card-title class="model-card__item_title">
+                    <a href="" [routerLink]="['/model', item.name]">{{item.name}}</a>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    {{item.count}} Item(s)
+                </mat-card-subtitle>
+                <mat-card-actions>
+                    <a mat-button href="" target="_blank">
+                        <mat-icon>add_circle</mat-icon>
+                    </a>
+                </mat-card-actions>
+            </mat-card>
+        </ng-container>
     </ng-container>
 </ng-container>
 <ng-template #noneTemplate>

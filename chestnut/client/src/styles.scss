@@ -29,3 +29,12 @@ body {
 .mat-card-subtitle {
     color: inherit;
 }
+
+.spinner-container {
+    display: flex;
+    height: 100%;
+
+    .spinner {
+        margin: auto;
+    }
+}

@@ -31,11 +31,13 @@ const reducer = new ReducerBuilder<CatalogPageState>()
     .handle(CountQueryExecuted, (state, action) => ({
         ...state,
         model: state.model.map(x => action.payload),
+        loaded: true,
+        loading: false,
     }))
     .build({
         model: none,
-        loaded: false, // indicate that data are ready
-        loading: false, // indicate Loading
+        loaded: false,
+        loading: false,
         error: none,
     });
 
@@ -43,14 +45,15 @@ export const getCatalogState = createFeatureSelector<CatalogPageState>('catalog'
 export const catalogSelectors = {
     getCatalogModel: createSelector(getCatalogState, state => state.model),
     isLoading: createSelector(getCatalogState, state => state.loading),
+    loaded: createSelector(getCatalogState, state => state.loaded),
 };
 
 const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
     metadata.fold<CatalogPageState>(
-        l => ({ loaded: false, loading: false, error: some(l), model: none }),
+        l => ({ loaded: true, loading: false, error: some(l), model: none }),
         r => ({
-            loaded: true,
-            loading: false,
+            loaded: false,
+            loading: true,
             model: some(r.models.map(p => <CatalogModel>{ name: p.name })),
             error: none,
         })

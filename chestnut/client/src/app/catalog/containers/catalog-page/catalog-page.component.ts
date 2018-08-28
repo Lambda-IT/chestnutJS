@@ -17,11 +17,13 @@ import { bindToOptionData } from '@shared/bind-functions';
 export class CatalogPageComponent implements OnDestroy {
     private destroying$ = new EventEmitter();
     model$: Observable<Option<CatalogModel[]>>;
+    loaded$: Observable<boolean>;
     loading$: Observable<boolean>;
 
     constructor(private store: Store<any>, private apollo: Apollo) {
         this.model$ = this.store.select(catalogSelectors.getCatalogModel);
         this.loading$ = this.store.select(catalogSelectors.isLoading);
+        this.loaded$ = this.store.select(catalogSelectors.loaded);
 
         const count = countQuery(this.apollo);
 
@@ -48,7 +50,7 @@ export const countQuery = (apollo: Apollo) => (modelName: string) =>
     apollo
         .watchQuery({
             query: composeCountQuery(modelName),
-            fetchPolicy: 'network-only',
+            fetchPolicy: 'cache-and-network',
         })
         .valueChanges.pipe(
             bindToOptionData(modelName, 'Count'),
