@@ -23,7 +23,7 @@ export class CatalogPageComponent implements OnDestroy {
         this.model$ = this.store.select(catalogSelectors.getCatalogModel);
         this.loading$ = this.store.select(catalogSelectors.isLoading);
 
-        const count = countQuery(this.apollo, this.store);
+        const count = countQuery(this.apollo);
 
         this.model$
             .pipe(
@@ -44,7 +44,7 @@ export class CatalogPageComponent implements OnDestroy {
     }
 }
 
-export const countQuery = (apollo: Apollo, store: Store<any>) => (modelName: string) =>
+export const countQuery = (apollo: Apollo) => (modelName: string) =>
     apollo
         .watchQuery({
             query: composeCountQuery(modelName),
