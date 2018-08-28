@@ -3,7 +3,7 @@ import { DocumentNode } from 'graphql';
 
 export const composeByIdQuery = (id: string, modelName, properties: string[]): DocumentNode =>
     gql`
-        query get${modelName}ById {
+        query get${capitalize(modelName)}ById {
             ${modelName}ById(_id: "${id}"){
                 ${[...properties]}
             }
@@ -23,8 +23,21 @@ export const composeCountQuery = (modelName: string): DocumentNode =>
         ${modelName}Count
     }`;
 
-export const composeCreateMutation = (modelName: string, model: any): DocumentNode =>
+// export const composeCreateMutation = (modelName: string, model: any, properties: string[]): DocumentNode =>
+//     gql`
+//         mutation create${modelName}($model: model!) {
+//             ${modelName}Create(record: $model)
+//         }`;
+
+export const composeUpdateMutation = (modelName: string): DocumentNode =>
     gql`
-        mutation create${modelName}($model: model) {
-            ${modelName}Create(record: model)
+        mutation update${capitalize(modelName)}($input: UpdateByIdTodoInput!) {
+            ${modelName}UpdateById(record: $input) { recordId }
         }`;
+
+const capitalize = (input: string) =>
+    input &&
+    input
+        .charAt(0)
+        .toUpperCase()
+        .concat(input.slice(1));

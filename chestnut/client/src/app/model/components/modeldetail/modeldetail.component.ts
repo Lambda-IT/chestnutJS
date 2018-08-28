@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { map, withLatestFrom, merge, tap } from 'rxjs/operators';
@@ -12,15 +12,17 @@ import { Memento, unit } from '@shared/bind-functions';
     styleUrls: ['./modeldetail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeldetailComponent implements OnDestroy {
-    private destroying$ = new EventEmitter();
-
+export class ModeldetailComponent {
     @Input()
     model: any;
     @Input()
     fields: FormlyFieldConfig[];
     @Input()
     modelName: string;
+
+    // tslint:disable-next-line:no-output-rename
+    @Output('submit')
+    submit$ = new EventEmitter();
 
     model$: Observable<Memento<any>>;
     reset$ = new EventEmitter();
@@ -32,24 +34,18 @@ export class ModeldetailComponent implements OnDestroy {
             tap(x => x.createMemento())
         );
 
-        this.model$ = fromModel$.pipe(
-            merge(
-                this.reset$.pipe(
-                    withLatestFrom(fromModel$),
-                    map(([_, m]) => {
-                        m.restoreMemento();
-                        return m;
-                    })
-                )
-            )
+        const onReset$ = this.reset$.pipe(
+            withLatestFrom(fromModel$),
+            map(([_, m]) => {
+                m.restoreMemento();
+                return m;
+            })
         );
+
+        this.model$ = fromModel$.pipe(merge(onReset$));
     }
 
     submit(model: any) {
-        console.log(model);
-    }
-
-    ngOnDestroy() {
-        this.destroying$.emit();
+        this.submit$.emit(model);
     }
 }
