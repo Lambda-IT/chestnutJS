@@ -1,11 +1,13 @@
 <ng-container *ngIf="model$ | async; let model">
 
-    <ng-container *ngIf="model.errors">
-        ERROR {{model.errors[0].message}}
-    </ng-container>
+    <ng-container *ngIf="!model.loading">
+        <ng-container *ngIf="model.errors">
+            ERROR {{model.errors[0].message}}
+        </ng-container>
 
-    <ng-container *ifNone="model.data">
-        No data found
+        <ng-container *ifNone="model.data">
+            No data found
+        </ng-container>
     </ng-container>
 
     <ng-container *ifSome="model.data; else noneTemplate; let data">
