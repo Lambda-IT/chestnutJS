@@ -5,14 +5,18 @@
             ERROR {{model.errors[0].message}}
         </ng-container>
 
-        <ng-container *ifNone="model.data">
-            No data found
+        <ng-container *ifSome="model.data; let data">
+            <ng-container *ngIf="data.length === 0">
+                No data found
+            </ng-container>
         </ng-container>
     </ng-container>
 
     <ng-container *ifSome="model.data; else noneTemplate; let data">
         <ng-container *ifSome="properties$ | async; else noneTemplate; let properties">
-            <app-modellist [displayedColumns]="properties" [dataSource]="data"></app-modellist>
+            <ng-container *ngIf="data.length > 0">
+                <app-modellist [displayedColumns]="properties" [dataSource]="data"></app-modellist>
+            </ng-container>
         </ng-container>
     </ng-container>
 
