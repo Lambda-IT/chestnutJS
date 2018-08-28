@@ -1,4 +1,4 @@
-import { Component, OnDestroy, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnDestroy, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
@@ -14,9 +14,8 @@ import { bindToOptionData } from '@shared/bind-functions';
     templateUrl: './catalog-page.component.html',
     styleUrls: ['./catalog-page.component.scss'],
 })
-export class CatalogPageComponent implements OnDestroy, OnInit {
+export class CatalogPageComponent implements OnDestroy {
     private destroying$ = new EventEmitter();
-    onInit$ = new EventEmitter<boolean>();
     model$: Observable<Option<CatalogModel[]>>;
     loading$: Observable<boolean>;
 
@@ -42,10 +41,6 @@ export class CatalogPageComponent implements OnDestroy, OnInit {
 
     ngOnDestroy() {
         this.destroying$.emit();
-    }
-
-    ngOnInit(): void {
-        this.onInit$.emit();
     }
 }
 
