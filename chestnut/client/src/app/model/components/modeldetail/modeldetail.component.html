@@ -11,7 +11,8 @@
             <form [formGroup]="form" (ngSubmit)="submit(model.state)">
                 <formly-form [form]="form" [fields]="fields" [model]="model.state">
                     <button mat-raised-button color="primary" type="submit">Save changes</button>
-                    <button style="margin-left: 5px" mat-raised-button color="accent" (click)="reset$.emit()">Reset changes</button>
+                    <button class="model-card__item_reset-button" mat-raised-button color="accent" (click)="reset$.emit()">Reset
+                        changes</button>
                 </formly-form>
             </form>
         </mat-card-subtitle>
