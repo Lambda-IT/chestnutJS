@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { modelSelectors } from '../../state/model.reducer';
 import { Observable } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import { mergeMap, map, tap, take, withLatestFrom } from 'rxjs/operators';
+import { mergeMap, map, take, withLatestFrom } from 'rxjs/operators';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';

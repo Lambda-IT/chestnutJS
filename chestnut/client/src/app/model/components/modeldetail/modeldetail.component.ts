@@ -4,7 +4,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { map, withLatestFrom, merge, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
-import { Memento, unit } from '@shared/bind-functions';
+import * as memento from '@shared/bind-functions';
 
 @Component({
     selector: 'app-modeldetail',
@@ -24,25 +24,25 @@ export class ModeldetailComponent {
     @Output('submit')
     submit$ = new EventEmitter();
 
-    model$: Observable<Memento<any>>;
+    model$: Observable<memento.Mementoable<any>>;
     reset$ = new EventEmitter();
     form = new FormGroup({});
 
     constructor() {
-        const fromModel$ = fromInput(this, 'model').pipe(
-            map(m => unit(m)),
-            tap(x => x.createMemento())
+        const onSave$ = this.submit$.pipe(map(memento.unit));
+        const fromModel$ = fromInput(this, 'model').pipe(map(m => memento.unit(m)));
+
+        const memento$ = fromModel$.pipe(
+            map(x => x.createMemento()),
+            merge(onSave$.pipe(map(x => x.createMemento())))
         );
 
         const onReset$ = this.reset$.pipe(
-            withLatestFrom(fromModel$),
-            map(([_, m]) => {
-                m.restoreMemento();
-                return m;
-            })
+            withLatestFrom(memento$, fromModel$),
+            map(([_, mem, m]) => m.restoreMemento(mem))
         );
 
-        this.model$ = fromModel$.pipe(merge(onReset$));
+        this.model$ = fromModel$.pipe(merge(onReset$, onSave$));
     }
 
     submit(model: any) {

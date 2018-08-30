@@ -1,21 +1,23 @@
-export interface Memento<T> {
-    createMemento(): void;
-    restoreMemento(): void;
-    state(): T;
+export interface Mementoable<T> {
+    state: T;
+    createMemento(): T;
+    restoreMemento(memento: T): Mementoable<T>;
 }
 
-export const unit = <T>(source: T): Memento<T> => {
+export const unit = <T>(source: T): Mementoable<T> => {
     let state: T = JSON.parse(JSON.stringify(source));
-    let memento: T;
-    return {
+    const that = {
         createMemento() {
-            memento = JSON.parse(JSON.stringify(state));
+            return JSON.parse(JSON.stringify(state));
         },
-        restoreMemento() {
+        restoreMemento(memento: T) {
             state = JSON.parse(JSON.stringify(memento));
+            return that;
         },
-        state() {
+        get state() {
             return state;
         },
     };
+
+    return that;
 };
