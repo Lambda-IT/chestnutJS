@@ -50,7 +50,7 @@ export const countQuery = (apollo: Apollo) => (modelName: string) =>
     apollo
         .watchQuery({
             query: composeCountQuery(modelName),
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'network-only',
         })
         .valueChanges.pipe(
             bindToOptionData(modelName, 'Count'),

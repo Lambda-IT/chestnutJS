@@ -10,6 +10,7 @@ import { Apollo } from 'apollo-angular';
 import { composeByIdQuery, composeUpdateMutation } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { bindToOptionData } from '@shared/bind-functions';
+import { filterProperties } from '@shared/helper-functions';
 
 @Component({
     selector: 'app-model-detail-page',
@@ -68,8 +69,3 @@ export class ModelDetailPageComponent implements OnDestroy {
         this.destroying$.emit();
     }
 }
-
-const filterProperties = ([data, prop]) =>
-    Object.getOwnPropertyNames(data)
-        .filter(p => prop.indexOf(p) > -1)
-        .reduce((acc, curr) => ({ ...acc, [curr]: data[curr] }), {});

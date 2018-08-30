@@ -23,15 +23,15 @@ export const composeCountQuery = (modelName: string): DocumentNode =>
         ${modelName}Count
     }`;
 
-// export const composeCreateMutation = (modelName: string, model: any, properties: string[]): DocumentNode =>
-//     gql`
-//         mutation create${modelName}($model: model!) {
-//             ${modelName}Create(record: $model)
-//         }`;
+export const composeCreateMutation = (modelName: string): DocumentNode =>
+    gql`
+        mutation create${capitalize(modelName)}($input: CreateOne${capitalize(modelName)}Input!) {
+            ${modelName}Create(record: $input) { recordId }
+        }`;
 
 export const composeUpdateMutation = (modelName: string): DocumentNode =>
     gql`
-        mutation update${capitalize(modelName)}($input: UpdateByIdTodoInput!) {
+        mutation update${capitalize(modelName)}($input: UpdateById${capitalize(modelName)}Input!) {
             ${modelName}UpdateById(record: $input) { recordId }
         }`;
 
