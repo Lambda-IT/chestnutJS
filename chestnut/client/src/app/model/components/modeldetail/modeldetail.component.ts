@@ -18,7 +18,10 @@ export class ModeldetailComponent {
     @Input()
     fields: FormlyFieldConfig[];
     @Input()
-    modelName: string;
+    title: string;
+
+    @Input()
+    showBackNavigation: boolean;
 
     // tslint:disable-next-line:no-output-rename
     @Output('submit')
@@ -30,7 +33,8 @@ export class ModeldetailComponent {
 
     constructor() {
         const onSave$ = this.submit$.pipe(map(memento.unit));
-        const fromModel$ = fromInput(this, 'model').pipe(map(m => memento.unit(m)));
+
+        const fromModel$ = fromInput<ModeldetailComponent>(this)('model').pipe(map(m => memento.unit(m)));
 
         const memento$ = fromModel$.pipe(
             map(x => x.createMemento()),

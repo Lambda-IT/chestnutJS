@@ -13,6 +13,7 @@ import { ModellistComponent } from './components/modellist/modellist.component';
 import { ModelDetailPageComponent } from './containers/model-detail-page/model-detail-page.component';
 import { StoreModule } from '@ngrx/store';
 import { modelReducer } from './state/model.reducer';
+import { CreateModelDetailPageComponent } from './containers/create-model-detail-page/create-model-detail-page.component';
 
 @NgModule({
     imports: [
@@ -25,6 +26,12 @@ import { modelReducer } from './state/model.reducer';
         StoreModule.forFeature('model', modelReducer),
         EffectsModule.forFeature([]),
     ],
-    declarations: [ModelPageComponent, ModeldetailComponent, ModellistComponent, ModelDetailPageComponent],
+    declarations: [
+        ModelPageComponent,
+        ModeldetailComponent,
+        ModellistComponent,
+        ModelDetailPageComponent,
+        CreateModelDetailPageComponent,
+    ],
 })
 export class ModelModule {}

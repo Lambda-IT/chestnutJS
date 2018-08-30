@@ -9,7 +9,7 @@
                     {{item.count}} Item(s)
                 </mat-card-subtitle>
                 <mat-card-actions>
-                    <a mat-button href="" target="_blank">
+                    <a mat-button href="" [routerLink]="['/model/add', item.name]">
                         <mat-icon>add_circle</mat-icon>
                     </a>
                 </mat-card-actions>
