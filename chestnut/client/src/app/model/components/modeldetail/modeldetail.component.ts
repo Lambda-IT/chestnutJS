@@ -23,8 +23,7 @@ export class ModeldetailComponent {
     @Input()
     showBackNavigation: boolean;
 
-    // tslint:disable-next-line:no-output-rename
-    @Output('submit')
+    @Output()
     submit$ = new EventEmitter();
 
     model$: Observable<memento.Mementoable<any>>;

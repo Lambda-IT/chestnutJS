@@ -8,9 +8,9 @@
             {{ title }}
         </mat-card-title>
         <mat-card-subtitle>
-            <form [formGroup]="form" (ngSubmit)="submit(model.state)">
+            <form [formGroup]="form">
                 <formly-form [form]="form" [fields]="fields" [model]="model.state">
-                    <button mat-raised-button color="primary" type="submit">Save changes</button>
+                    <button mat-raised-button color="primary" type="submit" (click)="submit(model.state)">Save changes</button>
                     <button class="model-card__item_reset-button" mat-raised-button color="accent" (click)="reset$.emit()">Reset
                         changes
                     </button>
