@@ -1,9 +1,9 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { modelSelectors } from '../../state/model.reducer';
 import { Observable } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import { mergeMap, map, take, withLatestFrom } from 'rxjs/operators';
+import { mergeMap, map, take, withLatestFrom, takeUntil } from 'rxjs/operators';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
@@ -16,7 +16,9 @@ import { bindToOptionData } from '@shared/bind-functions';
     templateUrl: './model-detail-page.component.html',
     styleUrls: ['./model-detail-page.component.scss'],
 })
-export class ModelDetailPageComponent {
+export class ModelDetailPageComponent implements OnDestroy {
+    private destroying$ = new EventEmitter();
+
     fields$: Observable<Option<FormlyFieldConfig[]>>;
     model$: Observable<any>;
     modelNameParam: string;
@@ -56,9 +58,14 @@ export class ModelDetailPageComponent {
                         mutation: composeUpdateMutation(this.modelNameParam),
                         variables: { input: p },
                     })
-                )
+                ),
+                takeUntil(this.destroying$)
             )
             .subscribe();
+    }
+
+    ngOnDestroy() {
+        this.destroying$.emit();
     }
 }
 
