@@ -7,7 +7,9 @@ export function createHomeController(server: Chestnut) {
     function getHome(req: Request, res: Response, next) {
         res.locals.testText = 'Hello World';
 
-        server.models.User.find({}).then(users => {
+        // server.logger.info('models', Object.keys(server.store.models));
+
+        server.store.models.user.find({}).then(users => {
             res.locals.users = users;
             res.render('test');
             next();
