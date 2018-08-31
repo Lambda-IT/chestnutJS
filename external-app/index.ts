@@ -46,7 +46,7 @@ initChestnut(
         sessionSecret: '___feifji$gö$gsdfgprüi45u834u584wtti',
         modelPrefix: 'dev',
     },
-    initMiddleware
+    initMiddleware,
 )
     .then(s => {
         server = s;
@@ -58,5 +58,5 @@ initChestnut(
         e =>
             server && server.logger
                 ? server.logger.error('error starting server', e)
-                : console.error('error starting server', e)
+                : console.error('error starting server', e),
     );

@@ -15,6 +15,7 @@ import { createStoreAsync, Store } from './store';
 import { initGraphQLSchema } from './schema';
 import { createMetadataController } from './controller';
 import { correlationId, registerGlobalExceptionHandler, resultProcessor, Response, Request } from './middleware';
+import { Mongooser, createApi } from './api/model-api';
 
 export const BASE_URL = '/chestnut';
 
@@ -39,7 +40,7 @@ export type Chestnut = {
 
 export async function initChestnut(
     options: ChestnutOptions,
-    initMiddleware?: (app) => Promise<void>
+    initMiddleware?: (app) => Promise<void>,
 ): Promise<Chestnut> {
     const logger = createLogger();
     registerGlobalExceptionHandler(logger);
@@ -77,8 +78,10 @@ export async function initChestnut(
             useMongoClient: true,
             /* other options */
         },
-        options.modelPrefix
+        options.modelPrefix,
     );
+
+    await createApi(app, store, logger);
 
     // session stuff after static middleware
     app.set('trust proxy', 1); // trust first proxy
@@ -89,7 +92,7 @@ export async function initChestnut(
             resave: false,
             saveUninitialized: false,
             store: new MongoStore({ mongooseConnection: store.connection }),
-        })
+        }),
     );
 
     const schema = initGraphQLSchema(store, options.modelPrefix);

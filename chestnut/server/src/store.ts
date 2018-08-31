@@ -22,7 +22,7 @@ export async function createStoreAsync(
     models: { [name: string]: any },
     connectionString: string,
     connectionOptions?: mongoose.ConnectionOptions,
-    modelPrefix?: string
+    modelPrefix?: string,
 ): Promise<Store> {
     if (!connectionStringRegex.test(connectionString)) {
         throw new Error(`${connectionString}: is not a valid connectionString`);
@@ -46,7 +46,7 @@ export async function createStoreAsync(
         const model = models[key];
         database.models[modelName] = new model().getModelForClass(
             model,
-            getOptions(options, kebabCase(modelName), modelPrefix)
+            getOptions(options, kebabCase(modelName), modelPrefix),
         );
     });
 

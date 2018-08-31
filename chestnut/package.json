@@ -1,19 +1,19 @@
 {
-    "name": "chestnut",
+    "name": "chestnutjs",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "client": "cd ./client && npm start",
         "server": "cd ./server && npm start",
-        "start": "./node_modules/.bin/concurrently 'npm run server' 'npm run client'"
+        "start": "concurrently 'npm run server' 'npm run client'"
     },
     "keywords": [],
     "author": "",
     "license": "MIT",
     "devDependencies": {
-        "concurrently": "^3.5.0",
-        "typescript": "^2.4.2"
-    },
-    "dependencies": {}
+        "concurrently": "^3.6.0",
+        "prettier": "^1.13.7",
+        "typescript": "2.7.2"
+    }
 }
