@@ -11,6 +11,11 @@ export interface AppState {
     model: Option<MetadataDto>;
 }
 
+export class Login {
+    readonly type = 'LOGIN';
+    constructor(public payload: { name: string; password: number }) {}
+}
+
 export const reducer = new ReducerBuilder<AppState>()
     .handle(MetadataLoading, (state, action) => ({
         ...state,

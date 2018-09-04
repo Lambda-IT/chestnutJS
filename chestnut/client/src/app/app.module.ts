@@ -22,6 +22,7 @@ import { AppEffects } from './app.effect';
 import { AppState, appReducer } from './app.reducer';
 import { CatalogModule } from './catalog/catalog.module';
 import { ModelModule } from './model/model.module';
+import { LoginDialogComponent } from '@core/login-dialog/login-dialog.component';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -67,6 +68,7 @@ export const reducers: ActionReducerMap<State> = {
     ],
     providers: [],
     bootstrap: [AppComponent],
+    entryComponents: [LoginDialogComponent], // https://github.com/angular/material2/issues/1491
 })
 export class AppModule {
     constructor(apollo: Apollo, httpLink: HttpLink, ngrxCache: NgrxCache, configService: AppConfigService) {
