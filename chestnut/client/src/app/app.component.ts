@@ -44,12 +44,7 @@ export class AppComponent implements OnDestroy {
             )
             .subscribe();
 
-        onLogin$
-            .pipe(
-                tap(x => alert('ydfkndskhg')),
-                takeUntil(this.destroying$)
-            )
-            .subscribe(x => this.store.dispatch(new Login(x)));
+        onLogin$.pipe(takeUntil(this.destroying$)).subscribe(x => this.store.dispatch(new Login(x)));
     }
 
     ngOnDestroy(): void {
