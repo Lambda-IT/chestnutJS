@@ -23,6 +23,7 @@ import { AppState, appReducer } from './app.reducer';
 import { CatalogModule } from './catalog/catalog.module';
 import { ModelModule } from './model/model.module';
 import { LoginDialogComponent } from '@core/login-dialog/login-dialog.component';
+import { LoginModule } from './login/login.module';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -65,6 +66,7 @@ export const reducers: ActionReducerMap<State> = {
         }),
         CatalogModule,
         ModelModule,
+        LoginModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

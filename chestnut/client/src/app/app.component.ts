@@ -2,11 +2,8 @@ import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';
-import { Observable, of } from 'rxjs';
-import { modelSelectors, Login } from './app.reducer';
-import { tap, takeUntil, map } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
-import { LoginDialogComponent, LoginDialogData } from '@core/login-dialog/login-dialog.component';
+import { Observable } from 'rxjs';
+import { modelSelectors } from './app.reducer';
 
 @Component({
     selector: 'app-root',
@@ -14,37 +11,37 @@ import { LoginDialogComponent, LoginDialogData } from '@core/login-dialog/login-
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
+    private destroying$ = new EventEmitter();
     title = 'client';
-
     loginClicked$ = new EventEmitter();
-    destroying$ = new EventEmitter();
 
     error$: Observable<Option<ErrorType>>;
 
-    constructor(private store: Store<any>, public dialog: MatDialog) {
+    constructor(private store: Store<any>) {
+        // , public dialog: MatDialog) {
         this.error$ = this.store.select(modelSelectors.error);
 
-        const onLogin$ = new EventEmitter<LoginDialogData>();
-        const loginResult$ = of({ error: '  Ohhh neiiin' });
+        // const onLogin$ = new EventEmitter<LoginDialogData>();
+        // const loginResult$ = of({ error: '  Ohhh neiiin' });
 
-        this.loginClicked$
-            .pipe(
-                tap(x => console.log('------loginClicked------', x)),
-                map(_ =>
-                    this.dialog.open(LoginDialogComponent, {
-                        width: '400px',
-                        data: {
-                            loginDialogData: { username: '', password: '' },
-                            loginResult: loginResult$,
-                            login: onLogin$,
-                        },
-                    })
-                ),
-                takeUntil(this.destroying$)
-            )
-            .subscribe();
+        // this.loginClicked$
+        //     .pipe(
+        //         tap(x => console.log('------loginClicked------', x)),
+        //         map(_ =>
+        //             this.dialog.open(LoginDialogComponent, {
+        //                 width: '400px',
+        //                 data: {
+        //                     loginDialogData: { username: '', password: '' },
+        //                     loginResult: loginResult$,
+        //                     login: onLogin$,
+        //                 },
+        //             })
+        //         ),
+        //         takeUntil(this.destroying$)
+        //     )
+        //     .subscribe();
 
-        onLogin$.pipe(takeUntil(this.destroying$)).subscribe(x => this.store.dispatch(new Login(x)));
+        // onLogin$.pipe(takeUntil(this.destroying$)).subscribe(x => this.store.dispatch(new Login(x)));
     }
 
     ngOnDestroy(): void {
