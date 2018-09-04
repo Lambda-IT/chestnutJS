@@ -2,9 +2,9 @@ import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { modelSelectors, Login } from './app.reducer';
-import { tap, takeUntil, map, mergeMap } from 'rxjs/operators';
+import { tap, takeUntil, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent, LoginDialogData } from '@core/login-dialog/login-dialog.component';
 
@@ -24,20 +24,29 @@ export class AppComponent implements OnDestroy {
     constructor(private store: Store<any>, public dialog: MatDialog) {
         this.error$ = this.store.select(modelSelectors.error);
 
-        const dialog$ = this.loginClicked$.pipe(
-            tap(x => console.log('------loginClicked------', x)),
-            map(_ =>
-                this.dialog.open(LoginDialogComponent, {
-                    width: '400px',
-                    data: <LoginDialogData>{ username: '', password: '' },
-                })
-            )
-        );
+        const onLogin$ = new EventEmitter<LoginDialogData>();
+        const loginResult$ = of({ error: '  Ohhh neiiin' });
 
-        dialog$
+        this.loginClicked$
             .pipe(
-                mergeMap(x => x.afterClosed()),
-                tap(x => console.log('------afterClosed--------------', x)),
+                tap(x => console.log('------loginClicked------', x)),
+                map(_ =>
+                    this.dialog.open(LoginDialogComponent, {
+                        width: '400px',
+                        data: {
+                            loginDialogData: { username: '', password: '' },
+                            loginResult: loginResult$,
+                            login: onLogin$,
+                        },
+                    })
+                ),
+                takeUntil(this.destroying$)
+            )
+            .subscribe();
+
+        onLogin$
+            .pipe(
+                tap(x => alert('ydfkndskhg')),
                 takeUntil(this.destroying$)
             )
             .subscribe(x => this.store.dispatch(new Login(x)));

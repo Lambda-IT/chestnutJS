@@ -1,5 +1,6 @@
 import { Component, Inject, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Observable } from 'rxjs';
 
 export interface LoginDialogData {
     username: string;
@@ -12,11 +13,13 @@ export interface LoginDialogData {
     styleUrls: ['./login-dialog.component.scss'],
 })
 export class LoginDialogComponent {
-    @Output()
-    login = new EventEmitter();
-
     constructor(
-        public dialogRef: MatDialogRef<LoginDialogComponent, LoginDialogData>,
-        @Inject(MAT_DIALOG_DATA) public data: LoginDialogData
+        public dialogRef: MatDialogRef<LoginDialogComponent>,
+        @Inject(MAT_DIALOG_DATA)
+        public data: {
+            loginDialogData: LoginDialogData;
+            loginResult: Observable<any>;
+            login: EventEmitter<LoginDialogData>;
+        }
     ) {}
 }
