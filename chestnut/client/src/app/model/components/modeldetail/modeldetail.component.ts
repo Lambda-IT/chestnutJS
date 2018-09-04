@@ -36,8 +36,8 @@ export class ModeldetailComponent {
         const fromModel$ = fromInput<ModeldetailComponent>(this)('model').pipe(map(m => memento.unit(m)));
 
         const memento$ = fromModel$.pipe(
-            map(x => x.createMemento()),
-            merge(onSave$.pipe(map(x => x.createMemento())))
+            merge(onSave$),
+            map(x => x.createMemento())
         );
 
         const onReset$ = this.reset$.pipe(
