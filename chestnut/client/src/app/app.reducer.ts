@@ -11,9 +11,33 @@ export interface AppState {
     model: Option<MetadataDto>;
 }
 
+export interface PasswordLogin {
+    client_id: string;
+    grant_type: 'password' | 'refresh_token';
+    password: string;
+    username: string;
+}
+
+export interface TokenResult {
+    token_type: string;
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
+}
+
 export class Login {
     readonly type = 'LOGIN';
-    constructor(public payload: { name: string; password: number }) {}
+    constructor(public payload: { username: string; password: string }) {}
+}
+
+export class LoginFailed {
+    readonly type = 'LOGIN_FAILED';
+    constructor() {}
+}
+
+export class LoginSuccess {
+    readonly type = 'LOGIN_SUCCESS';
+    constructor(public payload: TokenResult) {}
 }
 
 export const reducer = new ReducerBuilder<AppState>()
