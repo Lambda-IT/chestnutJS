@@ -7,7 +7,7 @@
         <mat-card-title class="model-card__item_title">
             {{ title }}
         </mat-card-title>
-        <mat-card-subtitle>
+        <mat-card-content>
             <form [formGroup]="form">
                 <formly-form [form]="form" [fields]="fields" [model]="model.state">
                     <button mat-raised-button color="primary" type="submit" (click)="submit(model.state)">Save changes</button>
@@ -16,7 +16,7 @@
                     </button>
                 </formly-form>
             </form>
-        </mat-card-subtitle>
+        </mat-card-content>
 
     </mat-card>
 </ng-container>
