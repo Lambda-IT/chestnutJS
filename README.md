@@ -1,2 +1,3 @@
 # chestnutJS
-Headless CMS with Angular 5 Admin UI and GraphQL, mongoose (typegoose) backend
+
+Headless CMS with Angular 6.1 Admin UI and GraphQL, mongoose (typegoose) backend
