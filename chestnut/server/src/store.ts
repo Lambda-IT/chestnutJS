@@ -41,9 +41,10 @@ export async function createStoreAsync(
         },
     };
 
-    Object.keys(models).forEach(key => {
+    Object.keys(models).forEach(key => { // Typegoose models
         const modelName = camelcase(key);
         const model = models[key];
+        // returns the corresponding Mongoose Model
         database.models[modelName] = new model().getModelForClass(
             model,
             getOptions(options, kebabCase(modelName), modelPrefix),

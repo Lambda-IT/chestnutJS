@@ -1,0 +1,9 @@
+.model-card__item {
+    width: 300px;
+    display: inline-block;
+    margin: 20px;
+
+    .model-card__item_title {
+        text-transform: capitalize;
+    }
+}

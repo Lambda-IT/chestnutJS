@@ -4,6 +4,8 @@
 
 export const environment = {
     production: false,
+    apiBaseUrl: 'http://localhost:9000/chestnut',
+    frontendUrl: 'http://localhost:4200',
 };
 
 /*

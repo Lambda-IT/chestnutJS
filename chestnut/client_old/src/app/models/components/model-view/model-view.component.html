@@ -1,0 +1,37 @@
+<a mat-button color="primary" [routerLink]="['/']">
+    <mat-icon>navigate_before</mat-icon>Back to overview</a>
+
+<!-- <div>
+    <select (change)="setColumnVisible($event.target.value)">
+        <option selected hidden>Columns ({{modelView.properties.length}})</option>
+        <option *ngFor="let prop of modelView.properties" [value]="prop.name">
+            <span *ngIf="!prop.hidden">✓ </span>{{prop.name}}</option>
+    </select>
+</div> -->
+
+<h1>{{ modelView.name }} ({{modelData.length}})</h1>
+<mat-form-field>
+    <mat-select placeholder="Columns ({{modelView.properties.length}})" (selectionChange)="setColumnVisible($event.value)">
+        <mat-option *ngFor="let prop of modelView.properties" [value]="prop.name">
+            <span *ngIf="!prop.hidden">✓ </span>{{prop.name}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+
+
+<div class=" mat-elevation-z4">
+    <mat-table #table [dataSource]="tableData" matSort>
+        <ng-container matColumnDef="{{prop.name}}" *ngFor="let prop of modelView.properties">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{prop.name}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a *ngIf="prop.name === '_id'; else row" [routerLink]="[element[prop.name]]">{{element[prop.name]}}</a>
+                <ng-template #row>
+                    {{element[prop.name]}}
+                </ng-template>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="propColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: propColumns;"></mat-row>
+    </mat-table>
+</div>

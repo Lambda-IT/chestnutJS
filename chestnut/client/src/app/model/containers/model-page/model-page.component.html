@@ -1,0 +1,29 @@
+<ng-container *ngIf="model$ | async; let model">
+
+    <ng-container *ngIf="!model.loading">
+        <ng-container *ngIf="model.errors">
+            ERROR {{model.errors[0].message}}
+        </ng-container>
+
+        <ng-container *ifSome="model.data; let data">
+            <ng-container *ngIf="data.length === 0">
+                No data found
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ifSome="model.data; else noneTemplate; let data">
+        <ng-container *ifSome="properties$ | async; else noneTemplate; let properties">
+            <ng-container *ngIf="data.length > 0">
+                <app-modellist [displayedColumns]="properties" [dataSource]="data"></app-modellist>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noneTemplate>
+        <div class="spinner-container">
+            <mat-spinner class="spinner" *ngIf="model.loading"></mat-spinner>
+        </div>
+    </ng-template>
+
+</ng-container>

@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+@import 'themes/default-theme.scss';
+
+@import 'app/core/header/header.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+    @include app-header-component-theme($theme);
+}
+
+@include angular-material-theme($app-theme);
+@include custom-components-theme($app-theme);
+
+// * {
+//     box-sizing: border-box;
+// }
+
+body {
+    margin: 0;
+}
+
+.content {
+    height: calc(100vh - 125px);
+    margin: 20px;
+}
+
+a.nav-back {
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.mat-card-subtitle {
+    color: inherit;
+}
+
+.spinner-container {
+    height: 100%;
+
+    .spinner {
+        margin: auto;
+    }
+}
