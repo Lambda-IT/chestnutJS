@@ -10,7 +10,10 @@
         "**/.DS_Store": true,
         "**/.git": true,
         "**/.hg": true,
-        "**/.svn": true
+        "**/.svn": true,
+        "**/*js": {
+            "when": "$(basename).ts"
+        }
     },
     "typescript.autoImportSuggestions.enabled": false,
     "files.insertFinalNewline": true,
