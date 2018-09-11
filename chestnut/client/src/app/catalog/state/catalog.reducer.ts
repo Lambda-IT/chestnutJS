@@ -2,7 +2,7 @@ import { Option, none, some } from 'fp-ts/lib/Option';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
+import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
 import { Either } from 'fp-ts/lib/Either';
 
 export interface CatalogModel {

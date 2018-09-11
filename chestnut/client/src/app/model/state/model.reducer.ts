@@ -1,6 +1,6 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
+import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';

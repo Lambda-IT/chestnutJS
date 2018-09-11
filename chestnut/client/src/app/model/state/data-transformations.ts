@@ -1,6 +1,6 @@
 import { PropertyType } from '../../../../../common/metadata';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { MetadataDto } from '@shared/actions';
+import { MetadataDto } from '@shared/state/actions';
 import { FormlyFieldConfigMap } from './model.reducer';
 
 interface FormMappingType {

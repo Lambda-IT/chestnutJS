@@ -1,7 +1,8 @@
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { createFeatureSelector, Action } from '@ngrx/store';
+import { createFeatureSelector, Action, createSelector } from '@ngrx/store';
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
+import { UserInfo, LoginSuccess, LoginFailed } from '@shared/state/actions';
 
 export interface PasswordLogin {
     client_id: string;
@@ -22,22 +23,8 @@ export class Login {
     constructor(public payload: { username: string; password: string }) {}
 }
 
-export class LoginFailed {
-    readonly type = 'LOGIN_FAILED';
-    constructor(public payload: ErrorType) {}
-}
-
-export class LoginSuccess {
-    readonly type = 'LOGIN_SUCCESS';
-    constructor(public payload: UserInfo) {}
-}
-
-export interface UserInfo {
-    username: string;
-}
-
 export interface LoginState {
-    loggedIn: boolean;
+    // loggedIn: boolean;
     userInfo: Option<UserInfo>;
     error: Option<ErrorType>;
 }
@@ -46,7 +33,7 @@ export const reducer = new ReducerBuilder<LoginState>()
     .handle(LoginSuccess, (state, action) => ({
         ...state,
         error: none,
-        loggedIn: true,
+        // loggedIn: true,
         userInfo: some(action.payload),
     }))
     .handle(LoginFailed, (state, action) => ({
@@ -55,12 +42,14 @@ export const reducer = new ReducerBuilder<LoginState>()
     }))
     .build({
         error: none,
-        loggedIn: false,
+        // loggedIn: false,
         userInfo: none,
     });
 
-export const getModelState = createFeatureSelector<LoginState>('model');
-export const loginSelectors = {};
+export const getLoginState = createFeatureSelector<LoginState>('login');
+export const loginSelectors = {
+    // isLoggedIn: createSelector(getLoginState, state => state.loggedIn),
+};
 
 export function loginReducer(state: LoginState, action: Action): LoginState {
     return reducer(state, action);

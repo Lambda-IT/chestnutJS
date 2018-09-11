@@ -18,6 +18,9 @@ import {
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { NgxFpTsModule } from 'ngx-fp-ts';
+import { AuthGuard } from '@shared/guards/auth-guard';
+import { StoreModule } from '@ngrx/store';
+import { sharedStateReducer } from '@shared/state/reducers';
 
 @NgModule({
     imports: [
@@ -38,6 +41,7 @@ import { NgxFpTsModule } from 'ngx-fp-ts';
         MatDialogModule,
         RouterModule,
         NgxFpTsModule,
+        StoreModule.forFeature('shared', sharedStateReducer),
     ],
     exports: [
         CommonModule,
@@ -56,8 +60,9 @@ import { NgxFpTsModule } from 'ngx-fp-ts';
         MatProgressSpinnerModule,
         MatDialogModule,
         RouterModule,
-        NgxFpTsModule,
+        NgxFpTsModule
     ],
+    providers: [AuthGuard],
     declarations: [],
 })
 export class SharedModule {}

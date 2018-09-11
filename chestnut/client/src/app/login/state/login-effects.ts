@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '@shared/services/app-config.service';
-import { PasswordLogin, Login, LoginSuccess, LoginFailed, TokenResult } from './login-reducer';
+import { PasswordLogin, Login, TokenResult } from './login-reducer';
 import { of, Observable } from 'rxjs';
 import { Effect, Actions } from '@ngrx/effects';
 import { instanceOf } from 'ngrx-reducer-builder';
@@ -8,6 +8,7 @@ import { mergeMap, map } from 'rxjs/operators';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { Action } from '@ngrx/store';
 import { Injectable } from '@angular/core';
+import { LoginFailed, LoginSuccess } from '@shared/state/actions';
 
 @Injectable()
 export class LoginEffects {

@@ -7,7 +7,7 @@ import { AppConfigService } from '@shared/services/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { ModelDescription } from '../../../common/metadata';
-import { MetadataLoaded, MetadataLoading } from '@shared/actions';
+import { MetadataLoaded, MetadataLoading } from '@shared/state/actions';
 
 export interface MetadataDto {
     models: ModelDescription[];

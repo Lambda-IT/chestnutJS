@@ -1,7 +1,7 @@
 import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/actions';
+import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AppState {
