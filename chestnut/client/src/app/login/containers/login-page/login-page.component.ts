@@ -41,7 +41,7 @@ export class LoginPageComponent implements OnDestroy {
                         type: 'password',
                         label: 'Password',
                         placeholder: 'Password',
-                        pattern: '^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[dW]).{8,}$',
+                        // pattern: '^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[dW]).{8,}$',
                     },
                     validators: {
                         validation: Validators.compose([Validators.required]),

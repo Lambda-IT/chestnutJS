@@ -9,10 +9,16 @@ import { bindRemoteCall } from '@shared/bind-functions';
 import { Action } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { LoginFailed, LoginSuccess } from '@shared/state/actions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable()
 export class LoginEffects {
-    constructor(private actions$: Actions, private http: HttpClient, private appConfig: AppConfigService) {}
+    constructor(
+        private actions$: Actions,
+        private http: HttpClient,
+        private appConfig: AppConfigService,
+        private route: ActivatedRoute,
+        private router: Router) { }
 
     @Effect()
     onLogin$ = this.actions$.pipe(
@@ -30,6 +36,7 @@ export class LoginEffects {
                     x.fold<Action>(
                         left => new LoginFailed(left),
                         right => {
+                            this.router.navigate([this.route.snapshot.queryParams['returnUrl'] || '/']);
                             localStorage.setItem('token', JSON.stringify(right));
                             return new LoginSuccess({ username: action.payload.username });
                         }
