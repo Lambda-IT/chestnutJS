@@ -1,26 +1,27 @@
 import * as crypto from 'crypto';
 import { AuthUser } from './models';
+import { success, failure, PasswordTokenRequest } from './identity-lib';
 
-export function createSalt() {
+export const createSalt = () => {
     const len = 8;
     return crypto
         .randomBytes(Math.ceil(len / 2))
         .toString('hex')
         .substring(0, len);
-}
+};
 
-export function computeHash(source: string, salt: string) {
+export const computeHash = (source: string, salt: string) => {
     const hmac = crypto.createHmac('sha1', salt);
     const hash = hmac.update(source);
     return hash.digest('hex');
-}
+};
 
-export function verifyUser(password: string, user: AuthUser) {
-    const testHash = computeHash(password, user.salt);
+export const verifyUser = (passwordTokenRequest: PasswordTokenRequest, authUser: AuthUser) => {
+    const testHash = computeHash(passwordTokenRequest.password, authUser.salt);
 
-    if (testHash === user.passwordHash) {
-        return user;
+    if (testHash === authUser.passwordHash) {
+        return success(authUser);
     }
 
-    throw new Error('INVALID_CREDENTIALS');
-}
+    return failure<string>('INVALID_CREDENTIALS');
+};

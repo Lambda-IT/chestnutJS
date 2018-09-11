@@ -31,9 +31,9 @@
         "graphql": "0.11.7",
         "graphql-compose": "2.9.6",
         "graphql-compose-connection": "2.5.4",
+        "graphql-compose-mongoose": "1.9.4",
         "graphql-compose-pagination": "1.1.2",
         "graphql-extensions": "0.0.5",
-        "graphql-compose-mongoose": "1.9.4",
         "graphql-subscriptions": "0.5.4",
         "helmet": "^3.9.0",
         "jsonwebtoken": "^8.1.0",
@@ -45,6 +45,7 @@
         "passport-http-bearer": "^1.0.1",
         "passport-local": "^1.0.0",
         "passport-oauth2-client-password": "^0.1.2",
+        "rxjs": "^6.3.2",
         "subscriptions-transport-ws": "^0.9.1",
         "typegoose": "^3.6.0",
         "uuid": "^3.1.0"

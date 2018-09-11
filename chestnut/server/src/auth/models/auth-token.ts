@@ -1,4 +1,4 @@
-import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { prop, Typegoose } from 'typegoose';
 
 export enum TokenType {
     refresh = 'refresh',
@@ -6,7 +6,7 @@ export enum TokenType {
 }
 
 export class AuthToken extends Typegoose {
-    @prop({ required: true, unique: true })
+    @prop({ required: true })
     userId: string;
 
     @prop({ required: true })
@@ -17,4 +17,7 @@ export class AuthToken extends Typegoose {
 
     @prop({ required: true, default: 'access', enum: TokenType })
     type: TokenType;
+
+    @prop({ required: true })
+    clientId: string;
 }

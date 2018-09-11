@@ -14,8 +14,9 @@ import { createLogger } from './logger';
 import { createStoreAsync, Store } from './store';
 import { initGraphQLSchema } from './schema';
 import { createMetadataController } from './controller';
-import { correlationId, registerGlobalExceptionHandler, resultProcessor, Response, Request } from './middleware';
-import { Mongooser, createApi } from './api/model-api';
+import { correlationId, registerGlobalExceptionHandler, resultProcessor } from './middleware';
+import { createApi } from './api/model-api';
+import { createAuth } from './auth/auth-api';
 
 export const BASE_URL = '/chestnut';
 
@@ -81,7 +82,8 @@ export async function initChestnut(
         options.modelPrefix,
     );
 
-    await createApi(app, store, logger);
+    createAuth(app, store, logger);
+    createApi(app, store, logger);
 
     // session stuff after static middleware
     app.set('trust proxy', 1); // trust first proxy
