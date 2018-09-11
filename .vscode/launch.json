@@ -10,6 +10,13 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}\\external-app\\index.js",
             "outFiles": ["${workspaceFolder}/**/*.js"]
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch with ng serve",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}\\chestnut\\client"
         }
     ]
 }
