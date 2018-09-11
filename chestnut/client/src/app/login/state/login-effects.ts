@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '@shared/services/app-config.service';
-import { PasswordLogin, Login, TokenResult } from './login-reducer';
+import { PasswordLogin, UserLogin, TokenResult } from './login-reducer';
 import { of, Observable } from 'rxjs';
 import { Effect, Actions } from '@ngrx/effects';
 import { instanceOf } from 'ngrx-reducer-builder';
@@ -22,7 +22,7 @@ export class LoginEffects {
 
     @Effect()
     onLogin$ = this.actions$.pipe(
-        instanceOf(Login),
+        instanceOf(UserLogin),
         mergeMap(action => {
             return bindRemoteCall(() =>
                 login(this.http, this.appConfig)({
