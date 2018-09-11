@@ -33,5 +33,5 @@ export function createAuth(app, store, logger: Log) {
         }
     );
 
-    app.post('/api/auth/token', identity.grant());
+    app.post('/auth/token', identity.grant());
 }

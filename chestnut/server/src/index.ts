@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as bluePromise from 'bluebird';
@@ -55,6 +56,13 @@ export async function initChestnut(
 
     app.use(express.static(options.publicFolder || 'public'));
     app.use(BASE_URL + '/admin', express.static(__dirname + '../../client/dist'));
+
+    // Allow cors on all routes
+    app.use(
+        cors({
+            exposedHeaders: ['Location'],
+        })
+    );
 
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());

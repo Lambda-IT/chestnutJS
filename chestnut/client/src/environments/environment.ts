@@ -5,6 +5,7 @@
 export const environment = {
     production: false,
     apiBaseUrl: 'http://localhost:9000/chestnut',
+    identityBaseUrl: 'http://localhost:9000/auth',
     frontendUrl: 'http://localhost:4200',
 };
 

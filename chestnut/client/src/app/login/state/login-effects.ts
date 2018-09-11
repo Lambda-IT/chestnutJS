@@ -19,7 +19,7 @@ export class LoginEffects {
         instanceOf(Login),
         mergeMap(action => {
             return bindRemoteCall(() =>
-                fakeLogin(this.http, this.appConfig)({
+                login(this.http, this.appConfig)({
                     client_id: 'chestnut_admin',
                     grant_type: 'password',
                     username: action.payload.username,
@@ -41,7 +41,7 @@ export class LoginEffects {
 }
 
 const login = (http: HttpClient, appConfig: AppConfigService) => (data: PasswordLogin): Observable<TokenResult> =>
-    http.post<TokenResult>(appConfig.buildApiUrl('/auth/token'), data);
+    http.post<TokenResult>(appConfig.buildIdentityUrl('/token'), data);
 
 const fakeLogin = (http: HttpClient, appConfig: AppConfigService) => (data: PasswordLogin): Observable<TokenResult> =>
     of({
