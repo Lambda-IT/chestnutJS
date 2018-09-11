@@ -11,6 +11,7 @@
         "**/.git": true,
         "**/.hg": true,
         "**/.svn": true,
+        "**/*js.map": true,
         "**/*js": {
             "when": "$(basename).ts"
         }
