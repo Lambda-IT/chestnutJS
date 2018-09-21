@@ -28,3 +28,9 @@ export class LoginSuccess {
     readonly type = 'LOGIN_SUCCESS';
     constructor(public payload: UserInfo) {}
 }
+
+
+export class TokenLogin {
+    readonly type = 'TOKEN_LOGIN';
+    constructor(public payload: { refresh_token: string }) {}
+}

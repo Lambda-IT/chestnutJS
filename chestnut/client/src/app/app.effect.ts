@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
-import { map, filter, tap, withLatestFrom, mergeMap, startWith } from 'rxjs/operators';
+import { map, filter, withLatestFrom, mergeMap, startWith } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { State } from './app.module';
 import { AppConfigService } from '@shared/services/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { ModelDescription } from '../../../common/metadata';
-import { MetadataLoaded, MetadataLoading } from '@shared/state/actions';
+import { MetadataLoaded, MetadataLoading, TokenLogin } from '@shared/state/actions';
 
 export interface MetadataDto {
     models: ModelDescription[];
@@ -20,14 +20,15 @@ export class AppEffects {
         private http: HttpClient,
         private store: Store<State>,
         private appConfig: AppConfigService
-    ) {}
+    ) { }
 
-    @Effect()
     onRootInit$ = this.actions$.pipe(
         withLatestFrom(this.store),
         map(([_, store]) => store),
-        filter(x => !x.app.loading && !x.app.loaded),
-        tap(x => console.log('load app module', x.app)),
+        filter(x => !x.app.loading && !x.app.loaded));
+
+    @Effect()
+    onloadCatalog$ = this.onRootInit$.pipe(
         mergeMap(_ =>
             bindRemoteCall(() => loadCatalog(this.http, this.appConfig)).pipe(
                 // map(x => bindDecode(MetadataInDtoRT, jsonDecodeString)(x)),
@@ -36,7 +37,15 @@ export class AppEffects {
             )
         )
     );
+
+    @Effect()
+    onTokenLogin$ = this.onRootInit$.pipe(
+        filter(_ => !!getRefreshToken()),
+        map(_ => new TokenLogin({ refresh_token: getRefreshToken() }))
+    );
 }
 
 const loadCatalog = (http: HttpClient, appConfig: AppConfigService) =>
     http.get<MetadataDto>(appConfig.buildApiUrl('/metadata'));
+
+const getRefreshToken = () => JSON.parse(localStorage.getItem('token') || '{}').refresh_token;

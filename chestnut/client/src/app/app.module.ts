@@ -23,7 +23,12 @@ import { AppState, appReducer } from './app.reducer';
 import { CatalogModule } from './catalog/catalog.module';
 import { ModelModule } from './model/model.module';
 import { LoginDialogComponent } from '@core/login-dialog/login-dialog.component';
-import { LoginModule } from './login/login.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
+import { loginReducer, LoginState } from './login/state/login-reducer';
+import { LoginEffects } from './login/state/login-effects';
+import { LoginPageComponent } from './login/containers/login-page/login-page.component';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -32,24 +37,29 @@ const metaReducers = environment.production ? [] : [logger];
 
 export interface State {
     app: AppState;
+    login: LoginState;
     router: RouterReducerState;
     apollo: any;
 }
 
 export const reducers: ActionReducerMap<State> = {
     app: appReducer,
+    login: loginReducer,
     router: routerReducer,
     apollo: apolloReducer,
 };
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, LoginPageComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         ApolloModule,
         HttpLinkModule, // Interceptor !! import from shared
+        ReactiveFormsModule,
+        FormlyModule.forRoot(),
+        FormlyMaterialModule,
         CoreModule,
         SharedModule,
         StaticModule,
@@ -59,14 +69,13 @@ export const reducers: ActionReducerMap<State> = {
         }),
         StoreModule.forRoot(reducers, { metaReducers }),
         NgrxCacheModule,
-        EffectsModule.forRoot([AppEffects]),
+        EffectsModule.forRoot([AppEffects, LoginEffects]),
         StoreDevtoolsModule.instrument({
             name: 'NgRx Chestnut Store DevTools',
             logOnly: environment.production,
         }),
         CatalogModule,
-        ModelModule,
-        LoginModule,
+        ModelModule
     ],
     providers: [],
     bootstrap: [AppComponent],
