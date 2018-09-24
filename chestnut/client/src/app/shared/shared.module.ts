@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     MatButtonModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatIconModule,
     MatMenuModule,
     MatListModule,
@@ -27,6 +28,7 @@ import { sharedStateReducer } from '@shared/state/reducers';
         CommonModule,
         MatButtonModule,
         MatToolbarModule,
+        MatTooltipModule,
         MatIconModule,
         MatMenuModule,
         MatListModule,
@@ -47,6 +49,7 @@ import { sharedStateReducer } from '@shared/state/reducers';
         CommonModule,
         MatButtonModule,
         MatToolbarModule,
+        MatTooltipModule,
         MatIconModule,
         MatMenuModule,
         MatListModule,

@@ -38,7 +38,7 @@
             Sign in
         </button>
 
-        <button *ngIf="model.isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu">
+        <button *ngIf="model.isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu" matTooltip="Logged in as: {{model.userInfo.getOrElse().username}}">
             <mat-icon>person</mat-icon>
         </button>
         <mat-menu #toolbarUserMenu="matMenu">

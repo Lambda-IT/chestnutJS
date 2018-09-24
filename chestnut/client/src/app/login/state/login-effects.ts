@@ -38,6 +38,7 @@ export class LoginEffects {
                         right => {
                             this.router.navigate([this.route.snapshot.queryParams['returnUrl'] || '/']);
                             localStorage.setItem('token', JSON.stringify(right));
+                            localStorage.setItem('user', JSON.stringify({ username: action.payload.username }));
                             return new ApplyLoginSuccessAction({ username: action.payload.username });
                         }
                     )
@@ -62,7 +63,8 @@ export class LoginEffects {
                         left => new ApplyLoginFailedAction(left),
                         right => {
                             localStorage.setItem('token', JSON.stringify(right));
-                            return new ApplyLoginSuccessAction({ username: '???' });
+                            const user = <{ username: string }>JSON.parse(localStorage.getItem('user'));
+                            return new ApplyLoginSuccessAction({ username: user.username });
                         }
                     )
                 )
