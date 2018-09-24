@@ -7,7 +7,7 @@
             <span>ChestnutJS</span>
         </div>
         <mat-nav-list>
-            <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()" >
+            <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()">
                 {{item.label}}
             </a>
         </mat-nav-list>
@@ -23,21 +23,22 @@
                 <img src="assets/img/535chestnut_100849.png" height="40px" />
                 <!-- <mat-icon>mood</mat-icon> TODO: svg icon -->
             </span>
-        
+
             <span class="branding__name">ChestnutJS</span>
         </div>
 
         <span class="toolbar_navitems__navitem">
-            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]" routerLinkActive="active">
+            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
+                routerLinkActive="active">
                 {{item.label}}
             </button>
         </span>
-        
-        <button mat-button class="toolbar__sign-in-button" *ngIf="!isAuthenticated" (click)="loginClicked.emit()">
+
+        <button mat-button class="toolbar__sign-in-button" *ngIf="!model.isAuthenticated" [routerLink]="['./login']">
             Sign in
         </button>
 
-        <button *ngIf="isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu">
+        <button *ngIf="model.isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu">
             <mat-icon>person</mat-icon>
         </button>
         <mat-menu #toolbarUserMenu="matMenu">
@@ -45,9 +46,9 @@
                 <mat-icon>power_off</mat-icon>
                 <span>Logout</span>
             </button>
-      </mat-menu>
+        </mat-menu>
 
-    
+
         <!-- <button mat-icon-button [mat-menu-trigger-for]="menu">
           <mat-icon>more_vert</mat-icon>
         </button> -->

@@ -1,18 +1,10 @@
 import { Either } from 'fp-ts/lib/Either';
 import { ErrorType } from '@shared/bind-functions';
-import { ModelDescription } from '../../../../../common/metadata';
-
-export interface MetadataDto {
-    models: ModelDescription[];
-}
-
-export interface UserInfo {
-    username: string;
-}
+import { MetadataDto } from '../../../../../common/metadata';
 
 export class ApplyMetadataLoadedAction {
     readonly type = 'CATALOG_DATA_LOADED';
-    constructor(public payload: Either<ErrorType, MetadataDto>) {}
+    constructor(public payload: Either<ErrorType, MetadataDto>) { }
 }
 
 export class ApplyMetadataLoadingAction {
@@ -21,16 +13,23 @@ export class ApplyMetadataLoadingAction {
 
 export class ApplyLoginFailedAction {
     readonly type = 'LOGIN_FAILED';
-    constructor(public payload: ErrorType) {}
+    constructor(public payload: ErrorType) { }
 }
 
 export class ApplyLoginSuccessAction {
     readonly type = 'LOGIN_SUCCESS';
-    constructor(public payload: UserInfo) {}
+    constructor(public payload: { username: string; }) { }
 }
 
+export class ApplyLogoutAction {
+    readonly type = 'Logout';
+}
 
 export class TokenLoginAction {
     readonly type = 'TOKEN_LOGIN';
-    constructor(public payload: { refresh_token: string }) {}
+    constructor(public payload: { refresh_token: string }) { }
+}
+
+export class LogoutAction {
+    readonly type = 'LOGOUT';
 }

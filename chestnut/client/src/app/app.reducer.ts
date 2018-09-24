@@ -1,8 +1,9 @@
 import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
-import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, MetadataDto } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
+import { MetadataDto } from '../../../common/metadata';
 
 export interface AppState {
     loaded: boolean;

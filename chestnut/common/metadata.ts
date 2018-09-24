@@ -27,3 +27,7 @@ export interface ModelDescription {
     sort?: string;
     properties: PropertyDescription[];
 }
+
+export interface MetadataDto {
+    models: ModelDescription[];
+}

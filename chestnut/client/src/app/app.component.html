@@ -1,4 +1,4 @@
-<app-header (loginClicked)="loginClicked$.emit($event)">
+<app-header (logoutClicked)="logoutClicked$.emit()" [model]="headerModel$ | async">
 
     <div *ifSome="error$ | async; let error">
         Error: {{error}}

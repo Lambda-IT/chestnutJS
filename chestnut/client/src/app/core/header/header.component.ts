@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, ChangeDetectionStrategy, Input } from '@angular/core';
+import { HeaderModel } from '../../login/login.model';
 
 @Component({
     selector: 'app-header',
@@ -7,9 +8,8 @@ import { Component, EventEmitter, Output, ChangeDetectionStrategy, Input } from 
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-    @Input() isAuthenticated: boolean;
+    @Input() model: HeaderModel;
     @Output() logoutClicked = new EventEmitter();
-    @Output() loginClicked = new EventEmitter();
 
     navigationSideMenu = [{ label: 'Label 1' }, { label: 'Label2'}];
     navigation = [{ label: 'Home', link: '/home' }, { label: 'About', link: '/about' }, { label: 'Catalog', link: '/catalog' }];

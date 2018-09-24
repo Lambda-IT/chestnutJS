@@ -1,11 +1,12 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, MetadataDto } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { Either } from 'fp-ts/lib/Either';
 import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
+import { MetadataDto } from '../../../../../common/metadata';
 
 export interface ModelPageModel {
     displayedColumnMap: Option<{ [key: string]: string[] }>;
