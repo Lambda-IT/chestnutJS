@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';
 import { Observable } from 'rxjs';
-import { modelSelectors } from './app.reducer';
+import { appSelectors } from './app.reducer';
 
 @Component({
     selector: 'app-root',
@@ -19,7 +19,7 @@ export class AppComponent implements OnDestroy {
 
     constructor(private store: Store<any>) {
         // , public dialog: MatDialog) {
-        this.error$ = this.store.select(modelSelectors.error);
+        this.error$ = this.store.select(appSelectors.error);
 
         // const onLogin$ = new EventEmitter<LoginDialogData>();
         // const loginResult$ = of({ error: '  Ohhh neiiin' });
