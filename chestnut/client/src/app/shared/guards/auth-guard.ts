@@ -12,9 +12,7 @@ export class AuthGuard implements CanActivate {
     constructor(private router: Router, private store: Store<any>) { }
 
     canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-
         this.store.dispatch(new TokenLogin({ refresh_token: getRefreshToken() }));
-
         return this.store.select(sharedStateSelectors.isLoggedIn)
             .pipe(
                 fromFilteredSome(),
