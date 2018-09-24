@@ -10,4 +10,7 @@
             </formly-form>
         </form>
     </mat-card-content>
+    <div *ifSome="error$ | async; let error">
+        {{error}}
+    </div>
 </mat-card>

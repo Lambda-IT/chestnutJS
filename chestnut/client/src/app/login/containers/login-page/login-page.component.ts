@@ -1,9 +1,12 @@
 import { Component, EventEmitter, OnDestroy } from '@angular/core';
-import { tap, takeUntil } from 'rxjs/operators';
+import { tap, takeUntil, map } from 'rxjs/operators';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Store } from '@ngrx/store';
-import { UserLoginAction } from '../../state/login-reducer';
+import { UserLoginAction, loginSelectors } from '../../state/login-reducer';
+import { Observable } from 'rxjs';
+import { ErrorType } from '@shared/bind-functions';
+import { Option } from 'fp-ts/lib/Option';
 
 export interface LoginDataModel {
     username: string;
@@ -52,8 +55,13 @@ export class LoginPageComponent implements OnDestroy {
     ];
 
     submit$ = new EventEmitter<LoginDataModel>();
+    error$: Observable<Option<ErrorType>>;
 
     constructor(private store: Store<any>) {
+        this.error$ = this.store.select(loginSelectors.error).pipe(
+            map(formatErrors),
+            tap(console.log));
+
         this.submit$
             .pipe(
                 tap(x => alert(JSON.stringify(x))),
@@ -66,3 +74,15 @@ export class LoginPageComponent implements OnDestroy {
         this.destroying$.emit();
     }
 }
+
+
+const formatErrors = x => x.map(e => {
+    if (ErrorType.is.APIErrorResponse(e)) {
+        if (e.value.apiErrorResponse.error.type === 'ModelError') {
+            return e.value.apiErrorResponse.error.message;
+        } else {
+            const error = e.value.apiErrorResponse.error;
+            return `${error.message}: ${error.fieldErrors.reduce((acc: string, err) => acc + err.message, '')}`;
+        }
+    }
+});

@@ -41,7 +41,8 @@ export const reducer = new ReducerBuilder<LoginState>()
 
 export const getLoginState = createFeatureSelector<LoginState>('login');
 export const loginSelectors = {
-    headerModel: createSelector(getLoginState, state => ({ isAuthenticated: state.userInfo.isSome(), userInfo: state.userInfo }))
+    headerModel: createSelector(getLoginState, state => ({ isAuthenticated: state.userInfo.isSome(), userInfo: state.userInfo })),
+    error: createSelector(getLoginState, state => state.error)
 };
 
 export function loginReducer(state: LoginState, action: Action): LoginState {
