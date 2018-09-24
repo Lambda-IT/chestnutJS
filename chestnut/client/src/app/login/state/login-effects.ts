@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '@shared/services/app-config.service';
-import { PasswordLogin, UserLogin, TokenResult, RefreshTokenLogin } from './login-reducer';
+import { UserLoginAction } from './login-reducer';
 import { of, Observable } from 'rxjs';
 import { Effect, Actions } from '@ngrx/effects';
 import { instanceOf } from 'ngrx-reducer-builder';
@@ -8,8 +8,28 @@ import { mergeMap, map, tap } from 'rxjs/operators';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { Action } from '@ngrx/store';
 import { Injectable } from '@angular/core';
-import { LoginFailed, LoginSuccess, TokenLogin } from '@shared/state/actions';
+import { ApplyLoginFailedAction, ApplyLoginSuccessAction, TokenLoginAction } from '@shared/state/actions';
 import { ActivatedRoute, Router } from '@angular/router';
+
+export interface PasswordLogin {
+    client_id: string;
+    grant_type: 'password';
+    password: string;
+    username: string;
+}
+
+export interface RefreshTokenLogin {
+    client_id: string;
+    grant_type: 'refresh_token';
+    refresh_token: string;
+}
+
+export interface TokenResult {
+    token_type: string;
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
+}
 
 @Injectable()
 export class LoginEffects {
@@ -22,7 +42,7 @@ export class LoginEffects {
 
     @Effect()
     onUserLogin$ = this.actions$.pipe(
-        instanceOf(UserLogin),
+        instanceOf(UserLoginAction),
         mergeMap(action => {
             return bindRemoteCall(() =>
                 userLogin(this.http, this.appConfig)({
@@ -34,11 +54,11 @@ export class LoginEffects {
             ).pipe(
                 map(x =>
                     x.fold<Action>(
-                        left => new LoginFailed(left),
+                        left => new ApplyLoginFailedAction(left),
                         right => {
                             this.router.navigate([this.route.snapshot.queryParams['returnUrl'] || '/']);
                             localStorage.setItem('token', JSON.stringify(right));
-                            return new LoginSuccess({ username: action.payload.username });
+                            return new ApplyLoginSuccessAction({ username: action.payload.username });
                         }
                     )
                 )
@@ -48,7 +68,7 @@ export class LoginEffects {
 
     @Effect()
     onTokenLogin$ = this.actions$.pipe(
-        instanceOf(TokenLogin),
+        instanceOf(TokenLoginAction),
         mergeMap(action => {
             return bindRemoteCall(() =>
                 tokenLogin(this.http, this.appConfig)({
@@ -59,10 +79,10 @@ export class LoginEffects {
             ).pipe(
                 map(x =>
                     x.fold<Action>(
-                        left => new LoginFailed(left),
+                        left => new ApplyLoginFailedAction(left),
                         right => {
                             localStorage.setItem('token', JSON.stringify(right));
-                            return new LoginSuccess({ username: '???' });
+                            return new ApplyLoginSuccessAction({ username: '???' });
                         }
                     )
                 )

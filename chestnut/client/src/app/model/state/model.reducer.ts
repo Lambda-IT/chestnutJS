@@ -1,6 +1,6 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, MetadataDto } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
@@ -66,14 +66,14 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
 
 export const reducer = new ReducerBuilder<ModelState>()
     .handle(
-        MetadataLoading,
+        ApplyMetadataLoadingAction,
         (state, action) =>
             <ModelState>{
                 modelPageModel: { ...state.modelPageModel, loading: true },
                 modelDetailPageModel: { ...state.modelDetailPageModel, loading: true },
             }
     )
-    .handle(MetadataLoaded, (state, action) => ({
+    .handle(ApplyMetadataLoadedAction, (state, action) => ({
         ...transformMetadata(action.payload),
     }))
     .build({

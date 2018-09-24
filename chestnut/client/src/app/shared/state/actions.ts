@@ -10,27 +10,27 @@ export interface UserInfo {
     username: string;
 }
 
-export class MetadataLoaded {
+export class ApplyMetadataLoadedAction {
     readonly type = 'CATALOG_DATA_LOADED';
     constructor(public payload: Either<ErrorType, MetadataDto>) {}
 }
 
-export class MetadataLoading {
+export class ApplyMetadataLoadingAction {
     readonly type = 'CATALOG_DATA_LOADING';
 }
 
-export class LoginFailed {
+export class ApplyLoginFailedAction {
     readonly type = 'LOGIN_FAILED';
     constructor(public payload: ErrorType) {}
 }
 
-export class LoginSuccess {
+export class ApplyLoginSuccessAction {
     readonly type = 'LOGIN_SUCCESS';
     constructor(public payload: UserInfo) {}
 }
 
 
-export class TokenLogin {
+export class TokenLoginAction {
     readonly type = 'TOKEN_LOGIN';
     constructor(public payload: { refresh_token: string }) {}
 }

@@ -2,7 +2,7 @@ import { Option, none, some } from 'fp-ts/lib/Option';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, MetadataDto } from '@shared/state/actions';
 import { Either } from 'fp-ts/lib/Either';
 
 export interface CatalogModel {
@@ -17,18 +17,18 @@ export interface CatalogPageState {
     error: Option<ErrorType>;
 }
 
-export class CountQueryExecuted {
+export class ApplyCountQueryExecutedAction {
     readonly type = 'COUNT_QUERY_EXECUTED';
     constructor(public payload: { name: string; count: number }[]) {}
 }
 
 const reducer = new ReducerBuilder<CatalogPageState>()
-    .handle(MetadataLoading, state => ({ ...state, loading: true }))
-    .handle(MetadataLoaded, (state, action) => ({
+    .handle(ApplyMetadataLoadingAction, state => ({ ...state, loading: true }))
+    .handle(ApplyMetadataLoadedAction, (state, action) => ({
         ...state,
         ...transformMetadata(action.payload),
     }))
-    .handle(CountQueryExecuted, (state, action) => ({
+    .handle(ApplyCountQueryExecutedAction, (state, action) => ({
         ...state,
         model: state.model.map(x => action.payload),
         loaded: true,

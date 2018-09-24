@@ -3,7 +3,7 @@ import { tap, takeUntil } from 'rxjs/operators';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Store } from '@ngrx/store';
-import { UserLogin } from '../../state/login-reducer';
+import { UserLoginAction } from '../../state/login-reducer';
 
 export interface LoginDataModel {
     username: string;
@@ -59,7 +59,7 @@ export class LoginPageComponent implements OnDestroy {
                 tap(x => alert(JSON.stringify(x))),
                 takeUntil(this.destroying$)
             )
-            .subscribe(x => this.store.dispatch(new UserLogin(x)));
+            .subscribe(x => this.store.dispatch(new UserLoginAction(x)));
     }
 
     ngOnDestroy(): void {

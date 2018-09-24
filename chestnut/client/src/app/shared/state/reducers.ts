@@ -1,5 +1,5 @@
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { LoginSuccess, LoginFailed } from '@shared/state/actions';
+import { ApplyLoginSuccessAction, ApplyLoginFailedAction } from '@shared/state/actions';
 import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { Option, some, none } from 'fp-ts/lib/Option';
 
@@ -8,11 +8,11 @@ export interface SharedState {
 }
 
 export const reducer = new ReducerBuilder<SharedState>()
-    .handle(LoginSuccess, (state, _) => ({
+    .handle(ApplyLoginSuccessAction, (state, _) => ({
         ...state,
         loggedIn: some(true),
     }))
-    .handle(LoginFailed, (state, _) => ({
+    .handle(ApplyLoginFailedAction, (state, _) => ({
         ...state,
         loggedIn: some(false)
     }))

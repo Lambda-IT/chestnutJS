@@ -1,7 +1,7 @@
 import { ReducerBuilder } from 'ngrx-reducer-builder';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
-import { MetadataLoading, MetadataLoaded, MetadataDto } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, MetadataDto } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AppState {
@@ -12,11 +12,11 @@ export interface AppState {
 }
 
 export const reducer = new ReducerBuilder<AppState>()
-    .handle(MetadataLoading, (state, action) => ({
+    .handle(ApplyMetadataLoadingAction, (state, action) => ({
         ...state,
         loading: true,
     }))
-    .handle(MetadataLoaded, (state, action) => ({
+    .handle(ApplyMetadataLoadedAction, (state, action) => ({
         ...state,
         ...action.payload.fold<AppState>(
             l => ({ loaded: false, loading: false, error: some(l), model: none }),

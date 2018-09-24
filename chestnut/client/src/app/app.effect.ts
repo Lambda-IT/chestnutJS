@@ -7,8 +7,7 @@ import { AppConfigService } from '@shared/services/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { ModelDescription } from '../../../common/metadata';
-import { MetadataLoaded, MetadataLoading, TokenLogin } from '@shared/state/actions';
-import { getRefreshToken } from '@shared/refresh-token';
+import { ApplyMetadataLoadedAction, ApplyMetadataLoadingAction } from '@shared/state/actions';
 
 export interface MetadataDto {
     models: ModelDescription[];
@@ -33,17 +32,11 @@ export class AppEffects {
         mergeMap(_ =>
             bindRemoteCall(() => loadCatalog(this.http, this.appConfig)).pipe(
                 // map(x => bindDecode(MetadataInDtoRT, jsonDecodeString)(x)),
-                map(result => new MetadataLoaded(result)),
-                startWith(new MetadataLoading())
+                map(result => new ApplyMetadataLoadedAction(result)),
+                startWith(new ApplyMetadataLoadingAction())
             )
         )
     );
-
-    // @Effect()
-    // onTokenLogin$ = this.onRootInit$.pipe(
-    //     // filter(_ => !!getRefreshToken()),
-    //     map(_ => new TokenLogin({ refresh_token: getRefreshToken() }))
-    // );
 }
 
 const loadCatalog = (http: HttpClient, appConfig: AppConfigService) =>

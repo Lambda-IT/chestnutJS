@@ -2,7 +2,7 @@ import { Component, OnDestroy, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
-import { catalogSelectors, CatalogModel, CountQueryExecuted } from '../../state/catalog.reducer';
+import { catalogSelectors, CatalogModel, ApplyCountQueryExecutedAction } from '../../state/catalog.reducer';
 import { composeCountQuery } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { mergeMap, takeUntil, map, take } from 'rxjs/operators';
@@ -33,7 +33,7 @@ export class CatalogPageComponent implements OnDestroy {
                 take(1),
                 mergeMap(p =>
                     forkJoin(p.map(c => count(c.name))).pipe(
-                        map(joined => this.store.dispatch(new CountQueryExecuted(joined)))
+                        map(joined => this.store.dispatch(new ApplyCountQueryExecutedAction(joined)))
                     )
                 ),
                 takeUntil(this.destroying$)
