@@ -39,11 +39,11 @@ export class AppEffects {
         )
     );
 
-    @Effect()
-    onTokenLogin$ = this.onRootInit$.pipe(
-        filter(_ => !!getRefreshToken()),
-        map(_ => new TokenLogin({ refresh_token: getRefreshToken() }))
-    );
+    // @Effect()
+    // onTokenLogin$ = this.onRootInit$.pipe(
+    //     // filter(_ => !!getRefreshToken()),
+    //     map(_ => new TokenLogin({ refresh_token: getRefreshToken() }))
+    // );
 }
 
 const loadCatalog = (http: HttpClient, appConfig: AppConfigService) =>

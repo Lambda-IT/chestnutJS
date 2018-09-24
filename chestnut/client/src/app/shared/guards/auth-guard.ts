@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { sharedStateSelectors } from '../state/reducers';
-import { map } from 'rxjs/operators';
+import { map, skip } from 'rxjs/operators';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { TokenLogin } from '@shared/state/actions';
 import { getRefreshToken } from '@shared/refresh-token';
@@ -15,13 +15,14 @@ export class AuthGuard implements CanActivate {
         this.store.dispatch(new TokenLogin({ refresh_token: getRefreshToken() }));
         return this.store.select(sharedStateSelectors.isLoggedIn)
             .pipe(
+                skip(1),
                 fromFilteredSome(),
                 map(loggedIn => {
-                if (loggedIn) {
-                    return true;
-                }
-                this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-                return false;
-            }));
+                    if (loggedIn) {
+                        return true;
+                    }
+                    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+                    return false;
+                }));
     }
 }
