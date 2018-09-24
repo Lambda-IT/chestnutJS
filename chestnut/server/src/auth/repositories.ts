@@ -13,7 +13,7 @@ export const createAuthTokenRepository = (store: Store): AuthTokenRepository => 
         return result[0]._id.toString();
     },
     async getRefreshToken(token: string, clientId: string): Promise<AuthToken> {
-        return await store['authToken'].findOne({ refreshToken: token, clientId: clientId, type: TokenType.refresh });
+        return await store.models.authToken.findOne({ token: token, clientId: clientId, type: TokenType.refresh });
     },
     async removeRefreshToken(token: string): Promise<string> {
         await store.models.authToken.remove({ token: token, type: TokenType.refresh });

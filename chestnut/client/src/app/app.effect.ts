@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { ModelDescription } from '../../../common/metadata';
 import { MetadataLoaded, MetadataLoading, TokenLogin } from '@shared/state/actions';
+import { getRefreshToken } from '@shared/refresh-token';
 
 export interface MetadataDto {
     models: ModelDescription[];
@@ -48,4 +49,3 @@ export class AppEffects {
 const loadCatalog = (http: HttpClient, appConfig: AppConfigService) =>
     http.get<MetadataDto>(appConfig.buildApiUrl('/metadata'));
 
-const getRefreshToken = () => JSON.parse(localStorage.getItem('token') || '{}').refresh_token;

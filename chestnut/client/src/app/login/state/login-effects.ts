@@ -21,7 +21,7 @@ export class LoginEffects {
         private router: Router) { }
 
     @Effect()
-    onLogin$ = this.actions$.pipe(
+    onUserLogin$ = this.actions$.pipe(
         instanceOf(UserLogin),
         mergeMap(action => {
             return bindRemoteCall(() =>
@@ -47,11 +47,11 @@ export class LoginEffects {
     );
 
     @Effect()
-    test$ = this.actions$.pipe(
+    onTokenLogin$ = this.actions$.pipe(
         instanceOf(TokenLogin),
         mergeMap(action => {
             return bindRemoteCall(() =>
-                fakeTokenLogin(this.http, this.appConfig)({
+                tokenLogin(this.http, this.appConfig)({
                     client_id: 'chestnut_admin',
                     grant_type: 'refresh_token',
                     refresh_token: action.payload.refresh_token
