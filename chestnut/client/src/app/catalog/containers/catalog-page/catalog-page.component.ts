@@ -1,8 +1,9 @@
 import { Component, OnDestroy, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
-import { Option } from 'fp-ts/lib/Option';
-import { catalogSelectors, CatalogModel, ApplyCountQueryExecutedAction } from '../../state/catalog.reducer';
+import {
+    ApplyCountQueryExecutedAction, getCatalogState, CatalogPageState
+} from '../../state/catalog.reducer';
 import { composeCountQuery } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { mergeMap, takeUntil, map, take } from 'rxjs/operators';
@@ -16,19 +17,17 @@ import { bindToOptionData } from '@shared/bind-functions';
 })
 export class CatalogPageComponent implements OnDestroy {
     private destroying$ = new EventEmitter();
-    model$: Observable<Option<CatalogModel[]>>;
-    loaded$: Observable<boolean>;
-    loading$: Observable<boolean>;
+
+    pageModel$: Observable<CatalogPageState>;
 
     constructor(private store: Store<any>, private apollo: Apollo) {
-        this.model$ = this.store.select(catalogSelectors.getCatalogModel);
-        this.loading$ = this.store.select(catalogSelectors.isLoading);
-        this.loaded$ = this.store.select(catalogSelectors.loaded);
+        this.pageModel$ = this.store.select(getCatalogState);
 
         const count = countQuery(this.apollo);
 
-        this.model$
+        this.pageModel$
             .pipe(
+                map(x => x.model),
                 fromFilteredSome(),
                 take(1),
                 mergeMap(p =>
