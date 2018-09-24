@@ -26,7 +26,7 @@ import { LoginDialogComponent } from '@core/login-dialog/login-dialog.component'
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
-import { loginReducer, LoginState } from './login/state/login-reducer';
+import { loginReducer, LoginPageState } from './login/state/login-reducer';
 import { LoginEffects } from './login/state/login-effects';
 import { LoginPageComponent } from './login/containers/login-page/login-page.component';
 
@@ -37,7 +37,7 @@ const metaReducers = environment.production ? [] : [logger];
 
 export interface State {
     app: AppState;
-    login: LoginState;
+    login: LoginPageState;
     router: RouterReducerState;
     apollo: any;
 }

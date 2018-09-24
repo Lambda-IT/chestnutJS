@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy } from '@angular/core';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { tap, takeUntil } from 'rxjs/operators';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Store } from '@ngrx/store';
@@ -58,9 +58,7 @@ export class LoginPageComponent implements OnDestroy {
     error$: Observable<Option<ErrorType>>;
 
     constructor(private store: Store<any>) {
-        this.error$ = this.store.select(loginSelectors.error).pipe(
-            map(formatErrors),
-            tap(console.log));
+        this.error$ = this.store.select(loginSelectors.error);
 
         this.submit$
             .pipe(
@@ -74,15 +72,3 @@ export class LoginPageComponent implements OnDestroy {
         this.destroying$.emit();
     }
 }
-
-
-const formatErrors = x => x.map(e => {
-    if (ErrorType.is.APIErrorResponse(e)) {
-        if (e.value.apiErrorResponse.error.type === 'ModelError') {
-            return e.value.apiErrorResponse.error.message;
-        } else {
-            const error = e.value.apiErrorResponse.error;
-            return `${error.message}: ${error.fieldErrors.reduce((acc: string, err) => acc + err.message, '')}`;
-        }
-    }
-});

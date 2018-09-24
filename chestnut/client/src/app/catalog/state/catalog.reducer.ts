@@ -43,11 +43,6 @@ const reducer = new ReducerBuilder<CatalogPageState>()
     });
 
 export const getCatalogState = createFeatureSelector<CatalogPageState>('catalog');
-export const catalogSelectors = {
-    getCatalogModel: createSelector(getCatalogState, state => state.model),
-    isLoading: createSelector(getCatalogState, state => state.loading),
-    loaded: createSelector(getCatalogState, state => state.loaded),
-};
 
 const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
     metadata.fold<CatalogPageState>(

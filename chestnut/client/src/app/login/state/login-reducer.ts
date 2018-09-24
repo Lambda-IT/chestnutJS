@@ -13,12 +13,12 @@ export interface UserInfo {
     username: string;
 }
 
-export interface LoginState {
+export interface LoginPageState {
     userInfo: Option<UserInfo>;
     error: Option<ErrorType>;
 }
 
-export const reducer = new ReducerBuilder<LoginState>()
+export const reducer = new ReducerBuilder<LoginPageState>()
     .handle(ApplyLoginSuccessAction, (state, action) => ({
         ...state,
         error: none,
@@ -39,12 +39,23 @@ export const reducer = new ReducerBuilder<LoginState>()
         userInfo: none,
     });
 
-export const getLoginState = createFeatureSelector<LoginState>('login');
+export const getLoginState = createFeatureSelector<LoginPageState>('login');
 export const loginSelectors = {
     headerModel: createSelector(getLoginState, state => ({ isAuthenticated: state.userInfo.isSome(), userInfo: state.userInfo })),
-    error: createSelector(getLoginState, state => state.error)
+    error: createSelector(getLoginState, state =>
+        state.error.map(e => {
+            if (ErrorType.is.APIErrorResponse(e)) {
+                if (e.value.apiErrorResponse.error.type === 'ModelError') {
+                    return e.value.apiErrorResponse.error.message;
+                } else {
+                    const error = e.value.apiErrorResponse.error;
+                    return `${error.message}: ${error.fieldErrors.reduce((acc: string, err) => acc + err.message, '')}`;
+                }
+            }
+        })
+    )
 };
 
-export function loginReducer(state: LoginState, action: Action): LoginState {
+export function loginReducer(state: LoginPageState, action: Action): LoginPageState {
     return reducer(state, action);
 }
