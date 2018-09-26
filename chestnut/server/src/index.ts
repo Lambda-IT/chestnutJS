@@ -18,6 +18,7 @@ import { createMetadataController } from './controller';
 import { correlationId, registerGlobalExceptionHandler, resultProcessor } from './middleware';
 import { createApi } from './api/model-api';
 import { createAuth } from './auth/auth-api';
+import { createAuthorizationHandler } from './auth/token-validation';
 
 export const BASE_URL = '/chestnut';
 
@@ -90,8 +91,17 @@ export async function initChestnut(
         options.modelPrefix,
     );
 
-    createAuth(app, store, logger);
-    createApi(app, store, logger);
+    const authConfiguration = {
+        issuer: `http://localhost:9000`,
+        secretKey: '5rzz289v303zg',
+        tokenExpiration: 3600,
+        refreshTokenExpiration: 86400,
+        maxFailedLoginAttempts: 3,
+        waitTimeToUnlockUser: 5,
+    };
+    const identity = createAuth(authConfiguration, app, store, logger);
+    const authHandler = createAuthorizationHandler(identity, authConfiguration);
+    createApi(authHandler, app, store, logger);
 
     // session stuff after static middleware
     app.set('trust proxy', 1); // trust first proxy
@@ -108,7 +118,7 @@ export async function initChestnut(
     const schema = initGraphQLSchema(store, options.modelPrefix);
     createMetadataController(app, store, BASE_URL);
 
-    app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema }));
+    app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
     app.use(csrf({ cookie: false }));

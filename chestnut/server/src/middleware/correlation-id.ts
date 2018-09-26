@@ -6,10 +6,10 @@ export type Correlation = {
 };
 
 export function correlationId(request: any, _: Response, next: NextFunction) {
-    let correlationId = request.header('correlationId');
-    if (!correlationId) {
-        correlationId = uuidV4();
+    let correlId = request.header('correlationId');
+    if (!correlId) {
+        correlId = uuidV4();
     }
-    request.correlationId = correlationId;
+    request.correlationId = correlId;
     return next();
 }

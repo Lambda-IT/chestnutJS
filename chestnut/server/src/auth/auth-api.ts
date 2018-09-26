@@ -4,16 +4,7 @@ import { createAuthUserRepository, createAuthTokenRepository } from './repositor
 import { verifyUser } from './password-service';
 
 
-export function createAuth(app, store, logger: Log) {
-
-    const configuration = {
-        issuer: `http://localhost:9000`,
-        secretKey: '5rzz289v303zg',
-        tokenExpiration: 3600,
-        refreshTokenExpiration: 86400,
-        maxFailedLoginAttempts: 3,
-        waitTimeToUnlockUser: 5,
-    };
+export function createAuth(configuration: any, app, store, logger: Log) {
 
     const authUserRepository = createAuthUserRepository(store);
     const authTokenRepository = createAuthTokenRepository(store);
@@ -23,15 +14,10 @@ export function createAuth(app, store, logger: Log) {
         authUserRepository,
         authTokenRepository,
         verifyUser,
-        {
-            issuer: configuration.issuer,
-            secretKey: configuration.secretKey,
-            tokenExpiration: configuration.tokenExpiration,
-            refreshTokenExpiration: configuration.refreshTokenExpiration,
-            maxFailedLoginAttempts: configuration.maxFailedLoginAttempts,
-            waitTimeToUnlockUser: configuration.waitTimeToUnlockUser,
-        }
+        configuration
     );
 
     app.post('/auth/token', identity.grant());
+
+    return identity;
 }

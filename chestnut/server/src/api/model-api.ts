@@ -192,11 +192,11 @@ export interface HttpRequest {
     rawBody?: any;
 }
 
-export function createApi(app, store, logger: Log) {
+export function createApi(authHandler: { ensureAuthorized: (request: Request, response: Response, next: NextFunction) => Promise<any>; }, app, store, logger: Log) {
     Object.keys(store.models).forEach(modelName => {
         const mongooser = new Mongooser(store.models[modelName]);
 
-        app.get(`/api/${kebabCase(modelName)}`, async (request: Request, response: Response, next: NextFunction) => {
+        app.get(`/api/${kebabCase(modelName)}`, authHandler.ensureAuthorized, async (request: Request, response: Response, next: NextFunction) => {
             const query = request.body || {
                 criteria: {},
                 projection: {},
@@ -225,6 +225,7 @@ export function createApi(app, store, logger: Log) {
 
         app.get(
             `/api/${kebabCase(modelName)}/:id`,
+            authHandler.ensureAuthorized,
             async (request: Request, response: Response, next: NextFunction) => {
                 const query = request.body || {
                     projection: null,
@@ -243,6 +244,7 @@ export function createApi(app, store, logger: Log) {
 
         app.post(
             `/api/${kebabCase(modelName)}/create`,
+            authHandler.ensureAuthorized,
             async (request: Request, response: Response, next: NextFunction) => {
                 try {
                     const dbResponse = await mongooser.insertMany(request);
@@ -256,6 +258,7 @@ export function createApi(app, store, logger: Log) {
 
         app.post(
             `/api/${kebabCase(modelName)}/update/:id`,
+            authHandler.ensureAuthorized,
             async (request: Request, response: Response, next: NextFunction) => {
                 try {
                     const dbResponse = await mongooser.updateOne(request, request.params.id);
@@ -269,6 +272,7 @@ export function createApi(app, store, logger: Log) {
 
         app.delete(
             `/api/${kebabCase(modelName)}/:id`,
+            authHandler.ensureAuthorized,
             async (request: Request, response: Response, next: NextFunction) => {
                 try {
                     const dbResponse = await mongooser.deletebyId(request.params.id);
@@ -286,7 +290,7 @@ export function createApi(app, store, logger: Log) {
  * The mongoose-based RESTful API implementation.
  */
 export class Mongooser<T extends mongoose.Document> {
-    constructor(private readonly model: mongoose.Model<T>) {}
+    constructor(private readonly model: mongoose.Model<T>) { }
 
     /**
      * Retrieves an existing item by id.
