@@ -1,10 +1,12 @@
 import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { excludeFromModel } from '../../decorators/exclude-from-model';
 
 export enum ChestnutPermissions {
     read = 'read',
     write = 'write',
 }
 
+@excludeFromModel()
 export class AuthUser extends Typegoose {
     @prop({ required: true })
     firstname: string;

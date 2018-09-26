@@ -1,13 +1,16 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
 
 export class Task extends Typegoose {
-    @prop() description: string;
+    @prop()
+    description: string;
 
-    @prop() completed: boolean;
+    @prop()
+    completed: boolean;
 }
 
 export class User extends Typegoose {
-    @prop() name?: string;
+    @prop()
+    name?: string;
 
     @prop({ required: true })
     age: number;
@@ -18,7 +21,8 @@ export class User extends Typegoose {
     @prop({ default: '<test>hm</test>' })
     webText?: string;
 
-    @prop() createdAt?: Date;
+    @prop()
+    createdAt?: Date;
 
     @prop({ enum: ['completed', 'started'] })
     state?: string;
@@ -28,9 +32,11 @@ export class User extends Typegoose {
 }
 
 export class Todo extends Typegoose {
-    @prop() description: string;
+    @prop()
+    description: string;
 
-    @prop() completed: boolean;
+    @prop()
+    completed: boolean;
 
     @prop({ ref: User, required: true })
     user: Ref<User>;

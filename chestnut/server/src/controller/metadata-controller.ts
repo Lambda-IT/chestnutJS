@@ -2,10 +2,13 @@ import { Request, Response, Express } from 'express';
 import { Model } from 'mongoose';
 import { ModelDescription, PropertyDescription } from '../../../common/metadata';
 import { Store } from '../store';
+import { registry } from '../decorators/type-registry';
 
 export function createMetadataController(app: Express, store: Store, baseUrl: string) {
     app.get(baseUrl + '/metadata', (req: Request, res: Response) => {
-        const modelDescriptions = Object.keys(store.models).map(key => {
+        const modelDescriptions = Object.keys(store.models)
+            .filter(k => registry.exclusions.indexOf(k) === -1)
+            .map(key => {
             const mongooseModel = store.models[key] as any; // mongooseModel
             const modelName = key.toLowerCase();
 
@@ -22,6 +25,7 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
                         enumValues: property.enumValues,
                         regExp: property.regExp,
                         reference: objProperty ? objProperty.ref : null,
+                        hidden: registry.model[modelName] && registry.model[modelName][p] && registry.model[modelName][p].hidden || false
                     };
 
                     return desc;

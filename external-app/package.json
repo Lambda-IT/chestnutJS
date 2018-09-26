@@ -10,7 +10,9 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "mongoose": "^5.2.17",
         "pug": "^2.0.0-rc.4",
-        "typegoose": "^3.6.0"
+        "reflect-metadata": "^0.1.12",
+        "typegoose": "^5.4.0"
     }
 }
