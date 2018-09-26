@@ -13,3 +13,5 @@ export const initModel = (name: string, key: string) => {
         registry.model[name][key] = { hidden: false };
     }
 };
+
+export const isHidden = (name: string, key: string) => registry.model[name] && registry.model[name][key] && registry.model[name][key].hidden || false;

@@ -1,4 +1,5 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { hidden } from '../../chestnut';
 
 export class Task extends Typegoose {
     @prop()
@@ -21,6 +22,7 @@ export class User extends Typegoose {
     @prop({ default: '<test>hm</test>' })
     webText?: string;
 
+    @hidden()
     @prop()
     createdAt?: Date;
 

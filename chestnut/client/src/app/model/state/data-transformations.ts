@@ -35,12 +35,13 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
                             <FormlyFieldConfig>{
                                 key: p.name,
                                 type: typeMap[p.type].type,
+                                hide: p.hidden,
                                 templateOptions: {
                                     type: typeMap[p.type].templateType,
                                     label: p.name,
                                     disabled: p.type === 'ObjectID',
                                     required: p.required,
-                                    pattern: p.regExp,
+                                    pattern: p.regExp
                                 },
                             }
                     ),
