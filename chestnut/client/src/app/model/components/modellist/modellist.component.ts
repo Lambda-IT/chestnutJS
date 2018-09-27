@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { tap, merge } from 'rxjs/operators';
+import { tap, takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
 
@@ -10,23 +10,27 @@ import { fromInput } from '@shared/rxjs-utils';
     styleUrls: ['./modellist.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModellistComponent {
+export class ModellistComponent implements OnDestroy {
+    private destroying$ = new EventEmitter();
     @Input() availableColumns: string[];
     @Input() visibleColumns: string[];
     @Input() dataSource: any[];
     @Output() selectedColumnsChanged = new EventEmitter<string[]>();
     selectedColumnsForm = new FormControl();
-    fromVisibleColumns$: Observable<string[]>;
     selectedColumns$: Observable<string[]>;
 
     constructor() {
-        this.fromVisibleColumns$ = fromInput<ModellistComponent>(this)('visibleColumns').pipe(
-            tap(x => this.selectedColumnsForm.setValue(x))
-        );
-        this.selectedColumns$ = this.fromVisibleColumns$.pipe(
-            merge(this.selectedColumnsForm.valueChanges.pipe(
-                tap(c => this.selectedColumnsChanged.emit(c)))
-            )
-        );
+
+        this.selectedColumnsForm.valueChanges.pipe(
+            tap(c => this.selectedColumnsChanged.emit(c)), takeUntil(this.destroying$)).subscribe();
+
+        this.selectedColumns$ =
+            fromInput<ModellistComponent>(this)('visibleColumns').pipe(
+                tap(x => this.selectedColumnsForm.setValue(x))
+            );
+    }
+
+    ngOnDestroy(): void {
+        this.destroying$.emit();
     }
 }

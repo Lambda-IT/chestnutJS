@@ -1,11 +1,9 @@
 <div class="model-container">
 
     <mat-form-field>
-        <!-- <ng-container *ngIf="fromAvailableColumns$ | async; let fromAvailableColumns"> -->
         <mat-select placeholder="Visible columns" [formControl]="selectedColumnsForm" multiple>
             <mat-option *ngFor="let col of availableColumns" [value]="col">{{col}}</mat-option>
         </mat-select>
-        <!-- </ng-container> -->
     </mat-form-field>
 
     <ng-container *ngIf="selectedColumns$ | async; let selectedColumns">
