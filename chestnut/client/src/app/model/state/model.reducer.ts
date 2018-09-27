@@ -1,6 +1,6 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction } from '@shared/state/actions';
+import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, ApplyUserVisibleColumnsAction } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
@@ -9,7 +9,8 @@ import { transformMetadataToForm, transformMetadataToProperties } from './data-t
 import { MetadataDto } from '../../../../../common/metadata';
 
 export interface ModelPageModel {
-    displayedColumnMap: Option<{ [key: string]: string[] }>;
+    availableColumnMap: Option<{ [key: string]: string[] }>;
+    userVisibleColumnMap: Option<{ [key: string]: string[] }>;
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
@@ -45,7 +46,8 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 loaded: false,
                 loading: false,
                 error: some(l),
-                displayedColumnMap: none,
+                availableColumnMap: none,
+                userVisibleColumnMap: none
             },
         }),
         r => ({
@@ -59,11 +61,17 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
             modelPageModel: {
                 loaded: true,
                 loading: false,
-                displayedColumnMap: some(transformMetadataToProperties(r)),
+                availableColumnMap: some(transformMetadataToProperties(r)),
                 error: none,
+                userVisibleColumnMap: some(transformMetadataToProperties(r))
             },
         })
     );
+
+export class ApplyColumnsChangedAction {
+    public readonly type = 'APPLY_COLUMNS_CHANGED';
+    constructor(public payload: { [model: string]: string[] }) { }
+}
 
 export const reducer = new ReducerBuilder<ModelState>()
     .handle(
@@ -77,6 +85,20 @@ export const reducer = new ReducerBuilder<ModelState>()
     .handle(ApplyMetadataLoadedAction, (state, action) => ({
         ...transformMetadata(action.payload),
     }))
+    .handle(ApplyUserVisibleColumnsAction, (state, action) => ({
+        ...state,
+        modelPageModel: {
+            ...state.modelPageModel,
+            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload }))
+        }
+    }))
+    .handle(ApplyColumnsChangedAction, (state, action) => ({
+        ...state,
+        modelPageModel: {
+            ...state.modelPageModel,
+            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload }))
+        }
+    }))
     .build({
         modelDetailPageModel: {
             loaded: false,
@@ -89,7 +111,8 @@ export const reducer = new ReducerBuilder<ModelState>()
             loaded: false,
             loading: false,
             error: none,
-            displayedColumnMap: none,
+            availableColumnMap: none,
+            userVisibleColumnMap: none
         },
     });
 
@@ -97,6 +120,8 @@ export const getModelState = createFeatureSelector<ModelState>('model');
 export const modelSelectors = {
     getFormFieldConfigMap: createSelector(getModelState, state => state.modelDetailPageModel.formFieldConfigMap),
     getProperties: createSelector(getModelState, state => state.modelDetailPageModel.propertyMap),
+    getAvailableColumns: createSelector(getModelState, state => state.modelPageModel.availableColumnMap),
+    getVisibleColumns: createSelector(getModelState, state => state.modelPageModel.userVisibleColumnMap)
 };
 
 export function modelReducer(state: ModelState, action: Action): ModelState {

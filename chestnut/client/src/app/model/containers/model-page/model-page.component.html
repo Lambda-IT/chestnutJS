@@ -13,9 +13,12 @@
     </ng-container>
 
     <ng-container *ifSome="model.data; else noneTemplate; let data">
-        <ng-container *ifSome="properties$ | async; else noneTemplate; let properties">
-            <ng-container *ngIf="data.length > 0">
-                <app-modellist [displayedColumns]="properties" [dataSource]="data"></app-modellist>
+        <ng-container *ifSome="availableColumns$ | async; else noneTemplate; let availableColumns">
+            <ng-container *ifSome="visibleColumns$ | async; else noneTemplate; let visibleColumns">
+                <ng-container *ngIf="data.length > 0">
+                    <app-modellist [availableColumns]="availableColumns" [visibleColumns]="visibleColumns" [dataSource]="data"
+                        (selectedColumnsChanged)="selectedColumnsChanged$.emit($event)"></app-modellist>
+                </ng-container>
             </ng-container>
         </ng-container>
     </ng-container>

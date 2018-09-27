@@ -3,10 +3,11 @@ import { tap, takeUntil } from 'rxjs/operators';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Store } from '@ngrx/store';
-import { UserLoginAction, loginSelectors } from '../../state/login-reducer';
+import { loginSelectors } from '../../state/login-reducer';
 import { Observable } from 'rxjs';
 import { ErrorType } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';
+import { UserLoginAction } from '../../state/login-effects';
 
 export interface LoginDataModel {
     username: string;

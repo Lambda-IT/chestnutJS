@@ -14,6 +14,7 @@ import { ModelDetailPageComponent } from './containers/model-detail-page/model-d
 import { StoreModule } from '@ngrx/store';
 import { modelReducer } from './state/model.reducer';
 import { CreateModelDetailPageComponent } from './containers/create-model-detail-page/create-model-detail-page.component';
+import { ModelEffects } from './state/model.effects';
 
 @NgModule({
     imports: [
@@ -24,7 +25,7 @@ import { CreateModelDetailPageComponent } from './containers/create-model-detail
         FormlyMaterialModule,
         RouterModule.forChild(modelRoutes),
         StoreModule.forFeature('model', modelReducer),
-        EffectsModule.forFeature([]),
+        EffectsModule.forFeature([ModelEffects]),
     ],
     declarations: [
         ModelPageComponent,

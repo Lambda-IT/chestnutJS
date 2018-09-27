@@ -4,11 +4,6 @@ import { Option, none, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { ApplyLoginSuccessAction, ApplyLoginFailedAction, ApplyLogoutAction } from '@shared/state/actions';
 
-export class UserLoginAction {
-    readonly type = 'USER_LOGIN';
-    constructor(public payload: { username: string; password: string }) { }
-}
-
 export interface UserInfo {
     username: string;
 }

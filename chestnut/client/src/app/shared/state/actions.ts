@@ -2,27 +2,32 @@ import { Either } from 'fp-ts/lib/Either';
 import { ErrorType } from '@shared/bind-functions';
 import { MetadataDto } from '../../../../../common/metadata';
 
+export class ApplyUserVisibleColumnsAction {
+    readonly type = 'APPLY_USERVISIBLECOLUMNS';
+    constructor(public payload: { [key: string]: string[] }) { }
+}
+
 export class ApplyMetadataLoadedAction {
-    readonly type = 'CATALOG_DATA_LOADED';
+    readonly type = 'APPLY_CATALOG_DATA_LOADED';
     constructor(public payload: Either<ErrorType, MetadataDto>) { }
 }
 
 export class ApplyMetadataLoadingAction {
-    readonly type = 'CATALOG_DATA_LOADING';
+    readonly type = 'APPLY_CATALOG_DATA_LOADING';
 }
 
 export class ApplyLoginFailedAction {
-    readonly type = 'LOGIN_FAILED';
+    readonly type = 'APPLY_LOGIN_FAILED';
     constructor(public payload: ErrorType) { }
 }
 
 export class ApplyLoginSuccessAction {
-    readonly type = 'LOGIN_SUCCESS';
+    readonly type = 'APPLY_LOGIN_SUCCESS';
     constructor(public payload: { username: string; }) { }
 }
 
 export class ApplyLogoutAction {
-    readonly type = 'Logout';
+    readonly type = 'APPLY_LOGOUT';
 }
 
 export class TokenLoginAction {

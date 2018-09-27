@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { AppConfigService } from '@shared/services/app-config.service';
-import { UserLoginAction } from './login-reducer';
 import { Effect, Actions } from '@ngrx/effects';
 import { instanceOf } from 'ngrx-reducer-builder';
 import { mergeMap, map, tap } from 'rxjs/operators';
@@ -10,6 +9,11 @@ import { Injectable } from '@angular/core';
 import { ApplyLoginFailedAction, ApplyLoginSuccessAction, TokenLoginAction, LogoutAction, ApplyLogoutAction } from '@shared/state/actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { userLogin, tokenLogin } from '../login.contracts';
+
+export class UserLoginAction {
+    readonly type = 'USER_LOGIN';
+    constructor(public payload: { username: string; password: string }) { }
+}
 
 @Injectable()
 export class LoginEffects {

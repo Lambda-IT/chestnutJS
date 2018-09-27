@@ -7,9 +7,13 @@ import { AppConfigService } from '@shared/services/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
 import { ModelDescription } from '../../../common/metadata';
-import { ApplyMetadataLoadedAction, ApplyMetadataLoadingAction, TokenLoginAction } from '@shared/state/actions';
+import {
+    ApplyMetadataLoadedAction, ApplyMetadataLoadingAction,
+    TokenLoginAction, ApplyUserVisibleColumnsAction
+} from '@shared/state/actions';
 import { loadCatalog } from './app.contracts';
 import { getRefreshToken } from '@shared/refresh-token';
+import { of } from 'rxjs';
 
 export interface MetadataDto {
     models: ModelDescription[];
@@ -34,7 +38,12 @@ export class AppEffects {
         mergeMap(_ =>
             bindRemoteCall(() => loadCatalog(this.http, this.appConfig)).pipe(
                 // map(x => bindDecode(MetadataInDtoRT, jsonDecodeString)(x)),
-                map(result => new ApplyMetadataLoadedAction(result)),
+                mergeMap(result => {
+                    const userVisibleColumns = localStorage.getItem('userVisibleColumns');
+                    return !userVisibleColumns ?
+                        of(new ApplyMetadataLoadedAction(result)) :
+                        of(new ApplyMetadataLoadedAction(result), new ApplyUserVisibleColumnsAction(JSON.parse(userVisibleColumns)));
+                }),
                 startWith(new ApplyMetadataLoadingAction())
             )
         )
