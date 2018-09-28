@@ -29,6 +29,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 import { loginReducer, LoginPageState } from './login/state/login-reducer';
 import { LoginEffects } from './login/state/login-effects';
 import { LoginPageComponent } from './login/containers/login-page/login-page.component';
+import { FormlyTinyMCEComponent } from '@shared/formly/tinymce.component';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -57,7 +58,6 @@ export const reducers: ActionReducerMap<State> = {
         HttpClientModule,
         ApolloModule,
         HttpLinkModule, // Interceptor !! import from shared
-        ReactiveFormsModule,
         FormlyModule.forRoot(),
         FormlyMaterialModule,
         CoreModule,

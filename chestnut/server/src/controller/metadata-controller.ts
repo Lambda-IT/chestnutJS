@@ -19,7 +19,7 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
                     const objProperty = mongooseModel.schema.obj[p];
                     const desc: PropertyDescription = {
                         name: p,
-                        type: property.instance,
+                        type: registry.model[modelName] && registry.model[modelName][p] && registry.model[modelName][p].editorType || property.instance,
                         default: property.defaultValue,
                         required: property.isRequired,
                         enumValues: property.enumValues,

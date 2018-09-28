@@ -3,13 +3,13 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldConfigMap } from './model.reducer';
 
 interface FormMappingType {
-    type: 'input' | 'textarea' | 'checkbox';
+    type: 'input' | 'textarea' | 'checkbox' | 'html';
     templateType?: 'text' | 'date' | 'number' | 'datetime-local';
 }
 
 const typeMap: { [key in PropertyType]: FormMappingType } = {
     [PropertyType.string]: { type: 'input', templateType: 'text' },
-    [PropertyType.html]: { type: 'textarea', templateType: 'text' },
+    [PropertyType.html]: { type: 'html' },
     [PropertyType.boolean]: { type: 'checkbox' },
     [PropertyType.date]: { type: 'input', templateType: 'date' },
     [PropertyType.dateTime]: { type: 'input', templateType: 'datetime-local' },

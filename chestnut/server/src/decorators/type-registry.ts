@@ -1,5 +1,8 @@
+import { PropertyType } from '../../../common/metadata';
+
 export type Options = {
     hidden?: boolean;
+    editorType?: PropertyType
 };
 export type Model = { [key: string]: { [key: string]: Options } };
 export type Registry = { model: Model, exclusions: string[] };

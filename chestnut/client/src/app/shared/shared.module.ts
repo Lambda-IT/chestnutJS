@@ -24,6 +24,11 @@ import { StoreModule } from '@ngrx/store';
 import { sharedStateReducer } from '@shared/state/reducers';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '@shared/interceptor/auth-interceptor';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { FormlyTinyMCEComponent } from '@shared/formly/tinymce.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 @NgModule({
     imports: [
@@ -45,6 +50,14 @@ import { AuthInterceptor } from '@shared/interceptor/auth-interceptor';
         MatDialogModule,
         RouterModule,
         NgxFpTsModule,
+        EditorModule,
+        ReactiveFormsModule,
+        FormlyModule.forChild({
+            types: [
+              { name: 'html', component: FormlyTinyMCEComponent },
+            ]
+        }),
+        FormlyMaterialModule,
         StoreModule.forFeature('shared', sharedStateReducer),
     ],
     exports: [
@@ -65,13 +78,16 @@ import { AuthInterceptor } from '@shared/interceptor/auth-interceptor';
         MatProgressSpinnerModule,
         MatDialogModule,
         RouterModule,
-        NgxFpTsModule
+        NgxFpTsModule,
+        EditorModule,
+        ReactiveFormsModule,
+        FormlyMaterialModule
     ],
     providers: [AuthGuard, {
         provide: HTTP_INTERCEPTORS,
         useClass: AuthInterceptor,
         multi: true,
     }],
-    declarations: [],
+    declarations: [FormlyTinyMCEComponent],
 })
 export class SharedModule {}

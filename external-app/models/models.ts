@@ -1,5 +1,7 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
 import { hidden } from '../../chestnut';
+import { editor } from '../../chestnut/server/src/decorators';
+import { PropertyType } from '../../chestnut/common/metadata';
 
 export class Task extends Typegoose {
     @prop()
@@ -19,6 +21,7 @@ export class User extends Typegoose {
     @prop({ default: 'test' })
     description?: string;
 
+    @editor(PropertyType.html)
     @prop({ default: '<test>hm</test>' })
     webText?: string;
 
