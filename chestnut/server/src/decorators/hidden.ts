@@ -6,6 +6,5 @@ export function hidden() {
         const modelName = target.constructor.name.toLowerCase();
         initModel(modelName, key);
         registry.model[modelName] = { ...registry.model[modelName], [key]: { hidden: true } };
-        console.log('----------editor------------', JSON.stringify(registry));
     };
 }
