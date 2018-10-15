@@ -1,21 +1,26 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "baseUrl": "src",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "module": "es2015",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "target": "es5",
-        "typeRoots": ["node_modules/@types"],
-        "lib": ["es2017", "dom", "esnext.asynciterable"],
-        "paths": {
-            "@core/*": ["app/core/*"],
-            "@shared/*": ["app/shared/*"],
-            "@lib/*": ["lib/*"]
-        }
-    }
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom", "esnext.asynciterable"],
+    "paths": {
+      "@core/*": ["app/core/*"],
+      "@shared/*": ["app/shared/*"],
+      "@lib/*": ["lib/*"]
+    },
+  },
+  "include": [
+    "src/**/*",
+    "../common/**/*"
+  ],
+
 }
