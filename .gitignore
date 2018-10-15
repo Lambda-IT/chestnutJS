@@ -39,3 +39,5 @@ jspm_packages
 **/*.js
 **/*.map
 dist
+common/**/*.d.ts
+server/**/*.d.ts
