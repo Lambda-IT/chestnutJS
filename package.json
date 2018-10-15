@@ -6,7 +6,11 @@
     "scripts": {
         "client": "cd ./client && npm start",
         "server": "cd ./server && npm start",
-        "start": "concurrently 'npm run server' 'npm run client'"
+        "start": "concurrently 'npm run server' 'npm run client'",
+        "build-server": "cd ./server && npm run build",
+        "build-client": "cd ./client && npm run build",
+        "build": "npm run build-server && npm run build-client",
+        "prepare": "npm run build"
     },
     "keywords": [],
     "author": "",
