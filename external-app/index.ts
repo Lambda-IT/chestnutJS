@@ -1,9 +1,9 @@
-import { Chestnut, ChestnutOptions, initChestnut } from '../chestnut';
+import { Chestnut, ChestnutOptions, initChestnut } from '../';
 import * as models from './models/models';
 import { createControllers } from './views';
 import * as pug from 'pug';
 
-export { Chestnut, Response, Request } from '../chestnut';
+export { Chestnut, Response, Request } from '../';
 
 const PORT = +(process.env.PORT || 9000);
 let server;

@@ -1,7 +1,7 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
-import { hidden } from '../../chestnut';
-import { editor } from '../../chestnut/server/src/decorators';
-import { PropertyType } from '../../chestnut/common/metadata';
+import { hidden } from '../../';
+import { editor } from '../../server/src/decorators';
+import { PropertyType } from '../../common/metadata';
 
 export class Task extends Typegoose {
     @prop()
