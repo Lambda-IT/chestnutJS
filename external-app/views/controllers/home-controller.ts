@@ -1,4 +1,4 @@
-import { Chestnut, Response, Request } from '.';
+import { Chestnut, Response, Request } from '.../../../';
 
 export function createHomeController(server: Chestnut) {
     server.expressApp.get('/', getHome);

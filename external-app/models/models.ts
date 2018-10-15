@@ -1,19 +1,14 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
-import { hidden } from '../../';
-import { editor } from '../../server/src/decorators';
-import { PropertyType } from '../../common/metadata';
+import { hidden, editor, PropertyType } from '../../';
 
 export class Task extends Typegoose {
-    @prop()
-    description: string;
+    @prop() description: string;
 
-    @prop()
-    completed: boolean;
+    @prop() completed: boolean;
 }
 
 export class User extends Typegoose {
-    @prop()
-    name?: string;
+    @prop() name?: string;
 
     @prop({ required: true })
     age: number;
@@ -37,11 +32,9 @@ export class User extends Typegoose {
 }
 
 export class Todo extends Typegoose {
-    @prop()
-    description: string;
+    @prop() description: string;
 
-    @prop()
-    completed: boolean;
+    @prop() completed: boolean;
 
     @prop({ ref: User, required: true })
     user: Ref<User>;

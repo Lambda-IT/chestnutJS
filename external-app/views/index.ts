@@ -1,4 +1,4 @@
-import { Chestnut } from '../';
+import { Chestnut } from '../../';
 import { createHomeController } from './controllers';
 
 export function createControllers(server: Chestnut) {
