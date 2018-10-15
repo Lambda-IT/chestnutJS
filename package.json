@@ -11,7 +11,7 @@
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
         "build:prod": "tsc -p . --outDir . --declaration && npm run build:client",
-        "postinstall": "cd ./server && npm install && cd .. && tsc -p . --outDir . --declaration && cd ./client && npm install && npm run build:client"
+        "postinstall": "cd ./server && npm install && cd .. && tsc -p . --outDir . --declaration && cd ./client && npm install && npm run build"
     },
     "keywords": [],
     "author": "",
