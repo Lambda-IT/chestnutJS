@@ -10,7 +10,7 @@
         "build:server": "cd ./server && npm run build",
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
-        "build:prod": "tsc -p . --outDir dist --declaration && npm run build:client",
+        "build:prod": "tsc -p . --outDir . --declaration && npm run build:client",
         "postinstall": "cd ./server && npm install && cd ../client && npm install && npm run build:prod"
     },
     "keywords": [],
