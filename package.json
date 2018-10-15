@@ -10,7 +10,7 @@
         "build:server": "cd ./server && npm run build",
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
-        "postinstall": "cd ./server && npm install && cd ./client && npm install && npm run build"
+        "postinstall": "cd ./server && npm install && cd ../client && npm install && npm run build"
     },
     "keywords": [],
     "author": "",
