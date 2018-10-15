@@ -54,6 +54,7 @@
     "include": [
         "server/**/*",
         "common/**/*",
+        "typings/**/*",
         "index.ts"
     ]
 }
