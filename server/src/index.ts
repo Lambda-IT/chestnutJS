@@ -92,7 +92,7 @@ export async function initChestnut(
         {
             useMongoClient: true,
             /* other options */
-            useNewUrlParser: true,
+            // useNewUrlParser: true,
         },
         options.modelPrefix
     );
