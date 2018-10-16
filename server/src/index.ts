@@ -20,6 +20,8 @@ import { correlationId, registerGlobalExceptionHandler, resultProcessor } from '
 import { createApi } from './api/model-api';
 import { createAuth } from './auth/auth-api';
 import { createAuthorizationHandler } from './auth/token-validation';
+import { ChestnutUser } from './chestnut-user-type';
+import { createAuthUserRepository } from './auth/repositories';
 
 export const BASE_URL = '/chestnut';
 
@@ -138,4 +140,8 @@ export async function initChestnut(
     logger.info(`chestnut-server listening on port ${options.port}`);
 
     return { expressApp: app, store: store, logger: logger };
+}
+
+export async function createUserAsync(store: Store, user: ChestnutUser) {
+    return createAuthUserRepository(store).createUser(user);
 }

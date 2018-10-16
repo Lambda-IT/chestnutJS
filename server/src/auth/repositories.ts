@@ -1,6 +1,8 @@
 import { AuthUser, AuthToken, TokenType } from './models';
 import { AuthUserRepository, AuthTokenRepository } from './oauth-model';
 import { Store } from '../store';
+import { ChestnutUser } from '../chestnut-user-type';
+import { computeHash, createSalt } from './password-service';
 
 export const COULD_NOT_WRITE_TO_SERVER = 'COULD_NOT_WRITE_TO_SERVER';
 
@@ -24,28 +26,43 @@ export const createAuthTokenRepository = (store: Store): AuthTokenRepository => 
     },
     async removeTokenByUser(userId: string, clientId: string): Promise<void> {
         await store.models.authToken.remove({ userId: userId, clientId: clientId });
-    }
+    },
 });
 
-export const createAuthUserRepository = (store: Store): AuthUserRepository =>
-    ({
-        async getRegisteredUser(email: string): Promise<AuthUser> {
-            return await store.models.authUser
-                .findOne({ email: email, deleted: false });
-        },
-        async getUser(email: string): Promise<AuthUser> {
-            return await store.models.authUser
-                .findOne({ email: email, deleted: false, activated: true });
-        },
-        async updateUser(authUser: AuthUser) {
-            // const updateUser = { ...user };
-            // delete (<any>updateUser)._id;
-            const result = await store.models.authUser
-                .updateOne({ email: authUser.email, deleted: false }, authUser, {
-                    upsert: false,
-                });
-            if (result.ok !== 1) {
-                throw Error(COULD_NOT_WRITE_TO_SERVER);
-            }
+export const createAuthUserRepository = (store: Store): AuthUserRepository => ({
+    async getRegisteredUser(email: string): Promise<AuthUser> {
+        return await store.models.authUser.findOne({ email: email, deleted: false });
+    },
+    async getUser(email: string): Promise<AuthUser> {
+        return await store.models.authUser.findOne({ email: email, deleted: false, activated: true });
+    },
+    async updateUser(authUser: AuthUser) {
+        // const updateUser = { ...user };
+        // delete (<any>updateUser)._id;
+        const result = await store.models.authUser.updateOne({ email: authUser.email, deleted: false }, authUser, {
+            upsert: false,
+        });
+        if (result.ok !== 1) {
+            throw Error(COULD_NOT_WRITE_TO_SERVER);
         }
-    });
+    },
+    async createUser(chestnutUser: ChestnutUser): Promise<string> {
+        const salt = createSalt();
+        const createUser: Partial<AuthUser> = {
+            ...chestnutUser,
+            passwordHash: computeHash(chestnutUser.password, salt),
+            salt,
+            failedLoginAttemps: 0,
+            locked: false,
+            deleted: false,
+            activated: true,
+            lastLoginAttempt: new Date('01-01-1970'),
+        };
+        delete (<any>createUser).password;
+        const result = await store.models.authUser.insertMany(createUser);
+        if (result.length !== 1) {
+            throw Error(COULD_NOT_WRITE_TO_SERVER);
+        }
+        return result[0]._id.toString();
+    },
+});

@@ -2,9 +2,22 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as jwt from 'jsonwebtoken';
 import * as uuidV4 from 'uuid/v4';
-import { Identity, failure, success, Success, Failure, ModelError, PasswordTokenRequest, RefreshTokenRequest, IdentityUser, RefreshToken, Token } from './identity-lib';
+import {
+    Identity,
+    failure,
+    success,
+    Success,
+    Failure,
+    ModelError,
+    PasswordTokenRequest,
+    RefreshTokenRequest,
+    IdentityUser,
+    RefreshToken,
+    Token,
+} from './identity-lib';
 import { AuthToken, AuthUser, ChestnutPermissions, TokenType } from './models';
 import { isNullOrEmpty } from '../../../common';
+import { ChestnutUser } from '../chestnut-user-type';
 
 export type Result<T> = Success<T> | Failure<string>;
 
@@ -12,6 +25,7 @@ export interface AuthUserRepository {
     getRegisteredUser(email: string): Promise<AuthUser>;
     updateUser(user: AuthUser): Promise<void>;
     getUser(email: string): Promise<AuthUser>;
+    createUser(chestnutUser: ChestnutUser): Promise<string>;
 }
 
 export interface AuthTokenRepository {
@@ -36,18 +50,17 @@ export interface PasswordService {
 }
 
 export class ChestnutIdentity extends Identity {
-
     constructor(
         private authUserRepository: AuthUserRepository,
         private authTokenRepository: AuthTokenRepository,
         private verifyUser: VerifyUserFunction,
         private internalConfiguration: {
-            issuer: string,
-            secretKey: string,
-            tokenExpiration: number,
-            refreshTokenExpiration: number,
-            maxFailedLoginAttempts: number,
-            waitTimeToUnlockUser: number,
+            issuer: string;
+            secretKey: string;
+            tokenExpiration: number;
+            refreshTokenExpiration: number;
+            maxFailedLoginAttempts: number;
+            waitTimeToUnlockUser: number;
         }
     ) {
         super(internalConfiguration);
@@ -178,7 +191,7 @@ export class ChestnutIdentity extends Identity {
             return success<IdentityUser>({
                 _id: (<any>authUser)._id.toString(),
                 email: authUser.email,
-                permissions: ChestnutPermissions[authUser.permissions]
+                permissions: ChestnutPermissions[authUser.permissions],
             });
         } else {
             authUser.failedLoginAttemps = !!authUser.failedLoginAttemps ? authUser.failedLoginAttemps + 1 : 1;
@@ -209,11 +222,16 @@ export class ChestnutIdentity extends Identity {
         return success({
             _id: (<any>authUser)._id.toString(),
             email: authUser.email,
-            permissions: ChestnutPermissions[authUser.permissions]
+            permissions: ChestnutPermissions[authUser.permissions],
         });
     }
 
-    public async saveAccessToken(signedAccessToken: string, clientId: string, expires: Date, user: IdentityUser): Promise<void> {
+    public async saveAccessToken(
+        signedAccessToken: string,
+        clientId: string,
+        expires: Date,
+        user: IdentityUser
+    ): Promise<void> {
         const authToken = new AuthToken();
         authToken.token = signedAccessToken;
         authToken.clientId = clientId;
@@ -232,12 +250,7 @@ export class ChestnutIdentity extends Identity {
         return { clientId: token.clientId, expires: token.expires, userId: token.userId, refreshToken: token.token };
     }
 
-    public async saveRefreshToken(
-        token: string,
-        clientId: string,
-        expires: Date,
-        user: IdentityUser
-    ): Promise<void> {
+    public async saveRefreshToken(token: string, clientId: string, expires: Date, user: IdentityUser): Promise<void> {
         const authToken = new AuthToken();
         authToken.token = token;
         authToken.clientId = clientId;
