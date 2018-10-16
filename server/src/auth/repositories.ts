@@ -49,7 +49,11 @@ export const createAuthUserRepository = (store: Store): AuthUserRepository => ({
     async createUser(chestnutUser: ChestnutUser): Promise<string> {
         const salt = createSalt();
         const createUser: Partial<AuthUser> = {
-            ...chestnutUser,
+            firstname: chestnutUser.firstname,
+            lastname: chestnutUser.lastname,
+            email: chestnutUser.email,
+            language: chestnutUser.language,
+            permissions: chestnutUser.permissions,
             passwordHash: computeHash(chestnutUser.password, salt),
             salt,
             failedLoginAttemps: 0,
