@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as cors from 'cors';
+import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as bluePromise from 'bluebird';
@@ -33,6 +34,7 @@ export type ChestnutOptions = {
     modelPrefix?: string;
     publicFolder?: string;
     sessionSecret: string;
+    apiUrl: string;
 };
 
 export type Chestnut = {
@@ -43,7 +45,7 @@ export type Chestnut = {
 
 export async function initChestnut(
     options: ChestnutOptions,
-    initMiddleware?: (app) => Promise<void>,
+    initMiddleware?: (app) => Promise<void>
 ): Promise<Chestnut> {
     const logger = createLogger();
     registerGlobalExceptionHandler(logger);
@@ -56,7 +58,10 @@ export async function initChestnut(
     app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
-    app.use(BASE_URL + '/admin', express.static(__dirname + '../../client/dist'));
+    const adminAppPath = path.join(__dirname, '../../client/dist');
+    app.use(BASE_URL + '/admin', express.static(adminAppPath));
+
+    console.log('static app', { BASE_URL, adminAppPath });
 
     // Allow cors on all routes
     app.use(
@@ -87,12 +92,13 @@ export async function initChestnut(
         {
             useMongoClient: true,
             /* other options */
+            useNewUrlParser: true,
         },
-        options.modelPrefix,
+        options.modelPrefix
     );
 
     const authConfiguration = {
-        issuer: `http://localhost:9000`,
+        issuer: options.apiUrl,
         secretKey: '5rzz289v303zg',
         tokenExpiration: 3600,
         refreshTokenExpiration: 86400,
@@ -112,7 +118,7 @@ export async function initChestnut(
             resave: false,
             saveUninitialized: false,
             store: new MongoStore({ mongooseConnection: store.connection }),
-        }),
+        })
     );
 
     const schema = initGraphQLSchema(store, options.modelPrefix);
