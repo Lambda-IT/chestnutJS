@@ -1,12 +1,23 @@
-import { prop, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
-import { excludeFromModel } from '../../decorators/exclude-from-model';
+import { prop, pre, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { createSalt, computeHash } from '../password-service';
 
 export enum ChestnutPermissions {
     read = 'read',
     write = 'write',
 }
 
-@excludeFromModel()
+@pre<AuthUser>('save', function(next) {
+    if (this.isNew) {
+        this.salt = createSalt();
+        this.passwordHash = computeHash(this.passwordHash, this.salt);
+        this.failedLoginAttemps = 0;
+        this.locked = false;
+        this.deleted = false;
+        this.activated = true;
+        this.lastLoginAttempt = new Date('01-01-1970');
+    }
+    next();
+})
 export class AuthUser extends Typegoose {
     @prop({ required: true })
     firstname: string;
