@@ -58,7 +58,7 @@ export async function initChestnut(
     app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
-    const adminAppPath = path.join(__dirname, '../../client/dist');
+    const adminAppPath = path.join(__dirname, '../../client/dist/client');
     app.use(BASE_URL + '/admin', express.static(adminAppPath));
 
     console.log('static app', { BASE_URL, adminAppPath });
@@ -90,7 +90,7 @@ export async function initChestnut(
         options.models,
         options.mongoDb,
         {
-            useMongoClient: true,
+            // useMongoClient: true,
             /* other options */
             // useNewUrlParser: true,
         },
