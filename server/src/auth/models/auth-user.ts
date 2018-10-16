@@ -1,5 +1,6 @@
 import { prop, pre, Typegoose, ModelType, InstanceType } from 'typegoose';
 import { createSalt, computeHash } from '../password-service';
+import { hidden } from '../../decorators';
 
 export enum ChestnutPermissions {
     read = 'read',
@@ -34,7 +35,8 @@ export class AuthUser extends Typegoose {
     @prop({ required: true })
     passwordHash: string;
 
-    @prop({ required: true })
+    @hidden()
+    @prop({})
     salt: string;
 
     @prop({ required: true, enum: ChestnutPermissions })

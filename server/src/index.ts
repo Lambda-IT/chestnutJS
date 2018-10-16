@@ -61,7 +61,10 @@ export async function initChestnut(
 
     app.use(express.static(options.publicFolder || 'public'));
     const adminAppPath = path.join(__dirname, '../../client/dist/client');
-    app.use(BASE_URL + '/admin', express.static(adminAppPath));
+    app.use(BASE_URL + '/admin', express.static(adminAppPath), (req, res, next) => {
+        console.log('not found', { header: res.header });
+        res.redirect(BASE_URL + '/admin');
+    });
 
     console.log('static app', { BASE_URL, adminAppPath });
 
