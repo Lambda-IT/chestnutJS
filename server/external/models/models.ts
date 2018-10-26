@@ -1,5 +1,5 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
-import { hidden, editor, PropertyType } from '../../';
+import { hidden, editor, PropertyType } from '../../..';
 
 export class Task extends Typegoose {
     @prop() description: string;

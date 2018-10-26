@@ -132,8 +132,8 @@ export async function initChestnut(
     app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
-    app.use(csrf({ cookie: false }));
-    app.use((req: any, res, next) => {
+    app.use('^((?!chestnut).)*$', csrf({ cookie: false }));
+    app.use('^((?!chestnut).)*$', (req: any, res, next) => {
         res.locals.csrfToken = req.csrfToken();
         next();
     });
