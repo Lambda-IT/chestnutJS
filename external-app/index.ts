@@ -1,8 +1,8 @@
 export { Chestnut, Response, Request } from '..';
-import { initChestnut } from '..';
 import * as models from './models/models';
 import { createControllers } from './views';
 import * as pug from 'pug';
+import { initChestnut } from '..';
 
 const PORT = +(process.env.PORT || 9000);
 let server;
@@ -44,6 +44,7 @@ initChestnut(
         mongoDb: 'mongodb://localhost:27017/external-app',
         sessionSecret: '___feifji$gö$gsdfgprüi45u834u584wtti',
         modelPrefix: 'dev',
+        apiUrl: 'http://localhost:9000',
     },
     initMiddleware
 )

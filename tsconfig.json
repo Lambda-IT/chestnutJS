@@ -55,6 +55,7 @@
         "server/**/*",
         "common/**/*",
         "typings/**/*",
-        "index.ts"
+        "index.ts",
+        "external-app/**/*"
     ]
 }

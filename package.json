@@ -5,9 +5,9 @@
     "main": "index.js",
     "scripts": {
         "start:client": "cd ./client && npm start",
-        "start:server": "cd ./server && npm start",
+        "start:server": "cd ./external-app && npm start",
         "start": "npm run start:server",
-        "build:server": "cd ./server && npm run build",
+        "build:server": "tsc -p .",
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
         "build:prod": "tsc -p . --outDir . --declaration && npm run build:client",

@@ -4,7 +4,7 @@ import { FieldType } from '@ngx-formly/core';
 @Component({
     selector: 'app-formly-tinymce',
     template: `
-        <editor [inline]="true" apiKey="test" [init]="{plugins: 'link'}" [formControl]="formControl" [formlyAttributes]="field"></editor>
+        <editor [inline]="true" [init]="{plugins: 'link'}" [formControl]="formControl" [formlyAttributes]="field"></editor>
     `,
 })
-export class FormlyTinyMCEComponent extends FieldType { }
+export class FormlyTinyMCEComponent extends FieldType {}
