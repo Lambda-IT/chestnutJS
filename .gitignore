@@ -36,8 +36,12 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-**/*.js
-**/*.map
+common/**/*.js
+server/**/*.js
+external-app/**/*.js
+external-app/**/*.map
+common/**/*.map
+server/**/*.map
 dist
 common/**/*.d.ts
 server/**/*.d.ts
