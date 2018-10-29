@@ -40,6 +40,9 @@ export const loginSelectors = {
     error: createSelector(getLoginState, state =>
         state.error.map(e => {
             if (ErrorType.is.APIErrorResponse(e)) {
+                if (typeof e.value.apiErrorResponse.error === 'string') {
+                    return e.value.apiErrorResponse.error;
+                }
                 if (e.value.apiErrorResponse.error.type === 'ModelError') {
                     return e.value.apiErrorResponse.error.message;
                 } else {
