@@ -13,7 +13,6 @@ import { environment } from 'environments/environment';
 import { ActionReducerMap, StoreModule, ActionReducer } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { storeLogger } from 'ngrx-store-logger';
-import { StaticModule } from './static/static.module';
 import { NgrxCacheModule, NgrxCache, apolloReducer } from 'apollo-angular-cache-ngrx';
 import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
@@ -23,13 +22,11 @@ import { AppState, appReducer } from './app.reducer';
 import { CatalogModule } from './catalog/catalog.module';
 import { ModelModule } from './model/model.module';
 import { LoginDialogComponent } from '@core/login-dialog/login-dialog.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { loginReducer, LoginPageState } from './login/state/login-reducer';
 import { LoginEffects } from './login/state/login-effects';
 import { LoginPageComponent } from './login/containers/login-page/login-page.component';
-import { FormlyTinyMCEComponent } from '@shared/formly/tinymce.component';
 
 export function logger(reducer: ActionReducer<any>): any {
     return storeLogger()(reducer);
@@ -62,7 +59,6 @@ export const reducers: ActionReducerMap<State> = {
         FormlyMaterialModule,
         CoreModule,
         SharedModule,
-        StaticModule,
         RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules }),
         StoreRouterConnectingModule.forRoot({
             stateKey: 'router', // name of reducer key

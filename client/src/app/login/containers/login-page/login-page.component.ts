@@ -62,10 +62,7 @@ export class LoginPageComponent implements OnDestroy {
         this.error$ = this.store.select(loginSelectors.error);
 
         this.submit$
-            .pipe(
-                tap(x => alert(JSON.stringify(x))),
-                takeUntil(this.destroying$)
-            )
+            .pipe(takeUntil(this.destroying$))
             .subscribe(x => this.store.dispatch(new UserLoginAction(x)));
     }
 

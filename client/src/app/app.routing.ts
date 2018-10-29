@@ -1,16 +1,11 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from '@core/home/home.component';
 import { LoginPageComponent } from './login/containers/login-page/login-page.component';
 
 export const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/home',
+        redirectTo: '/catalog',
         pathMatch: 'full',
-    },
-    {
-        path: 'home',
-        component: HomeComponent,
     },
     {
         path: 'login',
@@ -18,6 +13,6 @@ export const appRoutes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'about',
+        redirectTo: '/catalog',
     },
 ];

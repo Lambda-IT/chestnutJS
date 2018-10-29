@@ -1,7 +1,3 @@
-<p>
-    create-model-detail-page works!
-</p>
-
 <ng-container *ifSome="fields$ | async; let fields">
     <app-modeldetail [fields]="fields" [model]="data" [title]="title" (submit$)="submit$.emit($event)"></app-modeldetail>
 </ng-container>
