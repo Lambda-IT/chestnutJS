@@ -34,10 +34,12 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
                         p =>
                             <FormlyFieldConfig>{
                                 key: p.name,
-                                type: p.enumValues && p.enumValues.length > 0 ? 'select' : typeMap[p.type].type,
+                                type: p.readonly ? 'input' : p.enumValues && p.enumValues.length > 0 ? 'select' : typeMap[p.type].type,
                                 hide: p.hidden,
+                                defaultValue: p.default,
                                 templateOptions: {
-                                    type: p.enumValues && p.enumValues.length > 0 ? null : typeMap[p.type].templateType,
+                                    type: p.readonly ? 'text' :
+                                        p.enumValues && p.enumValues.length > 0 ? null : typeMap[p.type].templateType,
                                     label: p.name,
                                     disabled: p.type === 'ObjectID' || p.readonly,
                                     required: p.required,

@@ -1,6 +1,6 @@
 import { prop, pre, Typegoose, ModelType, InstanceType } from 'typegoose';
 import { createSalt, computeHash } from '../password-service';
-import { hidden } from '../../decorators';
+import { hidden, readonly } from '../../decorators';
 
 export enum ChestnutPermissions {
     read = 'read',
@@ -54,5 +54,6 @@ export class AuthUser extends Typegoose {
     @prop({ default: true })
     activated: boolean;
 
+    @readonly()
     @prop() lastLoginAttempt: Date;
 }

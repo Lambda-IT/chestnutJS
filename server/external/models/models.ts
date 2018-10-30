@@ -27,7 +27,6 @@ export class User extends Typegoose {
     @prop({ enum: ['completed', 'started'] })
     state?: string;
 
-    @readonly()
     @arrayProp({ itemsRef: Task })
     Task: Task[];
 }
