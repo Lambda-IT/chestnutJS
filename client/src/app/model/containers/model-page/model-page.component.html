@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="!model.loading">
         <ng-container *ngIf="model.errors">
-            ERROR {{model.errors[0].message}}
+            {{model.errors[0]?.message}}
         </ng-container>
 
         <ng-container *ifSome="model.data; let data">

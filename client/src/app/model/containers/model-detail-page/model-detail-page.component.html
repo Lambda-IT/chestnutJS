@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="!model.loading">
         <ng-container *ngIf="model.errors">
-            ERROR {{model.errors[0].message}}
+            {{model.errors[0]?.message}}
         </ng-container>
 
         <ng-container *ifNone="model.data">
@@ -12,7 +12,8 @@
 
     <ng-container *ifSome="model.data; else noneTemplate; let data">
         <ng-container *ifSome="fields$ | async; else noneTemplate; let fields">
-            <app-modeldetail [fields]="fields" [model]="data" [title]="modelNameParam" [showBackNavigation]="true" (submit$)="submit$.emit($event)"></app-modeldetail>
+            <app-modeldetail [fields]="fields" [model]="data" [title]="modelNameParam" [showBackNavigation]="true"
+                (submit$)="submit$.emit($event)"></app-modeldetail>
         </ng-container>
     </ng-container>
 

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { appSelectors } from './app.reducer';
 import { loginSelectors } from './login/state/login-reducer';
 import { HeaderModel } from './login/login.model';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import { LogoutAction } from '@shared/state/actions';
 
 @Component({
@@ -28,7 +28,6 @@ export class AppComponent implements OnDestroy {
         this.headerModel$ = this.store.select(loginSelectors.headerModel);
 
         this.logoutClicked$.pipe(
-            tap(x => console.log('------logouztClicked------', x)),
             map(_ => this.store.dispatch(new LogoutAction())),
             takeUntil(this.destroying$)
         ).subscribe();
