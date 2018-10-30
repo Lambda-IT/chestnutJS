@@ -1,5 +1,5 @@
 import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
-import { hidden, editor, PropertyType } from '../../..';
+import { hidden, editor, readonly, PropertyType } from '../../..';
 
 export class Task extends Typegoose {
     @prop() description: string;
@@ -27,6 +27,7 @@ export class User extends Typegoose {
     @prop({ enum: ['completed', 'started'] })
     state?: string;
 
+    @readonly()
     @arrayProp({ itemsRef: Task })
     Task: Task[];
 }

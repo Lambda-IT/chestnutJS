@@ -19,6 +19,7 @@ export interface PropertyDescription {
     enumValues?: string[];
     regExp?: string;
     hidden?: boolean;
+    readonly?: boolean;
 }
 
 export interface ModelDescription {

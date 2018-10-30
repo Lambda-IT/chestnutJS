@@ -2,7 +2,7 @@ import { Request, Response, Express } from 'express';
 import { Model } from 'mongoose';
 import { ModelDescription, PropertyDescription } from '../../../common/metadata';
 import { Store } from '../store';
-import { registry, isHidden } from '../decorators/type-registry';
+import { registry, isHidden, isReadonly } from '../decorators/type-registry';
 
 export function createMetadataController(app: Express, store: Store, baseUrl: string) {
     app.get(baseUrl + '/metadata', (req: Request, res: Response) => {
@@ -25,7 +25,8 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
                         enumValues: property.enumValues,
                         regExp: property.regExp,
                         reference: objProperty ? objProperty.ref : null,
-                        hidden: isHidden(modelName, p)
+                        hidden: isHidden(modelName, p),
+                        readonly: isReadonly(modelName, p)
                     };
 
                     return desc;

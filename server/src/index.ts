@@ -47,7 +47,7 @@ export type Chestnut = {
 
 export async function initChestnut(
     options: ChestnutOptions,
-    initMiddleware?: (app) => Promise<void>
+    initMiddleware?: (server: Chestnut) => Promise<void>
 ): Promise<Chestnut> {
     const logger = createLogger();
     registerGlobalExceptionHandler(logger);
@@ -78,8 +78,6 @@ export async function initChestnut(
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(cookieParser());
-
-    if (initMiddleware) await initMiddleware(app);
 
     app.use(BASE_URL, (req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
@@ -141,6 +139,8 @@ export async function initChestnut(
     await app.listen(options.port);
 
     logger.info(`chestnut-server listening on port ${options.port}`);
+
+    if (initMiddleware) await initMiddleware({ expressApp: app, store, logger });
 
     return { expressApp: app, store: store, logger: logger };
 }

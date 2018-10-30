@@ -39,7 +39,7 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
                                 templateOptions: {
                                     type: p.enumValues && p.enumValues.length > 0 ? null : typeMap[p.type].templateType,
                                     label: p.name,
-                                    disabled: p.type === 'ObjectID',
+                                    disabled: p.type === 'ObjectID' || p.readonly,
                                     required: p.required,
                                     pattern: p.regExp,
                                     options: p.enumValues && p.enumValues.length > 0 && p.enumValues.map(x => ({
