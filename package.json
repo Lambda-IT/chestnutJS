@@ -15,7 +15,8 @@
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
         "build:prod": "tsc -p . --outDir . --declaration && npm run build:client",
-        "prepublishOnly": "shx rm -rf dist && cd ./server && npm install && cd .. && tsc -p . --outDir dist --declaration && cd ./client && npm install && npm run build:npm"
+        "abba": "shx rm -rf dist && cd ./server && npm install && cd .. && tsc -p . --outDir dist",
+        "prepublishOnly": "shx rm -rf dist && cd ./server && npm install && cd .. && tsc -p tsconfig.publish.json && cd ./client && npm install && npm run build:npm"
     },
     "keywords": [],
     "author": "",
@@ -44,7 +45,6 @@
         "jsonwebtoken": "^8.1.0",
         "kebab-case": "^1.0.0",
         "lodash": "^4.17.4",
-        "mongoose": "5.3.3",
         "passport": "^0.4.0",
         "passport-http": "^0.3.0",
         "passport-http-bearer": "^1.0.1",
@@ -53,8 +53,11 @@
         "reflect-metadata": "^0.1.12",
         "rxjs": "^6.3.2",
         "subscriptions-transport-ws": "^0.9.1",
-        "typegoose": "5.4.1",
         "uuid": "^3.1.0"
+    },
+    "peerDependencies": {
+        "mongoose": "5.3.3",
+        "typegoose": "5.4.1"
     },
     "devDependencies": {
         "concurrently": "^3.6.0",
