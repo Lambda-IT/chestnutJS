@@ -49,7 +49,8 @@ initChestnut(
 );
 ```
 
-Where the second parameter (`initExampleApp` in the example) is an optional callback which gets the **chestnutJS** environment as parameter and needs to return a promise. This can be used to configure the custom API endpoints or replace an already existing nodeJS mongoDB environment.
+Where the second parameter (`initExampleApp` in the example) is an optional callback which gets the **chestnutJS** environment as parameter and needs to return a promise.  
+This can be used to configure the custom API endpoints or replace an already existing nodeJS mongoDB environment.
 
 ```typescript
 export declare type Chestnut = {
