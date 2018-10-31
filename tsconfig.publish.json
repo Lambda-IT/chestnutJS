@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "lib": ["es2017", "esnext.asynciterable"],
+        "sourceMap": true,
+        "outDir": "dist",
+        "declaration": true,
+        "declarationDir": "dist",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "include": ["server/**/*", "common/**/*", "index.ts"]
+}
