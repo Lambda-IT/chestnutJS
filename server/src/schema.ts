@@ -1,11 +1,11 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose'; // Plugin from graphql-compose toolkit
 import { GQC } from 'graphql-compose';
 import { GraphQLSchema } from 'graphql';
-import * as mongoose from 'mongoose';
 import * as camelcase from 'camelcase';
 import { Store } from './store';
+import { ChestnutOptions } from '.';
 
-export function initGraphQLSchema(store: Store, prefix?: string): GraphQLSchema {
+export function initGraphQLSchema(store: Store, options: ChestnutOptions): GraphQLSchema {
     const compositions: any = {};
 
     Object.keys(store.models).forEach(key => {

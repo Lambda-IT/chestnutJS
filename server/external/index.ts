@@ -11,7 +11,7 @@ initChestnut(
         models: models,
         mongoDb: 'mongodb://localhost:27017/external-app',
         sessionSecret: '___feifji$gö$gsdfgprüi45u834u584wtti',
-        modelPrefix: 'dev',
+        modelName: { prefix: 'dev', kebabCase: true },
         apiUrl: 'http://localhost:9000',
     },
     _ => Promise.resolve()

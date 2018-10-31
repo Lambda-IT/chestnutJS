@@ -33,7 +33,11 @@ export type ChestnutOptions = {
     port: number;
     models: { [name: string]: any }; // Typegoose Models
     mongoDb: string;
-    modelPrefix?: string;
+    modelName?: {
+        prefix?: string;
+        pluralize?: true;
+        kebabCase?: true;
+    };
     publicFolder?: string;
     sessionSecret: string;
     apiUrl: string;
@@ -60,7 +64,7 @@ export async function initChestnut(
     app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
-    const adminAppPath = path.join(__dirname, '../../client/dist/client');
+    const adminAppPath = path.join(__dirname, '../../client');
     app.use(BASE_URL + '/admin', express.static(adminAppPath, { fallthrough: true }), (req, res, next) => {
         console.log('not found', { header: res.header });
         res.redirect(BASE_URL + '/admin');
@@ -89,16 +93,11 @@ export async function initChestnut(
         }
     });
 
-    const store = await createStoreAsync(
-        options.models,
-        options.mongoDb,
-        {
-            // useMongoClient: true,
-            /* other options */
-            // useNewUrlParser: true,
-        },
-        options.modelPrefix
-    );
+    const store = await createStoreAsync(options, {
+        // useMongoClient: true,
+        /* other options */
+        // useNewUrlParser: true,
+    });
 
     const authConfiguration = {
         issuer: options.apiUrl,
@@ -124,10 +123,10 @@ export async function initChestnut(
         })
     );
 
-    const schema = initGraphQLSchema(store, options.modelPrefix);
+    const schema = initGraphQLSchema(store, options);
     createMetadataController(app, store, BASE_URL);
 
-    app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema }));
+    app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
     app.use('^((?!chestnut).)*$', csrf({ cookie: false }));
