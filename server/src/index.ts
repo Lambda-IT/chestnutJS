@@ -22,6 +22,7 @@ import { createAuth } from './auth/auth-api';
 import { createAuthorizationHandler } from './auth/token-validation';
 import { ChestnutUser } from './chestnut-user-type';
 import { createAuthUserRepository } from './auth/repositories';
+import { Server } from 'http';
 
 export const BASE_URL = '/chestnut';
 
@@ -47,6 +48,7 @@ export type Chestnut = {
     expressApp: express.Express;
     store: Store;
     logger: Log;
+    server: Server;
 };
 
 export async function initChestnut(
@@ -135,13 +137,13 @@ export async function initChestnut(
         next();
     });
 
-    await app.listen(options.port);
+    const server = await app.listen(options.port);
 
     logger.info(`chestnut-server listening on port ${options.port}`);
 
-    if (initMiddleware) await initMiddleware({ expressApp: app, store, logger });
+    if (initMiddleware) await initMiddleware({ expressApp: app, store, logger, server });
 
-    return { expressApp: app, store: store, logger: logger };
+    return { expressApp: app, store: store, logger: logger, server };
 }
 
 export async function createUserAsync(store: Store, user: ChestnutUser) {
