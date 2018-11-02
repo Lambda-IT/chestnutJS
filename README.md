@@ -7,7 +7,7 @@ Headless CMS with Angular 6.1 Admin UI and GraphQL, mongoose (typegoose) backend
 Using npm:
 
 ```sh
-npm install --save chestnutJS
+npm install --save chestnutjs
 ```
 
 After installing **chestnutJS** the following function can be used to bootup the entire chestnut ecosystem: `initChestnut`. The configuration parameter is declared as:
