@@ -15,7 +15,6 @@
         "build:client": "cd ./client && npm run build",
         "build": "npm run build:server && npm run build:client",
         "build:prod": "tsc -p . --outDir . --declaration && npm run build:client",
-        "abba": "shx rm -rf dist && cd ./server && npm install && cd .. && tsc -p . --outDir dist",
         "prepublishOnly": "shx rm -rf dist && cd ./server && npm install && cd .. && tsc -p tsconfig.publish.json && cd ./client && npm install && npm run build:npm"
     },
     "keywords": [],
@@ -63,6 +62,6 @@
         "concurrently": "^3.6.0",
         "prettier": "^1.13.7",
         "shx": "^0.3.2",
-        "typescript": "2.7.2"
+        "typescript": "^2.7.2"
     }
 }

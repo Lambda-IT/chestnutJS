@@ -22,7 +22,7 @@ export function modifyCaseOfModelName(modelName, options: ChestnutOptions) {
     if (!options.modelName || !options.modelName.kebabCase) {
         return modelName;
     }
-    return kebabCase(modelName);
+    return kebabCase(camelcase(modelName));
 }
 
 export interface Store {
