@@ -10,6 +10,7 @@ __export(require("./common/metadata"));
 var decorators_1 = require("./server/src/decorators");
 exports.editor = decorators_1.editor;
 exports.hidden = decorators_1.hidden;
+exports.readonly = decorators_1.readonly;
 exports.excludeFromModel = decorators_1.excludeFromModel;
 var auth_user_1 = require("./server/src/auth/models/auth-user");
 exports.ChestnutPermissions = auth_user_1.ChestnutPermissions;

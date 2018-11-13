@@ -3,7 +3,9 @@ import * as kebabCase from 'kebab-case';
 import * as camelcase from 'camelcase';
 import { AuthUser, AuthClient, AuthToken } from './auth/models';
 import { ChestnutOptions } from '.';
+import { ServerConfig } from './server-update-service';
 
+export const COULD_NOT_WRITE_TO_SERVER = 'COULD_NOT_WRITE_TO_SERVER';
 export const connectionStringRegex = /mongodb:\/\/(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\:\d{5}\/\w+/i;
 
 function getOptions(options, modelName, chestnutOptions: ChestnutOptions) {
@@ -52,6 +54,10 @@ export async function createStoreAsync(
             authUser: new AuthUser().getModelForClass(AuthUser, getOptions(parameters, 'auth-user', options)),
             authClient: new AuthClient().getModelForClass(AuthClient, getOptions(parameters, 'auth-client', options)),
             authToken: new AuthToken().getModelForClass(AuthToken, getOptions(parameters, 'auth-token', options)),
+            serverConfig: new ServerConfig().getModelForClass(
+                ServerConfig,
+                getOptions(parameters, 'server-config', options)
+            ),
         },
     };
 

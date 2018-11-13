@@ -9,7 +9,7 @@
     ],
     "scripts": {
         "start:client": "cd ./client && npm start",
-        "start:server": "cd ./external-app && npm start",
+        "start:server": "cd ./server && node external",
         "start": "npm run start:server",
         "build:server": "tsc -p .",
         "build:client": "cd ./client && npm run build",

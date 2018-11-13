@@ -1,10 +1,8 @@
 import { AuthUser, AuthToken, TokenType } from './models';
 import { AuthUserRepository, AuthTokenRepository } from './oauth-model';
-import { Store } from '../store';
+import { Store, COULD_NOT_WRITE_TO_SERVER } from '../store';
 import { ChestnutUser } from '../chestnut-user-type';
 import { computeHash, createSalt } from './password-service';
-
-export const COULD_NOT_WRITE_TO_SERVER = 'COULD_NOT_WRITE_TO_SERVER';
 
 export const createAuthTokenRepository = (store: Store): AuthTokenRepository => ({
     async addToken(authToken: AuthToken): Promise<string> {

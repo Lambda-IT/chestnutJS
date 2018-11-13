@@ -1,6 +1,7 @@
 export { Chestnut, Response, Request } from '../..';
 import * as models from './models/models';
 import { initChestnut } from '../..';
+import * as path from 'path';
 
 const PORT = +(process.env.PORT || 9000);
 let server;
@@ -13,6 +14,7 @@ initChestnut(
         sessionSecret: '___feifji$gö$gsdfgprüi45u834u584wtti',
         modelName: { prefix: 'dev', kebabCase: true },
         apiUrl: 'http://localhost:9000',
+        updatesFolder: path.join(__dirname, '../external/updates'),
     },
     _ => Promise.resolve()
 )

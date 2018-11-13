@@ -1,4 +1,4 @@
-export { initChestnut, Chestnut, createUserAsync } from './server/src';
+export { initChestnut, Chestnut, createUserAsync, UpdateFunction } from './server/src';
 export { ChestnutUser } from './server/src/chestnut-user-type';
 export * from './common/metadata';
 export { Response, Request } from './server/src/middleware';
