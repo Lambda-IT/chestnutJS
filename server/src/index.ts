@@ -60,7 +60,7 @@ export type Chestnut = {
 export async function initChestnut(
     options: ChestnutOptions,
     initMiddleware?: (app: express.Express, store: Store, logger: Log) => Promise<void>,
-    app = express()
+    app: express.Express = express()
 ): Promise<Chestnut> {
     const logger = createLogger();
     registerGlobalExceptionHandler(logger);
