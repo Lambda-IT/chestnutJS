@@ -59,7 +59,7 @@ export type Chestnut = {
 
 export async function initChestnut(
     options: ChestnutOptions,
-    initMiddleware?: (server: Chestnut) => Promise<void>,
+    initMiddleware?: (app: express.Express, store: Store, logger: Log) => Promise<void>,
     app = express()
 ): Promise<Chestnut> {
     const logger = createLogger();
@@ -160,25 +160,26 @@ export async function initChestnut(
         next();
     });
 
-    const updateFolder = options.updatesFolder || path.join(__dirname, '../updates');
-    logger.info('running updates', { updateFolder });
-    const availableUpdates = (await fs.readdirAsync(updateFolder)) as string[];
+    if (options.updatesFolder) {
+        logger.info('running updates', { updatesFolder: options.updatesFolder });
+        const availableUpdates = (await fs.readdirAsync(options.updatesFolder)) as string[];
 
-    await updateServer(
-        store,
-        serverConfig,
-        availableUpdates.map(u => path.join(updateFolder, u)),
-        serverConfigRepository,
-        logger
-    );
+        await updateServer(
+            store,
+            serverConfig,
+            availableUpdates.map(u => path.join(options.updatesFolder, u)),
+            serverConfigRepository,
+            logger
+        );
+    }
+
+    if (initMiddleware) await initMiddleware(app, store, logger);
 
     logger.info('server initialized successfull');
 
     const server = await app.listen(options.port);
 
     logger.info(`chestnut-server listening on port ${options.port}`);
-
-    if (initMiddleware) await initMiddleware({ expressApp: app, store, logger, server });
 
     process.on('SIGINT', () => {
         logger.info('shutdown signal received.');
