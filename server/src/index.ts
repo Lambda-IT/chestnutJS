@@ -49,6 +49,7 @@ export type ChestnutOptions = {
     sessionSecret: string;
     apiUrl: string;
     updatesFolder?: string;
+    cors: any;
 };
 
 export type Chestnut = {
@@ -63,9 +64,9 @@ async function replaceApiUrl(adminAppPath: string, apiUrl: string) {
         const buf: Buffer = await fs.readFileAsync(path.join(adminAppPath, 'index.html'));
         let html = buf.toString();
         // tslint:disable-next-line:quotemark
-        html.replace(/(window\.__apiBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'chestnut') + "';");
+        html = html.replace(/(window\.__apiBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'chestnut') + "';");
         // tslint:disable-next-line:quotemark
-        html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
+        html = html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
 
         console.log('html', html);
 
@@ -91,7 +92,7 @@ export async function initChestnut(
     app.use(express.static(options.publicFolder || 'public'));
     const adminAppPath = path.join(__dirname, '../../client');
 
-    await replaceApiUrl(path.join(__dirname, '../../dist/client'), options.apiUrl);
+    await replaceApiUrl(adminAppPath, options.apiUrl);
 
     app.use(BASE_URL + '/admin', express.static(adminAppPath, { fallthrough: true }), (req, res, next) => {
         console.log('not found', { header: res.header });
@@ -104,6 +105,7 @@ export async function initChestnut(
     app.use(
         cors({
             exposedHeaders: ['Location'],
+            ...options.cors,
         })
     );
 
