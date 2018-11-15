@@ -77,15 +77,17 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                         propertyName: p,
                     });
 
-                    const refName = camelcase(objProperty[0].ref);
+                    if (objProperty[0].ref !== 'String') {
+                        const refName = camelcase(objProperty[0].ref);
 
-                    compositions[modelName].addRelation(refName + 'Refs', {
-                        resolver: compositions[refName].getResolver('findByIds'),
-                        prepareArgs: {
-                            _ids: (source: any) => source[p],
-                        },
-                        projection: { [p]: 1 },
-                    });
+                        compositions[modelName].addRelation(refName + 'Refs', {
+                            resolver: compositions[refName].getResolver('findByIds'),
+                            prepareArgs: {
+                                _ids: (source: any) => source[p],
+                            },
+                            projection: { [p]: 1 },
+                        });
+                    }
                 }
             });
     });

@@ -4,12 +4,12 @@ export type ResultProcessor = {
     created(): void;
     createdResult(result: any): void;
     error(error: any): void;
-    badRequest(error: Error);
-    ok();
-    sendResult(result: any);
-    writeLocation(location: string);
-    notFound();
-    notAuthorized();
+    badRequest(error: Error): void;
+    ok(): void;
+    sendResult(result: any): void;
+    writeLocation(location: string): void;
+    notFound(): void;
+    notAuthorized(): void;
 };
 
 export function resultProcessor(_: any, response: any, next: NextFunction) {

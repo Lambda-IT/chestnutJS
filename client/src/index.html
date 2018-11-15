@@ -1,20 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Client</title>
+        <base href="/chestnut/admin/" />
 
-<head>
-    <meta charset="utf-8">
-    <title>Client</title>
-    <base href="/chestnut/admin/">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Mono:300" rel="stylesheet" />
+        <script type="text/javascript">
+            window.__apiBaseUrl = 'http://localhost:9000/chestnut';
+            window.__identityBaseUrl = 'http://localhost:9000/auth';
+        </script>
+    </head>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Mono:300" rel="stylesheet">
-</head>
-
-<body>
-    <app-root></app-root>
-</body>
-<script type="text/javascript" src="assets/js/tinymce/jquery.tinymce.min.js" defer></script>
-
+    <body>
+        <app-root></app-root>
+    </body>
+    <script type="text/javascript" src="assets/js/tinymce/jquery.tinymce.min.js" defer></script>
 </html>

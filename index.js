@@ -14,4 +14,6 @@ exports.readonly = decorators_1.readonly;
 exports.excludeFromModel = decorators_1.excludeFromModel;
 var auth_user_1 = require("./server/src/auth/models/auth-user");
 exports.ChestnutPermissions = auth_user_1.ChestnutPermissions;
+var store_1 = require("./server/src/store");
+exports.COULD_NOT_WRITE_TO_SERVER = store_1.COULD_NOT_WRITE_TO_SERVER;
 //# sourceMappingURL=index.js.map

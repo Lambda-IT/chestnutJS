@@ -11,6 +11,7 @@ import * as csrf from 'csurf';
 import * as connectMongo from 'connect-mongo';
 import * as _fs from 'fs';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+import * as urljoin from 'url-join';
 
 import { Log } from '../typings/log';
 import { createLogger } from './logger';
@@ -57,6 +58,23 @@ export type Chestnut = {
     server: Server;
 };
 
+async function replaceApiUrl(adminAppPath: string, apiUrl: string) {
+    try {
+        const buf: Buffer = await fs.readFileAsync(path.join(adminAppPath, 'index.html'));
+        let html = buf.toString();
+        // tslint:disable-next-line:quotemark
+        html.replace(/(window\.__apiBaseUrl = \')([^\']+)\';$/gi, '$1' + urljoin(apiUrl, 'chestnut') + "';");
+        // tslint:disable-next-line:quotemark
+        html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';$/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
+
+        console.log('html', html);
+
+        await fs.writeFileAsync(path.join(adminAppPath, 'index.html'), html);
+    } catch (e) {
+        console.log('replaceApiUrl failed' + e);
+    }
+}
+
 export async function initChestnut(
     options: ChestnutOptions,
     initMiddleware?: (app: express.Express, store: Store, logger: Log) => Promise<void>,
@@ -72,6 +90,9 @@ export async function initChestnut(
 
     app.use(express.static(options.publicFolder || 'public'));
     const adminAppPath = path.join(__dirname, '../../client');
+
+    await replaceApiUrl(path.join(__dirname, '../../dist/client'), options.apiUrl);
+
     app.use(BASE_URL + '/admin', express.static(adminAppPath, { fallthrough: true }), (req, res, next) => {
         console.log('not found', { header: res.header });
         res.redirect(BASE_URL + '/admin');
@@ -110,18 +131,16 @@ export async function initChestnut(
     let serverConfig = await serverConfigRepository.getServerConfigAsync();
 
     if (!serverConfig) {
-        const result = await store.models.serverConfig.create({
+        serverConfig = await store.models.serverConfig.create({
             active: true,
             processedUpdates: [],
             seeded: false,
             inProcess: false,
         } as ServerConfig);
 
-        if (result.length !== 1) {
+        if (!serverConfig) {
             throw Error(COULD_NOT_WRITE_TO_SERVER);
         }
-
-        serverConfig = await serverConfigRepository.getServerConfigAsync();
     }
 
     const authConfiguration = {

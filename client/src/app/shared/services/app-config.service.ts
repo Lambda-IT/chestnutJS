@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import * as urljoin from 'url-join';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppConfigService {
     public buildApiUrl(path: string, ...params: string[]): string {
-        return urljoin(environment.apiBaseUrl, path, ...params);
+        return urljoin(window['__apiBaseUrl'], path, ...params);
     }
 
     public buildIdentityUrl(path: string, ...params: string[]): string {
-        return urljoin(environment.identityBaseUrl, path, ...params);
+        return urljoin(window['__identityBaseUrl'], path, ...params);
     }
 }

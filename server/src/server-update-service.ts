@@ -4,7 +4,7 @@ import * as path from 'path';
 import { mapSeries } from 'bluebird';
 import { Store, COULD_NOT_WRITE_TO_SERVER } from './store';
 import { Log } from '../typings/log';
-import { Typegoose, prop } from 'typegoose';
+import { Typegoose, prop, arrayProp } from 'typegoose';
 import { readonly } from './decorators';
 
 export type UpdateFunction = (mongoStore: Store, logger: Log) => Promise<void>;
