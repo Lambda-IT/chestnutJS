@@ -63,9 +63,9 @@ async function replaceApiUrl(adminAppPath: string, apiUrl: string) {
         const buf: Buffer = await fs.readFileAsync(path.join(adminAppPath, 'index.html'));
         let html = buf.toString();
         // tslint:disable-next-line:quotemark
-        html.replace(/(window\.__apiBaseUrl = \')([^\']+)\';$/gi, '$1' + urljoin(apiUrl, 'chestnut') + "';");
+        html.replace(/(window\.__apiBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'chestnut') + "';");
         // tslint:disable-next-line:quotemark
-        html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';$/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
+        html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
 
         console.log('html', html);
 
