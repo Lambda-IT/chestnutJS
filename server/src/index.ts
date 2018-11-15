@@ -50,7 +50,7 @@ export type ChestnutOptions = {
     apiUrl: string;
     updatesFolder?: string;
     cors?: any;
-    bodyParser: {
+    bodyParser?: {
         json?: any;
         urlencoded?: any;
     };
@@ -112,6 +112,8 @@ export async function initChestnut(
             ...(options.cors || {}),
         })
     );
+
+    options.bodyParser = options.bodyParser || {};
 
     app.use(bodyParser.urlencoded({ extended: true, ...(options.bodyParser.urlencoded || {}) }));
     app.use(bodyParser.json({ ...(options.bodyParser.json || {}) }));
