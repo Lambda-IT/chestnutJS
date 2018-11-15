@@ -49,7 +49,11 @@ export type ChestnutOptions = {
     sessionSecret: string;
     apiUrl: string;
     updatesFolder?: string;
-    cors: any;
+    cors?: any;
+    bodyParser: {
+        json?: any;
+        urlencoded?: any;
+    };
 };
 
 export type Chestnut = {
@@ -105,12 +109,12 @@ export async function initChestnut(
     app.use(
         cors({
             exposedHeaders: ['Location'],
-            ...options.cors,
+            ...(options.cors || {}),
         })
     );
 
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true, ...(options.bodyParser.urlencoded || {}) }));
+    app.use(bodyParser.json({ ...(options.bodyParser.json || {}) }));
     app.use(cookieParser());
 
     app.use(BASE_URL, (req, res, next) => {
