@@ -89,7 +89,7 @@ const toPopulation = (obj: any) =>
             else res.push({ path: key });
         },
         [],
-        obj,
+        obj
     );
 
 /**
@@ -192,36 +192,45 @@ export interface HttpRequest {
     rawBody?: any;
 }
 
-export function createApi(authHandler: { ensureAuthorized: (request: Request, response: Response, next: NextFunction) => Promise<any>; }, app, store, logger: Log) {
+export function createApi(
+    authHandler: { ensureAuthorized: (request: Request, response: Response, next: NextFunction) => Promise<any> },
+    app,
+    store,
+    logger: Log
+) {
     Object.keys(store.models).forEach(modelName => {
         const mongooser = new Mongooser(store.models[modelName]);
 
-        app.get(`/api/${kebabCase(modelName)}`, authHandler.ensureAuthorized, async (request: Request, response: Response, next: NextFunction) => {
-            const query = request.body || {
-                criteria: {},
-                projection: {},
-                population: [],
-                page: null,
-                perPage: 10,
-                sort: null,
-            };
+        app.get(
+            `/api/${kebabCase(modelName)}`,
+            authHandler.ensureAuthorized,
+            async (request: Request, response: Response, next: NextFunction) => {
+                const query = request.body || {
+                    criteria: {},
+                    projection: {},
+                    population: [],
+                    page: null,
+                    perPage: 10,
+                    sort: null,
+                };
 
-            try {
-                const dbResponse = await mongooser.getMany(
-                    query.criteria,
-                    query.projection,
-                    query.population,
-                    query.page,
-                    query.perPage,
-                    query.sort,
-                );
-                logger.info(dbResponse);
-                response.status(dbResponse.status).send(dbResponse.body);
-            } catch (ex) {
-                logger.error(ex);
-                response.status(500).send('' + ex);
+                try {
+                    const dbResponse = await mongooser.getMany(
+                        query.criteria,
+                        query.projection,
+                        query.population,
+                        query.page,
+                        query.perPage,
+                        query.sort
+                    );
+                    logger.info(dbResponse);
+                    response.status(dbResponse.status).send(dbResponse.body);
+                } catch (ex) {
+                    logger.error(ex);
+                    response.status(500).send('' + ex);
+                }
             }
-        });
+        );
 
         app.get(
             `/api/${kebabCase(modelName)}/:id`,
@@ -239,7 +248,7 @@ export function createApi(authHandler: { ensureAuthorized: (request: Request, re
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            },
+            }
         );
 
         app.post(
@@ -253,7 +262,7 @@ export function createApi(authHandler: { ensureAuthorized: (request: Request, re
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            },
+            }
         );
 
         app.post(
@@ -267,7 +276,7 @@ export function createApi(authHandler: { ensureAuthorized: (request: Request, re
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            },
+            }
         );
 
         app.delete(
@@ -281,7 +290,7 @@ export function createApi(authHandler: { ensureAuthorized: (request: Request, re
                     logger.error(ex);
                     response.status(500).send('' + ex);
                 }
-            },
+            }
         );
     });
 }
@@ -290,7 +299,7 @@ export function createApi(authHandler: { ensureAuthorized: (request: Request, re
  * The mongoose-based RESTful API implementation.
  */
 export class Mongooser<T extends mongoose.Document> {
-    constructor(private readonly model: mongoose.Model<T>) { }
+    constructor(private readonly model: mongoose.Model<T>) {}
 
     /**
      * Retrieves an existing item by id.
@@ -298,7 +307,7 @@ export class Mongooser<T extends mongoose.Document> {
     getOne(
         id: any,
         projection?: any,
-        population?: mongoose.ModelPopulateOptions | Array<mongoose.ModelPopulateOptions>,
+        population?: mongoose.ModelPopulateOptions | Array<mongoose.ModelPopulateOptions>
     ): Promise<HttpResponse> {
         const query$ = this.model
             .findOne({ _id: id }, projection)
@@ -336,9 +345,9 @@ export class Mongooser<T extends mongoose.Document> {
         page?: number | any,
         perPage?: number | any,
         sort?: string | any,
-        showInactive?: boolean | any,
+        showInactive?: boolean | any
     ): Promise<HttpResponse> {
-        const count$ = this.model.find(criteria, projection).count();
+        const count$ = this.model.find(criteria, projection).count() as any;
 
         const query$ = this.model
             .find(criteria, projection)
@@ -346,7 +355,7 @@ export class Mongooser<T extends mongoose.Document> {
             .skip(Number(page) >= 0 && Number(perPage) > 0 ? Number(page) * Number(perPage) : 0)
             .limit(Number(page) >= 0 && Number(perPage) > 0 ? Number(perPage) : 0)
             .populate(population)
-            .lean();
+            .lean() as any;
 
         return Promise.all([count$, query$])
             .then((res: Array<any>) => {
