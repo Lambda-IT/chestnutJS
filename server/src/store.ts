@@ -6,7 +6,7 @@ import { ChestnutOptions } from '.';
 import { ServerConfig } from './server-update-service';
 
 export const COULD_NOT_WRITE_TO_SERVER = 'COULD_NOT_WRITE_TO_SERVER';
-export const connectionStringRegex = /mongodb:\/\/(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\:\d{5}\/\w+/i;
+export const connectionStringRegex = /^mongodb(:\/\/)([\w:@\-\.,\/]+)([\?\&][^\=]+\=[^\=\&\n]+)*$/i;
 
 function getOptions(options, modelName, chestnutOptions: ChestnutOptions) {
     const result = Object.assign({}, options);
