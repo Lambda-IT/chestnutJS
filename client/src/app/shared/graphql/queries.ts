@@ -18,29 +18,32 @@ export const composeManyQuery = (modelName: string, properties: string[]): Docum
             }
         }`;
 
-export const composeFilteredManyQuery = (modelName: string, filterItems: FilterItem[]): DocumentNode => {
+export const composeFilteredManyQuery = (
+    modelName: string,
+    properties: string[],
+    filterItems: FilterItem[]
+): DocumentNode => {
     return gql`
-        ${createQueryForFilterSearch(modelName, filterItems)}
+        ${createQueryForFilterSearch(modelName, properties, filterItems)}
     `;
 };
 
-export const createQueryForFilterSearch = (modelName: string, filterItems: FilterItem[]): string => {
+export const createQueryForFilterSearch = (
+    modelName: string,
+    properties: string[],
+    filterItems: FilterItem[]
+): string => {
     const filterString = filterItems.reduce((acc, cur) => {
         const currentValue = cur.isString ? `${cur.field}: "${cur.value}"` : `${cur.field}: ${cur.value}`;
         return [...acc, currentValue];
     }, []);
-    const query = `
+    return `
         query get${modelName}Many {
             ${modelName}Many(filter : {${filterString.join(',')}}) {
-            description, completed
+            ${[...properties]}
             }
         }
     `;
-
-    // const query = "query gettodoMany {todoMany(filter : {description: 'Test%'}) {description, completed}}";
-
-    console.log('query', query);
-    return query;
 };
 
 export const composeCountQuery = (modelName: string): DocumentNode =>

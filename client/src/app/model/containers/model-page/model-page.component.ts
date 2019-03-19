@@ -3,7 +3,7 @@ import { merge, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ApplyAddFilterItemAction, ApplyRemoveFilterItemAction, modelSelectors } from '../../state/model.reducer';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { composeFilteredManyQuery, composeManyQuery } from '@shared/graphql';
@@ -70,15 +70,21 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
 
         const modelTriggeredByFilterChange$ = this.filters$.pipe(
             fromFilteredSome(),
-            mergeMap(filterItems => {
+            withLatestFrom(this.availableColumns$.pipe(fromFilteredSome()), (filterItems, cols) => ({
+                filterItems: filterItems,
+                columns: cols,
+            })),
+            mergeMap(x => {
                 return this.apollo
                     .watchQuery({
-                        query: composeFilteredManyQuery(modelNameParam, filterItems),
+                        query: composeFilteredManyQuery(modelNameParam, x.columns, x.filterItems),
                         fetchPolicy: 'cache-and-network',
                     })
                     .valueChanges.pipe(bindToOptionData(modelNameParam, 'Many'));
             })
         );
+
+        // withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
 
         this.model$ = merge(modelTriggeredByColumnChanged$, modelTriggeredByFilterChange$);
 
