@@ -43,6 +43,8 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
 
         this.filterMetadata$ = this.store.select(modelSelectors.getMetadataForFilter(modelNameParam));
 
+        this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
+
         const modelTriggeredByColumnChanged$ = this.availableColumns$.pipe(
             fromFilteredSome(),
             mergeMap(p => {
@@ -56,6 +58,8 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
         );
 
         this.filters$ = this.store.select(modelSelectors.getItemFilters(modelNameParam));
+
+        this.filters$.subscribe(x => console.log('filters$', x));
 
         const selectedColumnsChangedAction = this.selectedColumnsChanged$.pipe(
             map(columns => new ColumnsChangedAction({ [modelNameParam]: columns }))

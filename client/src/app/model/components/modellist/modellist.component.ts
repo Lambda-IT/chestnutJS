@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { tap, takeUntil, filter, withLatestFrom, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
-import { Option, none, some } from 'fp-ts/lib/Option';
-import { FilterItem, FilterMetadataModel } from '../../types';
+import { none, Option, some } from 'fp-ts/lib/Option';
+import { FilterItem, FilterMetadataModel, ViewComponent } from '../../types';
 
 @Component({
     selector: 'app-modellist',
@@ -56,12 +56,18 @@ export class ModellistComponent implements OnDestroy {
         this.addFilter = this.applyFilter$.pipe(
             filter(() => this.filterForm.valid),
             withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
-            map(v => ({
-                field: v.field.name,
-                isString: v.field.isString,
-                operator: v.operator,
-                value: v.value,
-            })),
+            map(v => {
+                // console.log('Current Value', v);
+                // console.log('11111', ViewComponent.stringInput.toString());
+                // console.log('22222', v.field.viewComponent);
+                // console.log('33333', v.field.viewComponent === ViewComponent.stringInput);
+                return {
+                    field: v.field.name,
+                    isString: v.field.viewComponent === 'StringInput',
+                    operator: v.operator,
+                    value: v.value,
+                };
+            }),
             tap(() => this.filterForm.reset())
         );
     }

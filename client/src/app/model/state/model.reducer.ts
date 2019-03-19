@@ -12,7 +12,7 @@ import { Either } from 'fp-ts/lib/Either';
 import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
 import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
 import { insert, lookup, StrMap } from 'fp-ts/lib/StrMap';
-import { FilterItem, FilterMetadataModel } from '../types/model-types';
+import { FilterItem, FilterMetadataModel, ViewComponent } from '../types/model-types';
 
 export interface ModelPageModel {
     availableColumnMap: Option<{ [key: string]: string[] }>;
@@ -222,7 +222,7 @@ export function getViewModelForMetadata(metadata: Option<MetadataDto>, modelName
         m.properties.map(prop => ({
             name: prop.name,
             values: createValues(prop),
-            isString: prop.type !== PropertyType.boolean,
+            viewComponent: getViewComponent(prop.type),
         }))
     )[0];
 }
@@ -233,5 +233,20 @@ export function createValues(prop: PropertyDescription) {
             return [true, false];
         default:
             return '';
+    }
+}
+
+export function getViewComponent(prop: PropertyType) {
+    switch (prop) {
+        case PropertyType.boolean:
+        case PropertyType.array:
+            return ViewComponent.select;
+        case PropertyType.number:
+            return ViewComponent.number;
+        case PropertyType.date:
+        case PropertyType.dateTime:
+            return ViewComponent.date;
+        default:
+            return ViewComponent.stringInput;
     }
 }

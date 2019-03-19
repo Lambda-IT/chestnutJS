@@ -1,7 +1,7 @@
 export interface FilterMetadataModel {
     name: string;
     values: string | boolean[];
-    isString: boolean;
+    viewComponent: ViewComponent;
 }
 
 export interface FilterItem {
@@ -9,4 +9,11 @@ export interface FilterItem {
     operator: string;
     value: string | boolean;
     isString: boolean;
+}
+
+export enum ViewComponent {
+    stringInput = 'StringInput',
+    select = 'Select',
+    number = 'Number',
+    date = 'Date',
 }

@@ -27,8 +27,27 @@
             </mat-form-field>
 
             <mat-form-field *ifSome="(filterChange$ | async); let filterChange" class="filter-field-30 ">
-                <input *ngIf="filterChange.isString" matInput placeholder="Value" formControlName="value" />
-                <mat-select *ngIf="!filterChange.isString" placeholder="Value" formControlName="value">
+                <input
+                    *ngIf="filterChange.viewComponent === 'StringInput'"
+                    matInput
+                    placeholder="Value"
+                    formControlName="value"
+                />
+                <input
+                    *ngIf="filterChange.viewComponent === 'Number'"
+                    type="number"
+                    matInput
+                    placeholder="Value"
+                    formControlName="value"
+                />
+                <input
+                    *ngIf="filterChange.viewComponent === 'Date'"
+                    type="date"
+                    matInput
+                    placeholder="Value"
+                    formControlName="value"
+                />
+                <mat-select *ngIf="filterChange.viewComponent === 'Select'" placeholder="Value" formControlName="value">
                     <mat-option *ngFor="let value of filterChange.values" [value]="value">{{ value }}</mat-option>
                 </mat-select>
             </mat-form-field>
