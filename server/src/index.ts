@@ -180,7 +180,7 @@ export async function initChestnut(
     const schema = initGraphQLSchema(store, options);
     createMetadataController(app, store, BASE_URL);
 
-    app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema }));
+    app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema })); // authHandler.ensureAuthorized, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
     app.use('^((?!chestnut).)*$', csrf({ cookie: false }));
