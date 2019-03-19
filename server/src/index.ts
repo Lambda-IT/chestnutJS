@@ -30,6 +30,8 @@ import { updateServer, createServerConfigRepository, ServerConfig } from './serv
 export const BASE_URL = '/chestnut';
 const fs = <any>bluePromise.promisifyAll(_fs);
 
+const graphqlHTTP = require('express-graphql');
+
 export { UpdateFunction } from './server-update-service';
 
 const WS_GQL_PATH = '/subscriptions';

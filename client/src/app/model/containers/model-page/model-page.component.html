@@ -1,25 +1,32 @@
-<ng-container *ngIf="model$ | async; let model">
-
+<ng-container *ngIf="(model$ | async); let model">
     <ng-container *ngIf="!model.loading">
         <ng-container *ngIf="model.errors">
-            {{model.errors[0]?.message}}
+            {{ model.errors[0]?.message }}
         </ng-container>
 
-        <ng-container *ifSome="model.data; let data">
-            <ng-container *ngIf="data.length === 0">
-                No data found
-            </ng-container>
-        </ng-container>
+        <!--<ng-container *ifSome="model.data; let data">-->
+        <!--<ng-container *ngIf="data.length === 0">-->
+        <!--No data found-->
+        <!--</ng-container>-->
+        <!--</ng-container>-->
     </ng-container>
 
     <ng-container *ifSome="model.data; else noneTemplate; let data">
-        <ng-container *ifSome="availableColumns$ | async; else noneTemplate; let availableColumns">
-            <ng-container *ifSome="visibleColumns$ | async; else noneTemplate; let visibleColumns">
-                <ng-container *ngIf="data.length > 0">
-                    <app-modellist [availableColumns]="availableColumns" [visibleColumns]="visibleColumns" [dataSource]="data"
-                        (selectedColumnsChanged)="selectedColumnsChanged$.emit($event)"></app-modellist>
-                </ng-container>
+        <ng-container *ifSome="(availableColumns$ | async); else noneTemplate; let availableColumns">
+            <ng-container *ifSome="(visibleColumns$ | async); else noneTemplate; let visibleColumns">
+                <!--<ng-container *ngIf="data.length > 0">-->
+                <app-modellist
+                    [availableColumns]="availableColumns"
+                    [visibleColumns]="visibleColumns"
+                    [dataSource]="data"
+                    [filterItems$]="filters$ | async"
+                    [filterMetadata]="filterMetadata$ | async"
+                    (selectedColumnsChanged)="selectedColumnsChanged$.emit($event)"
+                    (addFilter)="addFilter$.emit($event)"
+                    (removeFilter)="removeFilter$.emit($event)"
+                ></app-modellist>
             </ng-container>
+            <!--</ng-container>-->
         </ng-container>
     </ng-container>
 
@@ -28,5 +35,4 @@
             <mat-spinner class="spinner" *ngIf="model.loading"></mat-spinner>
         </div>
     </ng-template>
-
 </ng-container>
