@@ -51,6 +51,24 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                 const property = mongooseModel.schema.paths[p];
                 const objProperty = mongooseModel.schema.obj[p];
 
+                if (property.instance === 'String') {
+                    // console.log('* ********************** extend regex resolver', {
+                    //     path: property.path,
+                    //     type: property.instance,
+                    // });
+
+                    const extendedResolver = compositions[modelName].getResolver('findMany').addFilterArg({
+                        name: property.path + '_regex',
+                        type: 'String',
+                        description: 'Search by regExp',
+                        query: (query, value) => {
+                            query[property.path] = new RegExp(value, 'i'); // eslint-disable-line
+                        },
+                    });
+                    extendedResolver.extendedResolver.name = 'findMany';
+                    compositions[modelName].addResolver(extendedResolver);
+                }
+
                 if (objProperty && objProperty.ref) {
                     const refName = camelcase(objProperty.ref);
 
