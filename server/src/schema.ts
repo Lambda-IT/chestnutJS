@@ -65,7 +65,7 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                             query[property.path] = new RegExp(value, 'i'); // eslint-disable-line
                         },
                     });
-                    extendedResolver.extendedResolver.name = 'findMany';
+                    extendedResolver.name = 'findMany';
                     compositions[modelName].addResolver(extendedResolver);
                 }
 
