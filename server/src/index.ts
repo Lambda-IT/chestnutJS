@@ -30,11 +30,11 @@ import { updateServer, createServerConfigRepository, ServerConfig } from './serv
 export const BASE_URL = '/chestnut';
 const fs = <any>bluePromise.promisifyAll(_fs);
 
-const graphqlHTTP = require('express-graphql');
+// const graphqlHTTP = require('express-graphql');
 
 export { UpdateFunction } from './server-update-service';
 
-const WS_GQL_PATH = '/subscriptions';
+// const WS_GQL_PATH = '/subscriptions';
 (<any>mongoose).Promise = bluePromise;
 const MongoStore = connectMongo(session);
 
@@ -180,7 +180,7 @@ export async function initChestnut(
     const schema = initGraphQLSchema(store, options);
     createMetadataController(app, store, BASE_URL);
 
-    app.use(`${BASE_URL}/graphql`, graphqlExpress({ schema })); // authHandler.ensureAuthorized, graphqlExpress({ schema }));
+    app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema }));
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));
 
     app.use('^((?!chestnut).)*$', csrf({ cookie: false }));
