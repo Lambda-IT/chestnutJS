@@ -22,7 +22,11 @@
             <mat-form-field *ngIf="filterForm.controls['field'].valid" class="filter-field-10 ">
                 <mat-select placeholder="Operator" formControlName="operator">
                     <mat-option value="is">is</mat-option>
-                    <mat-option value="contains">contains</mat-option>
+                    <mat-option
+                        *ngIf="filterForm.controls['field'].value.viewComponent === ViewComponent.stringInput"
+                        value="contains"
+                        >contains</mat-option
+                    >
                 </mat-select>
             </mat-form-field>
 

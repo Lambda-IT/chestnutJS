@@ -46,7 +46,6 @@ export const createQueryForFilterSearch = (
             }
         }
     `;
-    console.log('QUERY', query);
     return query;
 };
 
