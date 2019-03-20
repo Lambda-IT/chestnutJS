@@ -34,16 +34,20 @@ export const createQueryForFilterSearch = (
     filterItems: FilterItem[]
 ): string => {
     const filterString = filterItems.reduce((acc, cur) => {
-        const currentValue = cur.isString ? `${cur.field}: "${cur.value}"` : `${cur.field}: ${cur.value}`;
+        const fieldname = cur.operator === 'contains' ? `${cur.field}_regex` : cur.field;
+        const currentValue = cur.isString ? `${fieldname}: "${cur.value}"` : `${fieldname}: ${cur.value}`;
         return [...acc, currentValue];
     }, []);
-    return `
+
+    const query = `
         query get${modelName}Many {
             ${modelName}Many(filter : {${filterString.join(',')}}) {
             ${[...properties]}
             }
         }
     `;
+    console.log('QUERY', query);
+    return query;
 };
 
 export const composeCountQuery = (modelName: string): DocumentNode =>

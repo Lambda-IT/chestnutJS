@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { filter, map, startWith, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { FilterItem, FilterMetadataModel, ViewComponent } from '../../types';
+import { DestroyableComponent } from '@core/reactive-component/destroyable-component';
 
 @Component({
     selector: 'app-modellist',
@@ -12,12 +13,12 @@ import { FilterItem, FilterMetadataModel, ViewComponent } from '../../types';
     styleUrls: ['./modellist.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModellistComponent implements OnDestroy {
+export class ModellistComponent extends DestroyableComponent {
     @Input() availableColumns: string[];
     @Input() visibleColumns: string[];
     @Input() dataSource: any[];
     @Input() filterItems$: Option<FilterItem[]>;
-    @Input() filterMetadata: FilterMetadataModel;
+    @Input() filterMetadata: Observable<FilterMetadataModel>;
     @Output() selectedColumnsChanged = new EventEmitter<string[]>();
     @Output() addFilter: Observable<FilterItem>;
     @Output() removeFilter = new EventEmitter<FilterItem>();
@@ -29,8 +30,10 @@ export class ModellistComponent implements OnDestroy {
     filterForm: FormGroup;
     columnsToDisplay = ['field', 'operator', 'value', 'remove'];
     filterChange$;
+    ViewComponent = ViewComponent;
 
     constructor(private formBuilder: FormBuilder) {
+        super();
         this.selectedColumnsForm.valueChanges
             .pipe(
                 tap(c => this.selectedColumnsChanged.emit(c)),
@@ -57,13 +60,9 @@ export class ModellistComponent implements OnDestroy {
             filter(() => this.filterForm.valid),
             withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
             map(v => {
-                // console.log('Current Value', v);
-                // console.log('11111', ViewComponent.stringInput.toString());
-                // console.log('22222', v.field.viewComponent);
-                // console.log('33333', v.field.viewComponent === ViewComponent.stringInput);
                 return {
                     field: v.field.name,
-                    isString: v.field.viewComponent === 'StringInput',
+                    isString: v.field.viewComponent === ViewComponent.stringInput,
                     operator: v.operator,
                     value: v.value,
                 };

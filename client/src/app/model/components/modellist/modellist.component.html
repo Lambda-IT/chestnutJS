@@ -15,43 +15,56 @@
         <form [formGroup]="filterForm" class="filter-form">
             <mat-form-field class="filter-field-30 ">
                 <mat-select placeholder="Field" formControlName="field">
-                    <mat-option *ngFor="let col of filterMetadata" [value]="col">{{ col.name }} </mat-option>
+                    <mat-option *ngFor="let col of (filterMetadata | async)" [value]="col">{{ col.name }} </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="filter-field-10 ">
+            <mat-form-field *ngIf="filterForm.controls['field'].valid" class="filter-field-10 ">
                 <mat-select placeholder="Operator" formControlName="operator">
                     <mat-option value="is">is</mat-option>
                     <mat-option value="contains">contains</mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ifSome="(filterChange$ | async); let filterChange" class="filter-field-30 ">
-                <input
-                    *ngIf="filterChange.viewComponent === 'StringInput'"
-                    matInput
-                    placeholder="Value"
-                    formControlName="value"
-                />
-                <input
-                    *ngIf="filterChange.viewComponent === 'Number'"
-                    type="number"
-                    matInput
-                    placeholder="Value"
-                    formControlName="value"
-                />
-                <input
-                    *ngIf="filterChange.viewComponent === 'Date'"
-                    type="date"
-                    matInput
-                    placeholder="Value"
-                    formControlName="value"
-                />
-                <mat-select *ngIf="filterChange.viewComponent === 'Select'" placeholder="Value" formControlName="value">
-                    <mat-option *ngFor="let value of filterChange.values" [value]="value">{{ value }}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <button mat-raised-button (click)="applyFilter$.emit(true)" class="button">Apply Filter</button>
+            <ng-container *ifSome="(filterChange$ | async); let filterChange">
+                <mat-form-field *ngIf="filterForm.controls['operator'].valid" class="filter-field-30 ">
+                    <input
+                        *ngIf="filterChange.viewComponent === ViewComponent.stringInput"
+                        matInput
+                        placeholder="Value"
+                        formControlName="value"
+                    />
+                    <input
+                        *ngIf="filterChange.viewComponent === ViewComponent.number"
+                        type="number"
+                        matInput
+                        placeholder="Value"
+                        formControlName="value"
+                    />
+                    <input
+                        *ngIf="filterChange.viewComponent === ViewComponent.date"
+                        type="date"
+                        matInput
+                        placeholder="Value"
+                        formControlName="value"
+                    />
+                    <mat-select
+                        *ngIf="filterChange.viewComponent === ViewComponent.select"
+                        placeholder="Value"
+                        formControlName="value"
+                    >
+                        <mat-option *ngFor="let value of filterChange.values" [value]="value">{{ value }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+            <button
+                *ngIf="filterForm.controls['value'].valid"
+                mat-raised-button
+                (click)="applyFilter$.emit(true)"
+                class="button"
+            >
+                Apply Filter
+            </button>
         </form>
         <ng-container *ifSome="filterItems$; let filterItems">
             <table mat-table [dataSource]="filterItems" class="model-table">

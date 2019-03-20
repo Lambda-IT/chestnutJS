@@ -43,7 +43,9 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
 
         this.filterMetadata$ = this.store.select(modelSelectors.getMetadataForFilter(modelNameParam));
 
-        this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
+        this.filters$ = this.store.select(modelSelectors.getItemFilters(modelNameParam));
+
+        //  this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
 
         const modelTriggeredByColumnChanged$ = this.availableColumns$.pipe(
             fromFilteredSome(),
@@ -55,21 +57,6 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
                     })
                     .valueChanges.pipe(bindToOptionData(modelNameParam, 'Many'));
             })
-        );
-
-        this.filters$ = this.store.select(modelSelectors.getItemFilters(modelNameParam));
-
-        this.filters$.subscribe(x => console.log('filters$', x));
-
-        const selectedColumnsChangedAction = this.selectedColumnsChanged$.pipe(
-            map(columns => new ColumnsChangedAction({ [modelNameParam]: columns }))
-        );
-
-        const addFilterAction = this.addFilter$.pipe(
-            map(filterItem => new ApplyAddFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
-        );
-        const removeFilterAction = this.removeFilter$.pipe(
-            map(filterItem => new ApplyRemoveFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
         );
 
         const modelTriggeredByFilterChange$ = this.filters$.pipe(
@@ -91,6 +78,18 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
         // withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
 
         this.model$ = merge(modelTriggeredByColumnChanged$, modelTriggeredByFilterChange$);
+
+        // this.filters$.subscribe(x => console.log('filters$', x));
+
+        const selectedColumnsChangedAction = this.selectedColumnsChanged$.pipe(
+            map(columns => new ColumnsChangedAction({ [modelNameParam]: columns }))
+        );
+        const addFilterAction = this.addFilter$.pipe(
+            map(filterItem => new ApplyAddFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
+        );
+        const removeFilterAction = this.removeFilter$.pipe(
+            map(filterItem => new ApplyRemoveFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
+        );
 
         this.dispatch(selectedColumnsChangedAction, addFilterAction, removeFilterAction);
     }
