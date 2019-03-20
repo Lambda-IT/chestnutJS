@@ -74,11 +74,11 @@ async function replaceApiUrl(adminAppPath: string, apiUrl: string) {
         // tslint:disable-next-line:quotemark
         html = html.replace(/(window\.__identityBaseUrl = \')([^\']+)\';/gi, '$1' + urljoin(apiUrl, 'auth') + "';");
 
-        console.log('html', html);
+        // console.log('html', html);
 
         await fs.writeFileAsync(path.join(adminAppPath, 'index.html'), html);
     } catch (e) {
-        console.log('replaceApiUrl failed' + e);
+        console.error('replaceApiUrl failed' + e);
     }
 }
 
