@@ -1,4 +1,4 @@
-import { prop, pre, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { prop, pre, Typegoose, ModelType, InstanceType, index } from 'typegoose';
 import { createSalt, computeHash } from '../password-service';
 import { hidden, readonly } from '../../decorators';
 
@@ -42,7 +42,7 @@ export class AuthUser extends Typegoose {
     @prop({ required: true, enum: ChestnutPermissions })
     permissions: ChestnutPermissions;
 
-    @prop({ default: 0 })
+    @prop({ default: 0, index: true })
     failedLoginAttemps: number;
 
     @prop({ default: false })
@@ -55,5 +55,6 @@ export class AuthUser extends Typegoose {
     activated: boolean;
 
     @readonly()
-    @prop() lastLoginAttempt: Date;
+    @prop({ index: true })
+    lastLoginAttempt: Date;
 }
