@@ -15,10 +15,37 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
 
         compositions[modelName] = modelComposition;
 
-        console.log('compose', {
-            key: key,
-            modelName: modelName,
-        });
+        // console.log('compose', {
+        //     key: key,
+        //     modelName: modelName,
+        // });
+
+        Object.keys(mongooseModel.schema.paths)
+            .filter(k => k !== '__v')
+            .forEach(p => {
+                const property = mongooseModel.schema.paths[p];
+
+                if (property.instance === 'String') {
+                    modelComposition.setResolver(
+                        'findMany',
+                        modelComposition.getResolver('findMany').addFilterArg({
+                            name: property.path + '_regex',
+                            type: 'String',
+                            description: 'Search by regExp',
+                            query: (rawQuery, value) => {
+                                rawQuery[property.path] = new RegExp(value, 'i');
+                            },
+                        })
+                        // .wrapResolve(next => rp => {
+                        //     const r = next(rp);
+                        //     console.log('RawQuery:', rp.rawQuery);
+                        //     console.log('Mongoose query:', rp.query);
+                        //     return r;
+                        // })
+                    );
+                }
+            });
+
         // queries and mutations from graphql-compose ...
         GQC.rootQuery().addFields({
             [modelName + 'ById']: modelComposition.getResolver('findById'),
@@ -51,34 +78,16 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                 const property = mongooseModel.schema.paths[p];
                 const objProperty = mongooseModel.schema.obj[p];
 
-                if (property.instance === 'String') {
-                    // console.log('* ********************** extend regex resolver', {
-                    //     path: property.path,
-                    //     type: property.instance,
-                    // });
-
-                    const extendedResolver = compositions[modelName].getResolver('findMany').addFilterArg({
-                        name: property.path + '_regex',
-                        type: 'String',
-                        description: 'Search by regExp',
-                        query: (query, value) => {
-                            query[property.path] = new RegExp(value, 'i'); // eslint-disable-line
-                        },
-                    });
-                    extendedResolver.name = 'findMany';
-                    compositions[modelName].addResolver(extendedResolver);
-                }
-
                 if (objProperty && objProperty.ref) {
                     const refName = camelcase(objProperty.ref);
 
-                    console.log('addParentRelation', {
-                        reference: objProperty ? objProperty.ref : null,
-                        name: p,
-                        refName: refName,
-                        modelName: modelName,
-                        propertyName: p,
-                    });
+                    // console.log('addParentRelation', {
+                    //     reference: objProperty ? objProperty.ref : null,
+                    //     name: p,
+                    //     refName: refName,
+                    //     modelName: modelName,
+                    //     propertyName: p,
+                    // });
 
                     compositions[modelName].addRelation(refName + 'Ref', {
                         resolver: compositions[refName].getResolver('findById'),
@@ -88,12 +97,12 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                         projection: { [p]: 1 },
                     });
                 } else if (objProperty && Array.isArray(objProperty) && objProperty.length > 0) {
-                    console.log('addChildRelation', {
-                        reference: objProperty[0].ref,
-                        name: p,
-                        modelName: modelName,
-                        propertyName: p,
-                    });
+                    // console.log('addChildRelation', {
+                    //     reference: objProperty[0].ref,
+                    //     name: p,
+                    //     modelName: modelName,
+                    //     propertyName: p,
+                    // });
 
                     if (objProperty[0].ref !== 'String') {
                         const refName = camelcase(objProperty[0].ref);
