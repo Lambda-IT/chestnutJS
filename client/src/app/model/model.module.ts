@@ -13,6 +13,7 @@ import { StoreModule } from '@ngrx/store';
 import { modelReducer } from './state/model.reducer';
 import { CreateModelDetailPageComponent } from './containers/create-model-detail-page/create-model-detail-page.component';
 import { ModelEffects } from './state/model.effects';
+import { ModellistFilterComponent } from './components/modellist/modellist-filter.component';
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import { ModelEffects } from './state/model.effects';
         ModellistComponent,
         ModelDetailPageComponent,
         CreateModelDetailPageComponent,
+        ModellistFilterComponent,
     ],
 })
 export class ModelModule {}

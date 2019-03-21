@@ -34,7 +34,7 @@ export class User extends Typegoose {
 export class Todo extends Typegoose {
     @prop() description: string;
 
-    @prop() completed: boolean;
+    @prop({ default: false }) completed: boolean;
 
     @prop({ ref: User, required: true })
     user: Ref<User>;

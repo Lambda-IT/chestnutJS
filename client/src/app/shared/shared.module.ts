@@ -16,6 +16,7 @@ import {
     MatCardModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatExpansionModule,
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { NgxFpTsModule } from 'ngx-fp-ts';
@@ -52,10 +53,9 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         NgxFpTsModule,
         EditorModule,
         ReactiveFormsModule,
+        MatExpansionModule,
         FormlyModule.forChild({
-            types: [
-              { name: 'html', component: FormlyTinyMCEComponent },
-            ]
+            types: [{ name: 'html', component: FormlyTinyMCEComponent }],
         }),
         FormlyMaterialModule,
         StoreModule.forFeature('shared', sharedStateReducer),
@@ -81,13 +81,17 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         NgxFpTsModule,
         EditorModule,
         ReactiveFormsModule,
-        FormlyMaterialModule
+        FormlyMaterialModule,
+        MatExpansionModule,
     ],
-    providers: [AuthGuard, {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true,
-    }],
+    providers: [
+        AuthGuard,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+    ],
     declarations: [FormlyTinyMCEComponent],
 })
 export class SharedModule {}

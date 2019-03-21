@@ -20,6 +20,7 @@ export interface PropertyDescription {
     regExp?: string;
     hidden?: boolean;
     readonly?: boolean;
+    index: boolean;
 }
 
 export interface ModelDescription {

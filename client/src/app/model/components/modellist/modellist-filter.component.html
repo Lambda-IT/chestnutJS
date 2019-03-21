@@ -1,0 +1,64 @@
+<form [formGroup]="filterForm" class="filter-form">
+    <mat-form-field class="filter-field-30 ">
+        <mat-select placeholder="Field" formControlName="field">
+            <mat-option *ngFor="let col of (filterMetadata | async)" [value]="col">{{ col.name }} </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="filterForm.controls['field'].valid" class="filter-field-10 ">
+        <mat-select placeholder="Operator" formControlName="operator">
+            <mat-option *ngIf="!filterForm.controls['field'].value.hasOperator" value="is">is</mat-option>
+            <mat-option
+                *ngIf="
+                    filterForm.controls['field'].value.viewComponent === ViewComponent.stringInput &&
+                    !filterForm.controls['field'].value.hasOperator
+                "
+                value="contains"
+                >contains
+            </mat-option>
+            <ng-container *ngIf="filterForm.controls['field'].value.hasOperator">
+                <mat-option *ngFor="let val of operatorValues" [value]="val">{{ val }} </mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
+
+    <ng-container *ifSome="(filterChange$ | async); let filterChange">
+        <mat-form-field *ngIf="filterForm.controls['operator'].valid" class="filter-field-30 ">
+            <input
+                *ngIf="filterChange.viewComponent === ViewComponent.stringInput"
+                matInput
+                placeholder="Value"
+                formControlName="value"
+            />
+            <input
+                *ngIf="filterChange.viewComponent === ViewComponent.number"
+                type="number"
+                matInput
+                placeholder="Value"
+                formControlName="value"
+            />
+            <input
+                *ngIf="filterChange.viewComponent === ViewComponent.date"
+                type="date"
+                matInput
+                placeholder="Value"
+                formControlName="value"
+            />
+            <mat-select
+                *ngIf="filterChange.viewComponent === ViewComponent.select"
+                placeholder="Value"
+                formControlName="value"
+            >
+                <mat-option *ngFor="let value of filterChange.values" [value]="value">{{ value }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
+    <button
+        *ngIf="filterForm.controls['value'].valid"
+        mat-raised-button
+        (click)="applyFilter$.emit(true)"
+        class="button"
+    >
+        Apply Filter
+    </button>
+</form>

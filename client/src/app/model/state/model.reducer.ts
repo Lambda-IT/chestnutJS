@@ -1,12 +1,18 @@
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ReducerBuilder } from 'ngrx-reducer-builder';
-import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction, ApplyUserVisibleColumnsAction } from '@shared/state/actions';
+import {
+    ApplyMetadataLoadedAction,
+    ApplyMetadataLoadingAction,
+    ApplyUserVisibleColumnsAction,
+} from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
-import { Option, none, some } from 'fp-ts/lib/Option';
+import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { Either } from 'fp-ts/lib/Either';
 import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
-import { MetadataDto } from '../../../../../common/metadata';
+import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
+import { insert, lookup, StrMap } from 'fp-ts/lib/StrMap';
+import { FilterItem, FilterMetadataModel, ViewComponent } from '../types/model-types';
 
 export interface ModelPageModel {
     availableColumnMap: Option<{ [key: string]: string[] }>;
@@ -14,6 +20,8 @@ export interface ModelPageModel {
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
+    filterItem: StrMap<FilterItem[]>;
+    model: Option<MetadataDto>;
 }
 
 export interface ModelDetailPageModel {
@@ -47,7 +55,9 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 loading: false,
                 error: some(l),
                 availableColumnMap: none,
-                userVisibleColumnMap: none
+                userVisibleColumnMap: none,
+                filterItem: new StrMap({}),
+                model: none,
             },
         }),
         r => ({
@@ -63,14 +73,26 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 loading: false,
                 availableColumnMap: some(transformMetadataToProperties(r)),
                 error: none,
-                userVisibleColumnMap: some(transformMetadataToProperties(r))
+                userVisibleColumnMap: some(transformMetadataToProperties(r)),
+                model: some(r),
+                filterItem: new StrMap({}),
             },
         })
     );
 
 export class ApplyColumnsChangedAction {
     public readonly type = 'APPLY_COLUMNS_CHANGED';
-    constructor(public payload: { [model: string]: string[] }) { }
+    constructor(public payload: { [model: string]: string[] }) {}
+}
+
+export class ApplyAddFilterItemAction {
+    public readonly type = 'APPLY_ADD_FILTER_ITEM_';
+    constructor(public payload: FilterPayload) {}
+}
+
+export class ApplyRemoveFilterItemAction {
+    public readonly type = 'APPLY_REMOVE_FILTER_ITEM_';
+    constructor(public payload: FilterPayload) {}
 }
 
 export const reducer = new ReducerBuilder<ModelState>()
@@ -89,16 +111,49 @@ export const reducer = new ReducerBuilder<ModelState>()
         ...state,
         modelPageModel: {
             ...state.modelPageModel,
-            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload }))
-        }
+            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload })),
+        },
     }))
     .handle(ApplyColumnsChangedAction, (state, action) => ({
         ...state,
         modelPageModel: {
             ...state.modelPageModel,
-            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload }))
-        }
+            userVisibleColumnMap: state.modelPageModel.userVisibleColumnMap.map(x => ({ ...x, ...action.payload })),
+        },
     }))
+    .handle(
+        ApplyAddFilterItemAction,
+        (state, action): ModelState => {
+            const currentValues = lookup(action.payload.key, state.modelPageModel.filterItem).getOrElse([]);
+            return {
+                ...state,
+                modelPageModel: {
+                    ...state.modelPageModel,
+                    filterItem: insert(
+                        action.payload.key,
+                        [...currentValues, action.payload.filterItem],
+                        state.modelPageModel.filterItem
+                    ),
+                },
+            };
+        }
+    )
+    .handle(
+        ApplyRemoveFilterItemAction,
+        (state, action): ModelState => {
+            const currentValues = lookup(action.payload.key, state.modelPageModel.filterItem).getOrElse([]);
+            const newValues = currentValues.filter(x => {
+                return !(x === action.payload.filterItem);
+            });
+            return {
+                ...state,
+                modelPageModel: {
+                    ...state.modelPageModel,
+                    filterItem: insert(action.payload.key, newValues, state.modelPageModel.filterItem),
+                },
+            };
+        }
+    )
     .build({
         modelDetailPageModel: {
             loaded: false,
@@ -112,18 +167,87 @@ export const reducer = new ReducerBuilder<ModelState>()
             loading: false,
             error: none,
             availableColumnMap: none,
-            userVisibleColumnMap: none
+            userVisibleColumnMap: none,
+            filterItem: new StrMap({}),
+            model: none,
         },
     });
 
 export const getModelState = createFeatureSelector<ModelState>('model');
+
 export const modelSelectors = {
-    getFormFieldConfigMap: createSelector(getModelState, state => state.modelDetailPageModel.formFieldConfigMap),
-    getProperties: createSelector(getModelState, state => state.modelDetailPageModel.propertyMap),
-    getAvailableColumns: createSelector(getModelState, state => state.modelPageModel.availableColumnMap),
-    getVisibleColumns: createSelector(getModelState, state => state.modelPageModel.userVisibleColumnMap)
+    getFormFieldConfigMap: createSelector(
+        getModelState,
+        state => state.modelDetailPageModel.formFieldConfigMap
+    ),
+    getProperties: createSelector(
+        getModelState,
+        state => state.modelDetailPageModel.propertyMap
+    ),
+    getAvailableColumns: createSelector(
+        getModelState,
+        state => state.modelPageModel.availableColumnMap
+    ),
+    getVisibleColumns: createSelector(
+        getModelState,
+        state => state.modelPageModel.userVisibleColumnMap
+    ),
+    getItemFilters: field =>
+        createSelector(
+            getModelState,
+            (state: ModelState) => getModelState(state).modelPageModel.filterItem,
+            filter => lookup(`${field}`, filter.modelPageModel.filterItem)
+        ),
+
+    getMetadataForFilter: modelname =>
+        createSelector(
+            getModelState,
+            (state: ModelState) => getViewModelForMetadata(state.modelPageModel.model, modelname)
+        ),
 };
 
 export function modelReducer(state: ModelState, action: Action): ModelState {
     return reducer(state, action);
+}
+
+export interface FilterPayload {
+    key: string;
+    filterItem;
+}
+
+export function getViewModelForMetadata(metadata: Option<MetadataDto>, modelName: string): FilterMetadataModel[] {
+    const model = metadata.map(metaDto => metaDto.models.filter(m => m.name === modelName)).getOrElse([]);
+
+    return model.map(m =>
+        m.properties.map(prop => ({
+            name: prop.name,
+            values: createValues(prop),
+            viewComponent: getViewComponent(prop.type),
+            hasOperator: prop.index ? prop.index : false,
+        }))
+    )[0];
+}
+
+export function createValues(prop: PropertyDescription) {
+    switch (prop.type) {
+        case PropertyType.boolean:
+            return [true, false];
+        default:
+            return '';
+    }
+}
+
+export function getViewComponent(prop: PropertyType) {
+    switch (prop) {
+        case PropertyType.boolean:
+        case PropertyType.array:
+            return ViewComponent.select;
+        case PropertyType.number:
+            return ViewComponent.number;
+        case PropertyType.date:
+        case PropertyType.dateTime:
+            return ViewComponent.date;
+        default:
+            return ViewComponent.stringInput;
+    }
 }
