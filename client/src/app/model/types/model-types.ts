@@ -2,6 +2,7 @@ export interface FilterMetadataModel {
     name: string;
     values: string | boolean[];
     viewComponent: ViewComponent;
+    hasOperator: boolean;
 }
 
 export interface FilterItem {
@@ -9,6 +10,7 @@ export interface FilterItem {
     operator: string;
     value: string | boolean;
     isString: boolean;
+    hasGraphQLOperator: boolean;
 }
 
 export enum ViewComponent {

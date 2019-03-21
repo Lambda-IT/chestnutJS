@@ -34,8 +34,14 @@ export const createQueryForFilterSearch = (
     filterItems: FilterItem[]
 ): string => {
     const filterString = filterItems.reduce((acc, cur) => {
+        let currentValue;
         const fieldname = cur.operator === 'contains' ? `${cur.field}_regex` : cur.field;
-        const currentValue = cur.isString ? `${fieldname}: "${cur.value}"` : `${fieldname}: ${cur.value}`;
+
+        if (!cur.hasGraphQLOperator) {
+            currentValue = cur.isString ? `${fieldname}: "${cur.value}"` : `${fieldname}: ${cur.value}`;
+        } else {
+            currentValue = `_operators: {${fieldname} : {${cur.operator}:${cur.value}}}`;
+        }
         return [...acc, currentValue];
     }, []);
 
@@ -46,6 +52,8 @@ export const createQueryForFilterSearch = (
             }
         }
     `;
+
+    // console.log('QUERY', query);
     return query;
 };
 

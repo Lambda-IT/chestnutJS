@@ -32,6 +32,8 @@ export class ModellistComponent extends DestroyableComponent {
     filterChange$;
     ViewComponent = ViewComponent;
 
+    operatorValues = ['gt', 'gte', 'lt', 'lte'];
+
     constructor(private formBuilder: FormBuilder) {
         super();
         this.selectedColumnsForm.valueChanges
@@ -60,9 +62,11 @@ export class ModellistComponent extends DestroyableComponent {
             filter(() => this.filterForm.valid),
             withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
             map(v => {
+                console.log('HaS Operator', v.field);
                 return {
                     field: v.field.name,
                     isString: v.field.viewComponent === ViewComponent.stringInput,
+                    hasGraphQLOperator: v.field.hasOperator,
                     operator: v.operator,
                     value: v.value,
                 };
@@ -73,9 +77,5 @@ export class ModellistComponent extends DestroyableComponent {
 
     public expandPanel() {
         return this.filterItems$.isSome() && this.filterItems$.map(x => x.length > 0).getOrElse(false);
-    }
-
-    ngOnDestroy(): void {
-        this.destroying$.emit();
     }
 }

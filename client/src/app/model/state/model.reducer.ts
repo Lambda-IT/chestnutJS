@@ -223,6 +223,7 @@ export function getViewModelForMetadata(metadata: Option<MetadataDto>, modelName
             name: prop.name,
             values: createValues(prop),
             viewComponent: getViewComponent(prop.type),
+            hasOperator: prop.index ? prop.index : false,
         }))
     )[0];
 }

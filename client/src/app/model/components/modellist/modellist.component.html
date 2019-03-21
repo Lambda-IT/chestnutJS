@@ -21,12 +21,18 @@
 
             <mat-form-field *ngIf="filterForm.controls['field'].valid" class="filter-field-10 ">
                 <mat-select placeholder="Operator" formControlName="operator">
-                    <mat-option value="is">is</mat-option>
+                    <mat-option *ngIf="!filterForm.controls['field'].value.hasOperator" value="is">is</mat-option>
                     <mat-option
-                        *ngIf="filterForm.controls['field'].value.viewComponent === ViewComponent.stringInput"
+                        *ngIf="
+                            filterForm.controls['field'].value.viewComponent === ViewComponent.stringInput &&
+                            !filterForm.controls['field'].value.hasOperator
+                        "
                         value="contains"
-                        >contains</mat-option
-                    >
+                        >contains
+                    </mat-option>
+                    <ng-container *ngIf="filterForm.controls['field'].value.hasOperator">
+                        <mat-option *ngFor="let val of operatorValues" [value]="val">{{ val }} </mat-option>
+                    </ng-container>
                 </mat-select>
             </mat-form-field>
 
