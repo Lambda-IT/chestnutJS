@@ -13,15 +13,15 @@ import { Observable } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModellistFilterComponent extends DestroyableComponent {
-    @Input() filterChange: FilterMetadataModel;
+    @Input() filterMetadata: Observable<FilterMetadataModel>;
     @Output() addFilter: Observable<FilterItem>;
+    @Output() removeFilter = new EventEmitter<FilterItem>();
 
     applyFilter$ = new EventEmitter<boolean>();
-
     filterForm: FormGroup;
     columnsToDisplay = ['field', 'operator', 'value', 'remove'];
-
     ViewComponent = ViewComponent;
+    operatorValues = ['gt', 'gte', 'lt', 'lte'];
     filterChange$;
 
     constructor(private formBuilder: FormBuilder) {
