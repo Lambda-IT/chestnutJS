@@ -3,7 +3,7 @@ import * as uuidV4 from 'uuid';
 import * as crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
 import { Observable, of } from 'rxjs';
-import { filter, map, merge, flatMap, catchError } from 'rxjs/operators';
+import { filter, map, merge, flatMap, catchError, tap } from 'rxjs/operators';
 
 export type Success<T> = {
     isSuccess: true;
@@ -116,8 +116,8 @@ export const ensureToken = (req: Request & { token: string }, res: Response, nex
 };
 
 const generateRefreshToken = async (): Promise<string> => {
-    return new Promise<string>(async function (resolve: any, reject: any) {
-        crypto.randomBytes(256, function (error: Error, buffer: Buffer): void {
+    return new Promise<string>(async function(resolve: any, reject: any) {
+        crypto.randomBytes(256, function(error: Error, buffer: Buffer): void {
             if (error) {
                 return reject(error);
             }
@@ -140,7 +140,7 @@ const onSuccess = <T, R>(f: (r: Success<R>) => Promise<T>) => (
         : f(result);
 
 export class Identity {
-    constructor(private configuration: IdentityConfig) { }
+    constructor(private configuration: IdentityConfig) {}
 
     public grant(): (req: Request, res: Response, next: NextFunction) => Promise<void> {
         return async (req: Request, res: Response, next: NextFunction) => {
@@ -149,19 +149,22 @@ export class Identity {
             const password$: Observable<void> = of(request as PasswordTokenRequest).pipe(
                 filter<PasswordTokenRequest>((p: TokenRequest) => p.grant_type === 'password'),
                 this.grantPassword(),
-                this.renderResponse(req, res, next));
+                this.renderResponse(req, res, next)
+            );
 
             const refreshToken$: Observable<void> = of(request as RefreshTokenRequest).pipe(
                 filter<RefreshTokenRequest>((p: TokenRequest) => p.grant_type === 'refresh_token'),
                 this.grantRefreshToken(),
-                this.renderResponse(req, res, next));
+                this.renderResponse(req, res, next)
+            );
 
             const undefined$: Observable<void> = of(request).pipe(
                 filter(x => x.grant_type !== 'password' && x.grant_type !== 'refresh_token'),
                 map(_ => {
                     res.sendStatus(500);
                     next();
-                }));
+                })
+            );
 
             return password$.pipe(merge(refreshToken$, undefined$)).toPromise();
         };
@@ -187,16 +190,17 @@ export class Identity {
                 map(x => {
                     x.isSuccess
                         ? res.json({
-                            token_type: 'bearer',
-                            access_token: x.value.signedToken,
-                            expires_in: this.configuration.tokenExpiration,
-                            refresh_token: x.value.refreshToken,
-                        })
+                              token_type: 'bearer',
+                              access_token: x.value.signedToken,
+                              expires_in: this.configuration.tokenExpiration,
+                              refresh_token: x.value.refreshToken,
+                          })
                         : (<Failure<ModelError>>x).type
-                            ? res.status(400).json((<Failure<ModelError>>x).error)
-                            : res.status(500).json((<Failure<Error | string>>x).error);
+                        ? res.status(400).json((<Failure<ModelError>>x).error)
+                        : res.status(500).json((<Failure<Error | string>>x).error);
                     next();
-                }));
+                })
+            );
         };
     }
 
@@ -235,7 +239,8 @@ export class Identity {
                         )
                     )
                 ),
-                catchError((error: Error) => of(failure<Error>('UNEXPECTED_ERROR', error))));
+                catchError((error: Error) => of(failure<Error>('UNEXPECTED_ERROR', error)))
+            );
         };
     }
 
@@ -269,7 +274,8 @@ export class Identity {
                         )
                     )
                 ),
-                catchError((error: Error) => of(failure<Error>('UNEXPECTED_ERROR', error))));
+                catchError((error: Error) => of(failure<Error>('UNEXPECTED_ERROR', error)))
+            );
         };
     }
 
@@ -307,7 +313,7 @@ export class Identity {
             exp: Math.floor(Date.now() / 1000) + this.configuration.tokenExpiration,
             iat: Math.floor(Date.now() / 1000),
             name: user.email,
-            permissions: user.permissions
+            permissions: user.permissions,
         });
     }
 
@@ -340,7 +346,12 @@ export class Identity {
         return Promise.reject('NOT_IMPLEMENTED');
     }
 
-    public async saveAccessToken(signedAccessToken: string, clientId: string, expires: Date, user: IdentityUser): Promise<void> {
+    public async saveAccessToken(
+        signedAccessToken: string,
+        clientId: string,
+        expires: Date,
+        user: IdentityUser
+    ): Promise<void> {
         return Promise.reject('NOT_IMPLEMENTED');
     }
 
