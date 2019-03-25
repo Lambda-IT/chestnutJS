@@ -1,3 +1,5 @@
+import { Texte } from './models/models';
+
 export { Chestnut, Response, Request } from '../..';
 import * as models from './models/models';
 import { initChestnut } from '../..';
@@ -22,9 +24,8 @@ initChestnut(
         server = s;
         server.logger.info('started');
     })
-    .catch(
-        e =>
-            server && server.logger
-                ? server.logger.error('error starting server', e)
-                : console.error('error starting server', e)
+    .catch(e =>
+        server && server.logger
+            ? server.logger.error('error starting server', e)
+            : console.error('error starting server', e)
     );

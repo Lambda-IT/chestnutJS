@@ -12,7 +12,7 @@
                     [availableColumns]="availableColumns"
                     [visibleColumns]="visibleColumns"
                     [dataSource]="data"
-                    [filterItems$]="filters$ | async"
+                    [filters]="filters$ | async"
                     [filterMetadata]="filterMetadata$"
                     (selectedColumnsChanged)="selectedColumnsChanged$.emit($event)"
                     (addFilter)="addFilter$.emit($event)"

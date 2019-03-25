@@ -8,6 +8,7 @@ import { loginSelectors } from './login/state/login-reducer';
 import { HeaderModel } from './login/login.model';
 import { takeUntil, map } from 'rxjs/operators';
 import { LogoutAction } from '@shared/state/actions';
+import 'unknown-ts';
 
 @Component({
     selector: 'app-root',
@@ -27,10 +28,12 @@ export class AppComponent implements OnDestroy {
         this.error$ = this.store.select(appSelectors.error);
         this.headerModel$ = this.store.select(loginSelectors.headerModel);
 
-        this.logoutClicked$.pipe(
-            map(_ => this.store.dispatch(new LogoutAction())),
-            takeUntil(this.destroying$)
-        ).subscribe();
+        this.logoutClicked$
+            .pipe(
+                map(_ => this.store.dispatch(new LogoutAction())),
+                takeUntil(this.destroying$)
+            )
+            .subscribe();
 
         // const onLogin$ = new EventEmitter<LoginDialogData>();
         // const loginResult$ = of({ error: '  Ohhh neiiin' });

@@ -38,6 +38,7 @@ export async function createStoreAsync(
     options: ChestnutOptions,
     connectionOptions?: mongoose.ConnectionOptions
 ): Promise<Store> {
+    console.log('Options', options);
     const { mongoDb, models } = options;
 
     if (!connectionStringRegex.test(mongoDb)) {
@@ -65,6 +66,9 @@ export async function createStoreAsync(
         // Typegoose models
         const modelName = camelcase(key);
         const model = models[key];
+        console.log('Key', key);
+        console.log('modelName', modelName);
+        console.log('model', model);
         // returns the corresponding Mongoose Model
         database.models[modelName] = new model().getModelForClass(
             model,

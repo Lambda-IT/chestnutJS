@@ -23,6 +23,7 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
     model$: Observable<any>;
     availableColumns$: Observable<Option<string[]>>;
     visibleColumns$: Observable<Option<string[]>>;
+    columsForGraphQL$: Observable<Option<string[]>>;
     filterMetadata$: Observable<FilterMetadataModel[]>;
     filters$: Observable<Option<FilterItem[]>>;
     selectedColumnsChanged$ = new EventEmitter<string[]>();
@@ -41,13 +42,20 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
             .select(modelSelectors.getVisibleColumns)
             .pipe(map(x => x.map(p => p[modelNameParam])));
 
+        this.columsForGraphQL$ = this.store
+            .select(modelSelectors.getColumsForGraphql)
+            .pipe(map(x => x.map(p => p[modelNameParam])));
+
         this.filterMetadata$ = this.store.select(modelSelectors.getMetadataForFilter(modelNameParam));
 
         this.filters$ = this.store.select(modelSelectors.getItemFilters(modelNameParam));
 
-        //  this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
+        // this.filters$.subscribe(x => console.log('Received Filter', x));
 
-        const modelTriggeredByColumnChanged$ = this.availableColumns$.pipe(
+        //  this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
+        this.columsForGraphQL$.subscribe(x => console.log('columsForGraphQL$', x));
+
+        const modelTriggeredByColumnChanged$ = this.columsForGraphQL$.pipe(
             fromFilteredSome(),
             mergeMap(p => {
                 return this.apollo
@@ -61,10 +69,16 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
 
         const modelTriggeredByFilterChange$ = this.filters$.pipe(
             fromFilteredSome(),
-            withLatestFrom(this.availableColumns$.pipe(fromFilteredSome()), (filterItems, cols) => ({
-                filterItems: filterItems,
-                columns: cols,
-            })),
+            withLatestFrom(
+                this.columsForGraphQL$.pipe(
+                    fromFilteredSome(),
+                    map(x => x)
+                ),
+                (filterItems, cols) => ({
+                    filterItems: filterItems,
+                    columns: cols,
+                })
+            ),
             mergeMap(x => {
                 return this.apollo
                     .watchQuery({

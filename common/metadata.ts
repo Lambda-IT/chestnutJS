@@ -7,6 +7,7 @@ export enum PropertyType {
     dateTime = 'dateTime',
     number = 'Number',
     array = 'Array',
+    embedded = 'Embedded',
 }
 
 export interface PropertyDescription {

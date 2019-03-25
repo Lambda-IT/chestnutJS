@@ -65,6 +65,6 @@
         "concurrently": "^3.6.0",
         "prettier": "1.16.4",
         "shx": "^0.3.2",
-        "typescript": "3.3.1"
+        "typescript": "2.8.4"
     }
 }

@@ -9,18 +9,25 @@ import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
 import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { Either } from 'fp-ts/lib/Either';
-import { transformMetadataToForm, transformMetadataToProperties } from './data-transformations';
+import {
+    buildColumnListForGraphQL,
+    transformMetadataToForm,
+    transformMetadataToProperties,
+} from './data-transformations';
 import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
-import { insert, lookup, StrMap } from 'fp-ts/lib/StrMap';
+import { insert, lookup, remove } from 'fp-ts/lib/Record';
 import { FilterItem, FilterMetadataModel, ViewComponent } from '../types/model-types';
 
 export interface ModelPageModel {
     availableColumnMap: Option<{ [key: string]: string[] }>;
     userVisibleColumnMap: Option<{ [key: string]: string[] }>;
+    graphqlColumnMap: Option<{ [key: string]: string[] }>;
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
-    filterItem: StrMap<FilterItem[]>;
+    // filterItem: StrMap<FilterItem[]>;
+    filterItem: { [key: string]: FilterItem[] };
+
     model: Option<MetadataDto>;
 }
 
@@ -56,7 +63,8 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 error: some(l),
                 availableColumnMap: none,
                 userVisibleColumnMap: none,
-                filterItem: new StrMap({}),
+                graphqlColumnMap: none,
+                filterItem: {},
                 model: none,
             },
         }),
@@ -74,8 +82,10 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 availableColumnMap: some(transformMetadataToProperties(r)),
                 error: none,
                 userVisibleColumnMap: some(transformMetadataToProperties(r)),
+                graphqlColumnMap: some(buildColumnListForGraphQL(r)),
+
                 model: some(r),
-                filterItem: new StrMap({}),
+                filterItem: {},
             },
         })
     );
@@ -124,6 +134,7 @@ export const reducer = new ReducerBuilder<ModelState>()
     .handle(
         ApplyAddFilterItemAction,
         (state, action): ModelState => {
+            // gets the list of filteritems for provided key and adds provided filteritem to list
             const currentValues = lookup(action.payload.key, state.modelPageModel.filterItem).getOrElse([]);
             return {
                 ...state,
@@ -141,15 +152,15 @@ export const reducer = new ReducerBuilder<ModelState>()
     .handle(
         ApplyRemoveFilterItemAction,
         (state, action): ModelState => {
-            const currentValues = lookup(action.payload.key, state.modelPageModel.filterItem).getOrElse([]);
-            const newValues = currentValues.filter(x => {
-                return !(x === action.payload.filterItem);
-            });
+            // gets the list of filteritems for provided key and removes provided filteritem
+            const newValueToInsert = lookup(action.payload.key, state.modelPageModel.filterItem)
+                .map(filters => filters.filter(item => item !== action.payload.filterItem))
+                .getOrElse([]);
             return {
                 ...state,
                 modelPageModel: {
                     ...state.modelPageModel,
-                    filterItem: insert(action.payload.key, newValues, state.modelPageModel.filterItem),
+                    filterItem: insert(action.payload.key, newValueToInsert, state.modelPageModel.filterItem),
                 },
             };
         }
@@ -168,7 +179,8 @@ export const reducer = new ReducerBuilder<ModelState>()
             error: none,
             availableColumnMap: none,
             userVisibleColumnMap: none,
-            filterItem: new StrMap({}),
+            graphqlColumnMap: none,
+            filterItem: {},
             model: none,
         },
     });
@@ -191,6 +203,10 @@ export const modelSelectors = {
     getVisibleColumns: createSelector(
         getModelState,
         state => state.modelPageModel.userVisibleColumnMap
+    ),
+    getColumsForGraphql: createSelector(
+        getModelState,
+        state => state.modelPageModel.graphqlColumnMap
     ),
     getItemFilters: field =>
         createSelector(

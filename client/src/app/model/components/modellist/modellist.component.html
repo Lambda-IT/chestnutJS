@@ -17,7 +17,7 @@
             (removeFilter)="removeFilter.emit($event)"
             [filterMetadata]="filterMetadata"
         ></app-modellist-filter>
-        <ng-container *ifSome="filterItems$; let filterItems">
+        <ng-container *ifSome="filters; let filterItems">
             <table mat-table [dataSource]="filterItems" class="model-table">
                 <ng-container matColumnDef="field">
                     <th mat-header-cell *matHeaderCellDef>Field</th>

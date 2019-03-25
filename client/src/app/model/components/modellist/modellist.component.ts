@@ -17,7 +17,7 @@ export class ModellistComponent extends DestroyableComponent {
     @Input() availableColumns: string[];
     @Input() visibleColumns: string[];
     @Input() dataSource: any[];
-    @Input() filterItems$: Option<FilterItem[]>;
+    @Input() filters: Option<FilterItem[]>;
     @Input() filterMetadata: Observable<FilterMetadataModel>;
     @Output() selectedColumnsChanged = new EventEmitter<string[]>();
     @Output() addFilter = new EventEmitter<FilterItem>();
@@ -40,9 +40,10 @@ export class ModellistComponent extends DestroyableComponent {
         this.selectedColumns$ = fromInput<ModellistComponent>(this)('visibleColumns').pipe(
             tap(x => this.selectedColumnsForm.setValue(x))
         );
+        console.log('FilterItems', this.filters);
     }
 
     public expandPanel() {
-        return this.filterItems$.isSome() && this.filterItems$.map(x => x.length > 0).getOrElse(false);
+        return this.filters.isSome() && this.filters.map(x => x.length > 0).getOrElse(false);
     }
 }
