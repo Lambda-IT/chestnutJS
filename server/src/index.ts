@@ -94,13 +94,16 @@ export async function initChestnut(
     app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
-    const adminAppPath = path.join(__dirname, '../../client');
+    let adminAppPath = path.join(__dirname, '../../client');
+
+    if (options.apiUrl.indexOf('localhost') > 0) adminAppPath = path.join(adminAppPath, 'dist', 'client');
 
     await replaceApiUrl(adminAppPath, options.apiUrl);
 
     app.use(BASE_URL + '/admin', express.static(adminAppPath, { fallthrough: true }), (req, res, next) => {
-        console.log('not found', { header: res.header });
-        res.redirect(BASE_URL + '/admin');
+        logger.warn('not found', { path: req.path, query: req.query, params: req.params, headers: req.headers });
+        if (req.path !== '/') return res.redirect(BASE_URL + '/admin');
+        res.sendStatus(404);
     });
 
     console.log('static app', { BASE_URL, adminAppPath });
@@ -161,7 +164,7 @@ export async function initChestnut(
     };
     const identity = createAuth(authConfiguration, app, store, logger);
     const authHandler = createAuthorizationHandler(identity, authConfiguration);
-    createApi(authHandler, app, store, logger);
+    // createApi(authHandler, app, store, logger);
 
     // session stuff after static middleware
     app.set('trust proxy', 1); // trust first proxy
