@@ -1,5 +1,3 @@
-import { Texte } from './models/models';
-
 export { Chestnut, Response, Request } from '../..';
 import * as models from './models/models';
 import { initChestnut } from '../..';

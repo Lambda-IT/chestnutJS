@@ -1,6 +1,5 @@
-import { prop, arrayProp, Ref, Typegoose, ModelType, InstanceType } from 'typegoose';
+import { prop, arrayProp, Ref, Typegoose } from 'typegoose';
 import { hidden, editor, readonly, PropertyType } from '../../..';
-import { TranslatedName } from './model-type';
 
 export class Task extends Typegoose {
     @prop() description: string;
@@ -35,14 +34,11 @@ export class User extends Typegoose {
 export class Todo extends Typegoose {
     @prop() description: string;
 
-    @prop({ default: false }) completed: boolean;
+    @prop() completed: boolean;
+
+    @prop()
+    createdAt?: Date;
 
     @prop({ ref: User, required: true })
     user: Ref<User>;
-}
-
-export class Texte extends Typegoose {
-    @prop() description: string;
-
-    @prop() name: TranslatedName;
 }
