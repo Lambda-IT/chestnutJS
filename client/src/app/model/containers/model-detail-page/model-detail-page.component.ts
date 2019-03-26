@@ -7,7 +7,7 @@ import { mergeMap, map, withLatestFrom, takeUntil } from 'rxjs/operators';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { composeByIdQuery, composeUpdateMutation } from '@shared/graphql';
+import { composeByIdQueryWithParameters, composeUpdateMutation } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { bindToOptionData } from '@shared/bind-functions';
 import { filterProperties } from '@shared/helper-functions';
@@ -42,7 +42,7 @@ export class ModelDetailPageComponent implements OnDestroy {
             mergeMap(p =>
                 this.apollo
                     .watchQuery({
-                        query: composeByIdQuery(idParam, this.modelNameParam, p),
+                        query: composeByIdQueryWithParameters(idParam, this.modelNameParam, p),
                         fetchPolicy: 'cache-and-network',
                     })
                     .valueChanges.pipe(bindToOptionData(this.modelNameParam, 'ById'))

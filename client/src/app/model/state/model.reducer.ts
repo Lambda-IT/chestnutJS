@@ -13,6 +13,7 @@ import {
     buildColumnListForGraphQL,
     transformMetadataToForm,
     transformMetadataToProperties,
+    transformMetadataToPropertyDefinition,
 } from './data-transformations';
 import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
 import { insert, lookup, remove } from 'fp-ts/lib/Record';
@@ -31,9 +32,14 @@ export interface ModelPageModel {
     model: Option<MetadataDto>;
 }
 
+export interface PropertyDefinition {
+    name: string;
+    properties: PropertyDescription[];
+}
+
 export interface ModelDetailPageModel {
     formFieldConfigMap: Option<FormlyFieldConfigMap>;
-    propertyMap: Option<{ [key: string]: string[] }>;
+    propertyMap: Option<{ [key: string]: PropertyDefinition[] }>;
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
@@ -73,7 +79,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 loaded: true,
                 loading: false,
                 formFieldConfigMap: some(transformMetadataToForm(r)),
-                propertyMap: some(transformMetadataToProperties(r)),
+                propertyMap: some(transformMetadataToPropertyDefinition(r)),
                 error: none,
             },
             modelPageModel: {

@@ -70,6 +70,18 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
 export const transformMetadataToProperties = (metadata: MetadataDto) =>
     metadata.models.reduce((acc, curr) => ({ ...acc, [curr.name]: curr.properties.map(p => p.name) }), {});
 
+export const transformMetadataToPropertyDefinition = (metadata: MetadataDto) =>
+    metadata.models.reduce(
+        (acc, curr) => ({
+            ...acc,
+            [curr.name]: curr.properties.map(p => ({
+                name: p.name,
+                properties: p.properties.length > 0 ? p.properties : [],
+            })),
+        }),
+        {}
+    );
+
 export const buildColumnListForGraphQL = (metadata: MetadataDto) =>
     metadata.models.reduce(
         (acc, curr) => ({
