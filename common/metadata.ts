@@ -12,6 +12,7 @@ export enum PropertyType {
 
 export interface PropertyDescription {
     name: string;
+    nameOfParameters?: string[];
     type: PropertyType;
     required?: boolean;
     unique?: boolean;

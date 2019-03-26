@@ -32,7 +32,6 @@ export const transformMetadataToForm = (metadata: MetadataDto) => {
                         return x;
                     })
                     .map(p => {
-                        console.log('Properties', p);
                         return <FormlyFieldConfig>{
                             key: p.name,
                             type: p.readonly

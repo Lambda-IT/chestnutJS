@@ -16,13 +16,10 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
                     .map(p => {
                         const property = mongooseModel.schema.paths[p];
                         const objProperty = mongooseModel.schema.obj[p];
-                        if (p === 'name') {
-                            console.log('Property ', property);
-                            console.log('objProperty ', objProperty);
-                        }
-
                         const desc: PropertyDescription = {
                             name: p,
+                            nameOfParameters:
+                                property.schema && property.schema.paths ? Object.keys(property.schema.paths) : [],
                             type:
                                 (registry.model[modelName] &&
                                     registry.model[modelName][p] &&
