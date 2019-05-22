@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { map, withLatestFrom, merge, tap } from 'rxjs/operators';
+import { map, withLatestFrom, merge } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
 import * as memento from '@shared/bind-functions';

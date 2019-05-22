@@ -1,71 +1,86 @@
-import { MetadataDto, PropertyType } from '../../../../../common/metadata';
+import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldConfigMap } from './model.reducer';
 
 interface FormMappingType {
-    type: 'input' | 'textarea' | 'checkbox' | 'html';
-    templateType?: 'text' | 'date' | 'number' | 'datetime-local';
+    type: 'input' | 'textarea' | 'checkbox' | 'html' | 'embedded';
+    templateType?: 'text' | 'date' | 'number' | 'datetime-local' | 'embedded';
 }
 
 const typeMap: { [key in PropertyType]: FormMappingType } = {
     [PropertyType.string]: { type: 'input', templateType: 'text' },
-    [PropertyType.html]: { type: 'html' },
-    [PropertyType.boolean]: { type: 'checkbox' },
+    [PropertyType.html]: { type: 'html', templateType: 'date' },
+    [PropertyType.boolean]: { type: 'checkbox', templateType: 'date' },
     [PropertyType.date]: { type: 'input', templateType: 'date' },
     [PropertyType.dateTime]: { type: 'input', templateType: 'datetime-local' },
     [PropertyType.number]: { type: 'input', templateType: 'number' },
     [PropertyType.objectID]: { type: 'input', templateType: 'text' },
     [PropertyType.array]: { type: 'input', templateType: 'text' },
     [PropertyType.embedded]: { type: 'input', templateType: 'text' },
+    [PropertyType.mixed]: { type: 'input', templateType: 'text' },
 };
 
 export const transformMetadataToForm = (metadata: MetadataDto) => {
     return metadata.models.reduce(
         (acc, model) => {
-            return {
-                ...acc,
-                [model.name]: model.properties
-                    .map(x => {
-                        if (!typeMap[x.type]) {
-                            console.log(`Property: ${x.name} has a wrong type!`, x);
-                        }
-                        return x;
-                    })
-                    .map(p => {
-                        return <FormlyFieldConfig>{
-                            key: p.name,
-                            type: p.readonly
-                                ? 'input'
-                                : p.enumValues && p.enumValues.length > 0
-                                ? 'select'
-                                : typeMap[p.type].type,
-                            hide: p.hidden,
-                            defaultValue: p.default,
-                            templateOptions: {
-                                type: p.readonly
-                                    ? 'text'
-                                    : p.enumValues && p.enumValues.length > 0
-                                    ? null
-                                    : typeMap[p.type].templateType,
-                                label: p.name,
-                                disabled: p.type === 'ObjectID' || p.readonly,
-                                required: p.required,
-                                pattern: p.regExp,
-                                options:
-                                    p.enumValues &&
-                                    p.enumValues.length > 0 &&
-                                    p.enumValues.map(x => ({
-                                        label: x,
-                                        value: x,
-                                    })),
-                            },
-                        };
-                    }),
-            };
+            return createForm(acc, model);
         },
         {} as FormlyFieldConfigMap
     );
 };
+
+export const createForm = (acc, model) => {
+    return {
+        ...acc,
+        [model.name]: model.properties
+            .map(x => {
+                if (!typeMap[x.type]) {
+                    console.log(`Property: ${x.name} has a wrong type!`, x);
+                }
+                if (x.type === PropertyType.embedded) {
+                }
+                return x;
+            })
+            .map(p => createFormRecursively(p)),
+    };
+};
+
+export const createFormRecursively = p => {
+    if (p.type === 'Embedded') {
+        return <FormlyFieldConfig>{
+            key: p.name,
+            wrappers: ['panel'],
+            templateOptions: { label: p.name },
+            fieldGroup: createFieldGroup(p.properties),
+        };
+    } else {
+        return <FormlyFieldConfig>{
+            key: p.name,
+            type: p.readonly ? 'input' : p.enumValues && p.enumValues.length > 0 ? 'select' : typeMap[p.type].type,
+            hide: p.hidden,
+            defaultValue: p.default,
+            templateOptions: {
+                type: calculateType(p),
+                label: p.name,
+                disabled: p.type === 'ObjectID' || p.readonly,
+                required: p.required,
+                pattern: p.regExp,
+                options:
+                    p.enumValues &&
+                    p.enumValues.length > 0 &&
+                    p.enumValues.map(x => ({
+                        label: x,
+                        value: x,
+                    })),
+            },
+        };
+    }
+};
+
+export const calculateType = p =>
+    p.readonly ? 'text' : p.enumValues && p.enumValues.length > 0 ? null : typeMap[p.type].templateType;
+
+export const createFieldGroup = (pDescs: PropertyDescription[]) => pDescs.map(pDesc => createFormRecursively(pDesc));
 
 export const transformMetadataToProperties = (metadata: MetadataDto) =>
     metadata.models.reduce((acc, curr) => ({ ...acc, [curr.name]: curr.properties.map(p => p.name) }), {});

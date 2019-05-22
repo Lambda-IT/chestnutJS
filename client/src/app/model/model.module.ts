@@ -14,6 +14,7 @@ import { modelReducer } from './state/model.reducer';
 import { CreateModelDetailPageComponent } from './containers/create-model-detail-page/create-model-detail-page.component';
 import { ModelEffects } from './state/model.effects';
 import { ModellistFilterComponent } from './components/modellist/modellist-filter.component';
+import { PanelWrapperComponent } from './components/modeldetail/panel-wrapper.component';
 
 @NgModule({
     imports: [
@@ -23,6 +24,9 @@ import { ModellistFilterComponent } from './components/modellist/modellist-filte
         RouterModule.forChild(modelRoutes),
         StoreModule.forFeature('model', modelReducer),
         EffectsModule.forFeature([ModelEffects]),
+        FormlyModule.forRoot({
+            wrappers: [{ name: 'panel', component: PanelWrapperComponent }],
+        }),
     ],
     declarations: [
         ModelPageComponent,
@@ -31,6 +35,7 @@ import { ModellistFilterComponent } from './components/modellist/modellist-filte
         ModelDetailPageComponent,
         CreateModelDetailPageComponent,
         ModellistFilterComponent,
+        PanelWrapperComponent,
     ],
 })
 export class ModelModule {}

@@ -3,19 +3,7 @@ import { DocumentNode } from 'graphql';
 import { FilterItem } from '../../model/types';
 import { PropertyDefinition } from '../../model/state/model.reducer';
 
-export const composeByIdQuery = (id: string, modelName, properties: string[]): DocumentNode =>
-    gql`
-        query get${capitalize(modelName)}ById {
-            ${modelName}ById(_id: "${id}"){
-                ${[...properties]}
-            }
-        }`;
-
-export const composeByIdQueryWithParameters = (
-    id: string,
-    modelName,
-    properties: PropertyDefinition[]
-): DocumentNode => {
+export const composeByIdQuery = (id: string, modelName, properties: PropertyDefinition[]): DocumentNode => {
     const props = properties.reduce((acc, cur) => {
         return (
             acc +
@@ -68,16 +56,13 @@ export const createQueryForFilterSearch = (
         return [...acc, currentValue];
     }, []);
 
-    const query = `
+    return `
         query get${modelName}Many {
             ${modelName}Many(filter : {${filterString.join(',')}}) {
             ${[...properties]}
             }
         }
     `;
-
-    // console.log('QUERY', query);
-    return query;
 };
 
 export const composeCountQuery = (modelName: string): DocumentNode =>
@@ -92,11 +77,17 @@ export const composeCreateMutation = (modelName: string): DocumentNode =>
             ${modelName}Create(record: $input) { recordId }
         }`;
 
-export const composeUpdateMutation = (modelName: string): DocumentNode =>
-    gql`
-        mutation update${capitalize(modelName)}($input: UpdateById${capitalize(modelName)}Input!) {
-            ${modelName}UpdateById(record: $input) { recordId }
-        }`;
+export const composeUpdateMutation = (modelName: string, p): DocumentNode => {
+    const q = `mutation Somename ($myData: UpdateById${capitalize(modelName)}Input!) {
+              ${modelName}UpdateById(record: $myData) {
+                recordId
+               }
+            }`;
+
+    return gql`
+        ${q}
+    `;
+};
 
 const capitalize = (input: string) =>
     input &&

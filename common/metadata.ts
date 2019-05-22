@@ -8,6 +8,7 @@ export enum PropertyType {
     number = 'Number',
     array = 'Array',
     embedded = 'Embedded',
+    mixed = 'Mixed',
 }
 
 export interface PropertyDescription {
