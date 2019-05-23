@@ -10,3 +10,19 @@
 .model-card__item_reset-button {
     margin-left: 5px;
 }
+
+.success {
+    width: 800px;
+    background-color: green;
+    padding: 20px;
+    margin: 30px 0;
+    color: white;
+    font-size: 18px;
+}
+
+.success-message {
+    background-color: green;
+    color: pink;
+}
+
+//mat-snack-bar-container ng-tns-c26-11 ng-trigger ng-trigger-state success-message mat-snack-bar-center ng-star-inserted

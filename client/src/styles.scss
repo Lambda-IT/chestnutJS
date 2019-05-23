@@ -35,6 +35,36 @@ a.nav-back {
     color: inherit;
 }
 
+.success-message {
+    margin: 50px 0;
+    background-color: green;
+    color: white;
+    width: 500px;
+    padding: 30px !important;
+    .mat-simple-snackbar-action {
+        color: black;
+    }
+    button {
+        background: white;
+    }
+}
+
+.error-message {
+    background-color: red;
+    color: white;
+    .mat-simple-snackbar-action {
+        color: black;
+    }
+    button {
+        background: white;
+    }
+    //height: 60px;
+}
+
+.mat-simple-snackbar {
+    font-size: 16px;
+}
+
 .spinner-container {
     height: 100%;
 

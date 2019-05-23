@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { merge, Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
@@ -34,26 +34,24 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
         super(store.dispatch.bind(store));
         const modelNameParam = this.activatedRoute.snapshot.params['modelName'];
 
-        this.availableColumns$ = this.store
-            .select(modelSelectors.getAvailableColumns)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
+        this.availableColumns$ = this.store.pipe(
+            select(modelSelectors.getAvailableColumns),
+            map(x => x.map(p => p[modelNameParam]))
+        );
 
-        this.visibleColumns$ = this.store
-            .select(modelSelectors.getVisibleColumns)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
+        this.visibleColumns$ = this.store.pipe(
+            select(modelSelectors.getVisibleColumns),
+            map(x => x.map(p => p[modelNameParam]))
+        );
 
-        this.columsForGraphQL$ = this.store
-            .select(modelSelectors.getColumsForGraphql)
-            .pipe(map(x => x.map(p => p[modelNameParam])));
+        this.columsForGraphQL$ = this.store.pipe(
+            select(modelSelectors.getColumsForGraphql),
+            map(x => x.map(p => p[modelNameParam]))
+        );
 
-        this.filterMetadata$ = this.store.select(modelSelectors.getMetadataForFilter(modelNameParam));
+        this.filterMetadata$ = this.store.pipe(select(modelSelectors.getMetadataForFilter(modelNameParam)));
 
-        this.filters$ = this.store.select(modelSelectors.getItemFilters(modelNameParam));
-
-        // this.filters$.subscribe(x => console.log('Received Filter', x));
-
-        //  this.filterMetadata$.subscribe(x => console.log('filterMetadata$', x));
-        this.columsForGraphQL$.subscribe(x => console.log('columsForGraphQL$', x));
+        this.filters$ = this.store.pipe(select(modelSelectors.getItemFilters(modelNameParam)));
 
         const modelTriggeredByColumnChanged$ = this.columsForGraphQL$.pipe(
             fromFilteredSome(),
@@ -89,11 +87,7 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
             })
         );
 
-        // withLatestFrom(this.filterForm.valueChanges, (_, f) => f),
-
         this.model$ = merge(modelTriggeredByColumnChanged$, modelTriggeredByFilterChange$);
-
-        // this.filters$.subscribe(x => console.log('filters$', x));
 
         const selectedColumnsChangedAction = this.selectedColumnsChanged$.pipe(
             map(columns => new ColumnsChangedAction({ [modelNameParam]: columns }))

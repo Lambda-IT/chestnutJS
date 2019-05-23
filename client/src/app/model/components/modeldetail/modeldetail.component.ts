@@ -1,10 +1,13 @@
-import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { map, withLatestFrom, merge } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, withLatestFrom, tap, filter } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
 import * as memento from '@shared/bind-functions';
+import { ReactiveComponent } from '@core/reactive-component/reactive-component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Either } from 'fp-ts/lib/Either';
 
 @Component({
     selector: 'app-modeldetail',
@@ -12,14 +15,15 @@ import * as memento from '@shared/bind-functions';
     styleUrls: ['./modeldetail.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeldetailComponent {
+export class ModeldetailComponent extends ReactiveComponent<ModeldetailComponent> {
     @Input()
     model: any;
     @Input()
     fields: FormlyFieldConfig[];
     @Input()
     title: string;
-
+    @Input()
+    mutationData: Either<string, null>;
     @Input()
     showBackNavigation: boolean;
 
@@ -30,22 +34,49 @@ export class ModeldetailComponent {
     reset$ = new EventEmitter();
     form = new FormGroup({});
 
-    constructor() {
+    mutationData$ = this.observePropertyCurrentValue('mutationData').pipe(filter(x => !!x));
+
+    constructor(private snackBar: MatSnackBar) {
+        super();
+        this.mutationData$
+            .pipe(
+                tap(x => {
+                    if (x.isRight()) {
+                        setTimeout(() =>
+                            this.snackBar.open('Die Daten wurden erfolgreich gespeichert', 'Schliessen', {
+                                duration: 5000,
+                                horizontalPosition: 'center',
+                                verticalPosition: 'top',
+                                panelClass: 'success-message',
+                            })
+                        );
+                    } else {
+                        const message = `Es gab ein Problem beim Speichern der Daten:  ${x}`;
+                        setTimeout(() =>
+                            this.snackBar.open(message, 'Schliessen', {
+                                duration: 5000,
+                                horizontalPosition: 'center',
+                                verticalPosition: 'top',
+                                panelClass: 'error-message',
+                            })
+                        );
+                    }
+                })
+            )
+            .subscribe();
+
         const onSave$ = this.submit$.pipe(map(memento.unit));
 
         const fromModel$ = fromInput<ModeldetailComponent>(this)('model').pipe(map(m => memento.unit(m)));
 
-        const memento$ = fromModel$.pipe(
-            merge(onSave$),
-            map(x => x.createMemento())
-        );
+        const memento$ = merge(fromModel$, onSave$).pipe(map(x => x.createMemento()));
 
         const onReset$ = this.reset$.pipe(
             withLatestFrom(memento$, fromModel$),
             map(([_, mem, m]) => m.restoreMemento(mem))
         );
 
-        this.model$ = fromModel$.pipe(merge(onReset$, onSave$));
+        this.model$ = merge(fromModel$, onReset$, onSave$);
     }
 
     submit(model: any) {

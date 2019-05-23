@@ -1,7 +1,7 @@
-<ng-container *ngIf="model$ | async; let model">
-
+<ng-container *ngIf="(model$ | async); let model">
     <a *ngIf="showBackNavigation" class="nav-back" mat-button color="primary" [routerLink]="['..']">
-        <mat-icon>navigate_before</mat-icon>Back to the listing of {{title | titlecase}}</a>
+        <mat-icon>navigate_before</mat-icon>Back to the listing of {{ title | titlecase }}</a
+    >
 
     <mat-card class="model-card__item">
         <mat-card-title class="model-card__item_title">
@@ -10,13 +10,25 @@
         <mat-card-content>
             <form [formGroup]="form">
                 <formly-form [form]="form" [fields]="fields" [model]="model.state">
-                    <button mat-raised-button color="primary" type="submit" (click)="submit(model.state)">Save changes</button>
-                    <button class="model-card__item_reset-button" mat-raised-button color="accent" (click)="reset$.emit()">Reset
-                        changes
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        type="submit"
+                        (click)="submit(model.state)"
+                        [disabled]="!form.dirty"
+                    >
+                        Save changes
+                    </button>
+                    <button
+                        class="model-card__item_reset-button"
+                        mat-raised-button
+                        color="accent"
+                        (click)="reset$.emit()"
+                    >
+                        Reset changes
                     </button>
                 </formly-form>
             </form>
         </mat-card-content>
-
     </mat-card>
 </ng-container>

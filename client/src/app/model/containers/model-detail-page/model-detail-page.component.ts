@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, EventEmitter, OnDestroy, Optional } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { modelSelectors } from '../../state/model.reducer';
 import { Observable } from 'rxjs';
-import { Option } from 'fp-ts/lib/Option';
+import { Option, some, none } from 'fp-ts/lib/Option';
 import { mergeMap, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
@@ -11,6 +11,8 @@ import { composeByIdQuery, composeUpdateMutation } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { bindToOptionData } from '@shared/bind-functions';
 import { filterProperties } from '@shared/helper-functions';
+import { Either } from 'decode-ts';
+import { left, right } from 'fp-ts/lib/Either';
 
 @Component({
     selector: 'app-model-detail-page',
@@ -24,23 +26,21 @@ export class ModelDetailPageComponent implements OnDestroy {
     model$: Observable<any>;
     modelNameParam: string;
     submit$ = new EventEmitter<any>();
+    mutationSuccess$ = new EventEmitter<Either<string, null>>();
 
     constructor(private store: Store<any>, private activatedRoute: ActivatedRoute, private apollo: Apollo) {
         const idParam = this.activatedRoute.snapshot.params['id'];
         this.modelNameParam = this.activatedRoute.snapshot.params['modelName'];
 
-        const properties$ = this.store
-            .select(modelSelectors.getProperties)
-            .pipe(map(x => x.map(p => p[this.modelNameParam])));
+        const properties$ = this.store.pipe(
+            select(modelSelectors.getProperties),
+            map(x => x.map(p => p[this.modelNameParam]))
+        );
 
-        this.fields$ = this.store
-            .select(modelSelectors.getFormFieldConfigMap)
-            .pipe(map(x => x.map(p => p[this.modelNameParam])));
-
-        // const fields1 = this.store.select(modelSelectors.getFormFieldConfigMap);
-        //
-        // this.fields$.subscribe(x => console.log('FIelds', x));
-        // fields1.subscribe(x => console.log('FIelds  1', x));
+        this.fields$ = this.store.pipe(
+            select(modelSelectors.getFormFieldConfigMap),
+            map(x => x.map(p => p[this.modelNameParam]))
+        );
 
         this.model$ = properties$.pipe(
             fromFilteredSome(),
@@ -54,18 +54,28 @@ export class ModelDetailPageComponent implements OnDestroy {
             )
         );
 
-        // this.model$.subscribe(x => console.log('***** MODEL', x));
-
         this.submit$
             .pipe(
                 withLatestFrom(properties$.pipe(fromFilteredSome())),
                 map(filterProperties),
-                mergeMap(p =>
-                    this.apollo.mutate({
+                mergeMap(p => {
+                    const mutation = this.apollo.mutate({
                         mutation: composeUpdateMutation(this.modelNameParam, p),
                         variables: { myData: p },
-                    })
-                ),
+                        errorPolicy: 'all',
+                    });
+
+                    mutation.subscribe(
+                        _data => {
+                            return this.mutationSuccess$.emit(right(null));
+                        },
+                        error => {
+                            return this.mutationSuccess$.emit(left(error.toString));
+                        }
+                    );
+                    return mutation;
+                }),
+                map(x => x),
                 takeUntil(this.destroying$)
             )
             .subscribe();

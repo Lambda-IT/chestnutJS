@@ -17,6 +17,7 @@ import {
     MatProgressSpinnerModule,
     MatDialogModule,
     MatExpansionModule,
+    MatSnackBarModule,
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { NgxFpTsModule } from 'ngx-fp-ts';
@@ -47,6 +48,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         MatInputModule,
         MatCheckboxModule,
         MatCardModule,
+        MatSnackBarModule,
         MatProgressSpinnerModule,
         MatDialogModule,
         RouterModule,
@@ -72,6 +74,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         MatSelectModule,
         MatTableModule,
         MatSortModule,
+        MatSnackBarModule,
         MatInputModule,
         MatCheckboxModule,
         MatCardModule,
