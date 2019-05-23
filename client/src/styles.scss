@@ -42,10 +42,10 @@ a.nav-back {
     width: 500px;
     padding: 30px !important;
     .mat-simple-snackbar-action {
-        color: black;
+        color: white;
     }
     button {
-        background: white;
+        font-size: 20px;
     }
 }
 
@@ -53,12 +53,11 @@ a.nav-back {
     background-color: red;
     color: white;
     .mat-simple-snackbar-action {
-        color: black;
+        color: white;
     }
     button {
-        background: white;
+        font-size: 20px;
     }
-    //height: 60px;
 }
 
 .mat-simple-snackbar {

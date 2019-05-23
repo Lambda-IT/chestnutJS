@@ -43,7 +43,7 @@ export class ModeldetailComponent extends ReactiveComponent<ModeldetailComponent
                 tap(x => {
                     if (x.isRight()) {
                         setTimeout(() =>
-                            this.snackBar.open('Die Daten wurden erfolgreich gespeichert', 'Schliessen', {
+                            this.snackBar.open('Die Daten wurden erfolgreich gespeichert', 'X', {
                                 duration: 5000,
                                 horizontalPosition: 'center',
                                 verticalPosition: 'top',
@@ -53,7 +53,7 @@ export class ModeldetailComponent extends ReactiveComponent<ModeldetailComponent
                     } else {
                         const message = `Es gab ein Problem beim Speichern der Daten:  ${x}`;
                         setTimeout(() =>
-                            this.snackBar.open(message, 'Schliessen', {
+                            this.snackBar.open(message, 'X', {
                                 duration: 5000,
                                 horizontalPosition: 'center',
                                 verticalPosition: 'top',

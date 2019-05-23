@@ -75,7 +75,6 @@ export class ModelDetailPageComponent implements OnDestroy {
                     );
                     return mutation;
                 }),
-                map(x => x),
                 takeUntil(this.destroying$)
             )
             .subscribe();

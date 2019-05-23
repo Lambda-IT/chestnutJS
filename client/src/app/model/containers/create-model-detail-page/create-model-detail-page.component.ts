@@ -10,6 +10,8 @@ import { Apollo } from 'apollo-angular';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { composeCreateMutation } from '@shared/graphql';
 import { filterProperties } from '@shared/helper-functions';
+import { left, right } from 'fp-ts/lib/Either';
+import { Either } from 'decode-ts';
 
 @Component({
     selector: 'app-create-model-detail-page',
@@ -23,6 +25,7 @@ export class CreateModelDetailPageComponent implements OnDestroy {
     data: any;
     title: string;
     submit$ = new EventEmitter<any>();
+    mutationSuccess$ = new EventEmitter<Either<string, null>>();
 
     constructor(private store: Store<any>, private activatedRoute: ActivatedRoute, private apollo: Apollo) {
         const modelNameParam = this.activatedRoute.snapshot.params['modelName'];
@@ -42,12 +45,23 @@ export class CreateModelDetailPageComponent implements OnDestroy {
             .pipe(
                 withLatestFrom(properties$.pipe(fromFilteredSome())),
                 map(filterProperties),
-                mergeMap(p =>
-                    this.apollo.mutate({
+                mergeMap(p => {
+                    const mutation = this.apollo.mutate({
                         mutation: composeCreateMutation(modelNameParam),
                         variables: { input: p },
-                    })
-                ),
+                    });
+
+                    mutation.subscribe(
+                        _data => {
+                            return this.mutationSuccess$.emit(right(null));
+                        },
+                        error => {
+                            return this.mutationSuccess$.emit(left(error.toString));
+                        }
+                    );
+
+                    return mutation;
+                }),
                 takeUntil(this.destroying$)
             )
             .subscribe();
