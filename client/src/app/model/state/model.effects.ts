@@ -6,13 +6,12 @@ import { ApplyColumnsChangedAction } from './model.reducer';
 
 export class ColumnsChangedAction {
     public readonly type = 'COLUMNS_CHANGED';
-    constructor(public payload: { [model: string]: string[] }) { }
+    constructor(public payload: { [model: string]: string[] }) {}
 }
 
 @Injectable()
 export class ModelEffects {
-
-    constructor(private actions$: Actions) { }
+    constructor(private actions$: Actions) {}
 
     @Effect()
     onSelectedColumnsChanged$ = this.actions$.pipe(

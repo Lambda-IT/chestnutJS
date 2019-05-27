@@ -5,10 +5,7 @@ import { staticRoutes } from './static.routing';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(staticRoutes),
-  ],
-  declarations: [AboutComponent]
+    imports: [CommonModule, RouterModule.forChild(staticRoutes)],
+    declarations: [AboutComponent],
 })
-export class StaticModule { }
+export class StaticModule {}

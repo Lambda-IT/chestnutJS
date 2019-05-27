@@ -71,7 +71,7 @@ export const reducers: ActionReducerMap<State> = {
             logOnly: environment.production,
         }),
         CatalogModule,
-        ModelModule
+        ModelModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

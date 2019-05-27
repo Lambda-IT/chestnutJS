@@ -14,11 +14,11 @@ export const reducer = new ReducerBuilder<SharedState>()
     }))
     .handle(ApplyLoginFailedAction, (state, _) => ({
         ...state,
-        loggedIn: some(false)
+        loggedIn: some(false),
     }))
     .handle(ApplyLogoutAction, (state, action) => ({
         ...state,
-        loggedIn: some(false)
+        loggedIn: some(false),
     }))
     .build({
         loggedIn: none,
@@ -26,7 +26,10 @@ export const reducer = new ReducerBuilder<SharedState>()
 
 export const getSharedState = createFeatureSelector<SharedState>('shared');
 export const sharedStateSelectors = {
-    isLoggedIn: createSelector(getSharedState, state => state.loggedIn),
+    isLoggedIn: createSelector(
+        getSharedState,
+        state => state.loggedIn
+    ),
 };
 
 export function sharedStateReducer(state: SharedState, action: Action): SharedState {

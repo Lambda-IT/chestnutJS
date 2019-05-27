@@ -1,24 +1,7 @@
 <app-header (logoutClicked)="logoutClicked$.emit()" [model]="headerModel$ | async">
-
-    <div *ifSome="error$ | async; let error">
-        Error: {{error}}
-    </div>
+    <div *ifSome="(error$ | async); let error">Error: {{ error }}</div>
 
     <div class="content">
         <router-outlet></router-outlet>
-        <!-- <div>
-                        <mat-card>
-                          <button mat-button>All</button>
-                          <button mat-raised-button>Of</button>
-                          <button mat-raised-button color="primary">The</button>
-                          <button mat-raised-button color="accent">Buttons</button>
-                        </mat-card>
-
-                        <span class="done">
-                          <button mat-fab>
-                            <mat-icon>check circle</mat-icon>
-                          </button>
-                        </span>
-                      </div> -->
     </div>
 </app-header>

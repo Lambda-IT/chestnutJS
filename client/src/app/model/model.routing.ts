@@ -8,16 +8,16 @@ export const modelRoutes: Routes = [
     {
         path: 'model/:modelName',
         component: ModelPageComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: 'model/add/:modelName',
         component: CreateModelDetailPageComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
     {
         path: 'model/:modelName/:id',
         component: ModelDetailPageComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
 ];

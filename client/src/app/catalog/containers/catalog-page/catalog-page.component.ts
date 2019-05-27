@@ -1,9 +1,7 @@
 import { Component, OnDestroy, EventEmitter } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
-import {
-    ApplyCountQueryExecutedAction, getCatalogState, CatalogPageState
-} from '../../state/catalog.reducer';
+import { ApplyCountQueryExecutedAction, getCatalogState, CatalogPageState } from '../../state/catalog.reducer';
 import { composeCountQuery } from '@shared/graphql';
 import { fromFilteredSome } from '@shared/effects-helper';
 import { mergeMap, takeUntil, map, take } from 'rxjs/operators';

@@ -22,13 +22,17 @@ export interface TokenResultDto {
     refresh_token: string;
 }
 
-export const userLogin = (http: HttpClient, appConfig: AppConfigService) => (data: PasswordLoginDto): Observable<TokenResultDto> =>
-    http.post<TokenResultDto>(appConfig.buildIdentityUrl('/token'), data);
+export const userLogin = (http: HttpClient, appConfig: AppConfigService) => (
+    data: PasswordLoginDto
+): Observable<TokenResultDto> => http.post<TokenResultDto>(appConfig.buildIdentityUrl('/token'), data);
 
-export const tokenLogin = (http: HttpClient, appConfig: AppConfigService) => (data: RefreshTokenLoginDto): Observable<TokenResultDto> =>
-    http.post<TokenResultDto>(appConfig.buildIdentityUrl('/token'), data);
+export const tokenLogin = (http: HttpClient, appConfig: AppConfigService) => (
+    data: RefreshTokenLoginDto
+): Observable<TokenResultDto> => http.post<TokenResultDto>(appConfig.buildIdentityUrl('/token'), data);
 
-export const fakeLogin = (http: HttpClient, appConfig: AppConfigService) => (data: PasswordLoginDto): Observable<TokenResultDto> =>
+export const fakeLogin = (http: HttpClient, appConfig: AppConfigService) => (
+    data: PasswordLoginDto
+): Observable<TokenResultDto> =>
     of({
         token_type: 'bearer',
         access_token:
@@ -38,7 +42,9 @@ export const fakeLogin = (http: HttpClient, appConfig: AppConfigService) => (dat
         refresh_token: 'acbaa5e4c774bd209d46e1fd911addd06771554b',
     });
 
-export const fakeTokenLogin = (http: HttpClient, appConfig: AppConfigService) => (data: RefreshTokenLoginDto): Observable<TokenResultDto> =>
+export const fakeTokenLogin = (http: HttpClient, appConfig: AppConfigService) => (
+    data: RefreshTokenLoginDto
+): Observable<TokenResultDto> =>
     of({
         token_type: 'bearer',
         access_token:

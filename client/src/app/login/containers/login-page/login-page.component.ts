@@ -44,7 +44,7 @@ export class LoginPageComponent implements OnDestroy {
                     templateOptions: {
                         type: 'password',
                         label: 'Password',
-                        placeholder: 'Password'
+                        placeholder: 'Password',
                         // pattern: '^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[dW]).{8,}$',
                     },
                     validators: {
@@ -61,9 +61,7 @@ export class LoginPageComponent implements OnDestroy {
     constructor(private store: Store<any>) {
         this.error$ = this.store.select(loginSelectors.error);
 
-        this.submit$
-            .pipe(takeUntil(this.destroying$))
-            .subscribe(x => this.store.dispatch(new UserLoginAction(x)));
+        this.submit$.pipe(takeUntil(this.destroying$)).subscribe(x => this.store.dispatch(new UserLoginAction(x)));
     }
 
     ngOnDestroy(): void {

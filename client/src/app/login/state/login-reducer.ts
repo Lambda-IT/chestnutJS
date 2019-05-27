@@ -27,7 +27,7 @@ export const reducer = new ReducerBuilder<LoginPageState>()
     .handle(ApplyLogoutAction, (state, action) => ({
         ...state,
         error: none,
-        userInfo: none
+        userInfo: none,
     }))
     .build({
         error: none,
@@ -36,22 +36,30 @@ export const reducer = new ReducerBuilder<LoginPageState>()
 
 export const getLoginState = createFeatureSelector<LoginPageState>('login');
 export const loginSelectors = {
-    headerModel: createSelector(getLoginState, state => ({ isAuthenticated: state.userInfo.isSome(), userInfo: state.userInfo })),
-    error: createSelector(getLoginState, state =>
-        state.error.map(e => {
-            if (ErrorType.is.APIErrorResponse(e)) {
-                if (typeof e.value.apiErrorResponse.error === 'string') {
-                    return e.value.apiErrorResponse.error;
+    headerModel: createSelector(
+        getLoginState,
+        state => ({ isAuthenticated: state.userInfo.isSome(), userInfo: state.userInfo })
+    ),
+    error: createSelector(
+        getLoginState,
+        state =>
+            state.error.map(e => {
+                if (ErrorType.is.APIErrorResponse(e)) {
+                    if (typeof e.value.apiErrorResponse.error === 'string') {
+                        return e.value.apiErrorResponse.error;
+                    }
+                    if (e.value.apiErrorResponse.error.type === 'ModelError') {
+                        return e.value.apiErrorResponse.error.message;
+                    } else {
+                        const error = e.value.apiErrorResponse.error;
+                        return `${error.message}: ${error.fieldErrors.reduce(
+                            (acc: string, err) => acc + err.message,
+                            ''
+                        )}`;
+                    }
                 }
-                if (e.value.apiErrorResponse.error.type === 'ModelError') {
-                    return e.value.apiErrorResponse.error.message;
-                } else {
-                    const error = e.value.apiErrorResponse.error;
-                    return `${error.message}: ${error.fieldErrors.reduce((acc: string, err) => acc + err.message, '')}`;
-                }
-            }
-        })
-    )
+            })
+    ),
 };
 
 export function loginReducer(state: LoginPageState, action: Action): LoginPageState {
