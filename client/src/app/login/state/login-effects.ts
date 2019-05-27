@@ -6,18 +6,24 @@ import { mergeMap, map, tap } from 'rxjs/operators';
 import { bindRemoteCall, ErrorType } from '@shared/bind-functions';
 import { Action } from '@ngrx/store';
 import { Injectable } from '@angular/core';
-import { ApplyLoginFailedAction, ApplyLoginSuccessAction, TokenLoginAction, LogoutAction, ApplyLogoutAction } from '@shared/state/actions';
+import {
+    ApplyLoginFailedAction,
+    ApplyLoginSuccessAction,
+    TokenLoginAction,
+    LogoutAction,
+    ApplyLogoutAction,
+} from '@shared/state/actions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { userLogin, tokenLogin } from '../login.contracts';
 
 export class UserLoginAction {
     readonly type = 'USER_LOGIN';
-    constructor(public payload: { username: string; password: string }) { }
+    constructor(public payload: { username: string; password: string }) {}
 }
 
 export class UserLoginFailedAction {
     readonly type = 'USER_LOGIN_FAILED';
-    constructor(public payload: ErrorType) { }
+    constructor(public payload: ErrorType) {}
 }
 
 @Injectable()
@@ -28,7 +34,7 @@ export class LoginEffects {
         private appConfig: AppConfigService,
         private route: ActivatedRoute,
         private router: Router
-    ) { }
+    ) {}
 
     @Effect()
     onUserLogin$ = this.actions$.pipe(
@@ -60,10 +66,10 @@ export class LoginEffects {
     @Effect()
     onUserLoginFailed$ = this.actions$.pipe(
         instanceOf(UserLoginFailedAction),
-            map(x => {
-                this.router.navigate(['/login']);
-                return new ApplyLoginFailedAction(x.payload);
-            })
+        map(x => {
+            this.router.navigate(['/login']);
+            return new ApplyLoginFailedAction(x.payload);
+        })
     );
 
     @Effect()
@@ -74,7 +80,7 @@ export class LoginEffects {
                 tokenLogin(this.http, this.appConfig)({
                     client_id: 'chestnut_admin',
                     grant_type: 'refresh_token',
-                    refresh_token: action.payload.refresh_token
+                    refresh_token: action.payload.refresh_token,
                 })
             ).pipe(
                 map(x =>
@@ -96,6 +102,6 @@ export class LoginEffects {
         instanceOf(LogoutAction),
         tap(_ => localStorage.removeItem('token')),
         tap(_ => this.router.navigate(['./login'])),
-        map(_ => new ApplyLogoutAction)
+        map(_ => new ApplyLogoutAction())
     );
 }

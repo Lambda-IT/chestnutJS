@@ -12,19 +12,16 @@ import { UserLoginFailedAction } from '../state/login-effects';
     providedIn: 'root',
 })
 export class LoginService {
-
-    constructor(
-        private configService: AppConfigService,
-        private http: HttpClient,
-        private store: Store<any>
-    ) { }
+    constructor(private configService: AppConfigService, private http: HttpClient, private store: Store<any>) {}
 
     tokenLogin(refreshToken: string) {
-        return bindRemoteCall(() => tokenLogin(this.http, this.configService)({
-            client_id: 'chestnut_admin',
-            grant_type: 'refresh_token',
-            refresh_token: refreshToken
-        })).pipe(
+        return bindRemoteCall(() =>
+            tokenLogin(this.http, this.configService)({
+                client_id: 'chestnut_admin',
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken,
+            })
+        ).pipe(
             tap(x =>
                 x.fold(
                     l => this.store.dispatch(new UserLoginFailedAction(l)),
@@ -34,6 +31,7 @@ export class LoginService {
                         return this.store.dispatch(new ApplyLoginSuccessAction({ username: user.username }));
                     }
                 )
-            ));
+            )
+        );
     }
 }

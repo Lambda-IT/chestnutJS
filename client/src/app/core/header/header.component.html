@@ -1,5 +1,4 @@
 <mat-sidenav-container>
-
     <mat-sidenav #sidenav mode="push">
         <div class="branding">
             <img src="assets/img/535chestnut_100849.png" height="40px" />
@@ -8,7 +7,7 @@
         </div>
         <mat-nav-list>
             <a mat-list-item *ngFor="let item of navigationSideMenu" (click)="sidenav.close()">
-                {{item.label}}
+                {{ item.label }}
             </a>
         </mat-nav-list>
     </mat-sidenav>
@@ -28,9 +27,14 @@
         </div>
 
         <span class="toolbar_navitems__navitem">
-            <button mat-button class="nav-button" *ngFor="let item of navigation" [routerLink]="[item.link]"
-                routerLinkActive="active">
-                {{item.label}}
+            <button
+                mat-button
+                class="nav-button"
+                *ngFor="let item of navigation"
+                [routerLink]="[item.link]"
+                routerLinkActive="active"
+            >
+                {{ item.label }}
             </button>
         </span>
 
@@ -38,7 +42,12 @@
             Sign in
         </button>
 
-        <button *ngIf="model.isAuthenticated" mat-icon-button [matMenuTriggerFor]="toolbarUserMenu" matTooltip="Logged in as: {{model.userInfo.getOrElse().username}}">
+        <button
+            *ngIf="model.isAuthenticated"
+            mat-icon-button
+            [matMenuTriggerFor]="toolbarUserMenu"
+            matTooltip="Logged in as: {{ model.userInfo.getOrElse().username }}"
+        >
             <mat-icon>person</mat-icon>
         </button>
         <mat-menu #toolbarUserMenu="matMenu">
@@ -47,7 +56,6 @@
                 <span>Logout</span>
             </button>
         </mat-menu>
-
 
         <!-- <button mat-icon-button [mat-menu-trigger-for]="menu">
           <mat-icon>more_vert</mat-icon>

@@ -33,7 +33,10 @@ export const reducer = new ReducerBuilder<AppState>()
 
 export const getAppState = createFeatureSelector<AppState>('app');
 export const appSelectors = {
-    error: createSelector(getAppState, state => state.error),
+    error: createSelector(
+        getAppState,
+        state => state.error
+    ),
 };
 
 export function appReducer(state: AppState, action: Action): AppState {

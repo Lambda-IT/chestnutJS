@@ -7,18 +7,18 @@ import { fromFilteredSome } from '@shared/effects-helper';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private router: Router, private store: Store<any>) { }
+    constructor(private router: Router, private store: Store<any>) {}
 
     canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        return this.store.select(sharedStateSelectors.isLoggedIn)
-            .pipe(
-                fromFilteredSome(),
-                map(loggedIn => {
-                    if (loggedIn) {
-                        return true;
-                    }
-                    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-                    return false;
-                }));
+        return this.store.select(sharedStateSelectors.isLoggedIn).pipe(
+            fromFilteredSome(),
+            map(loggedIn => {
+                if (loggedIn) {
+                    return true;
+                }
+                this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+                return false;
+            })
+        );
     }
 }

@@ -1,4 +1,4 @@
-<ng-container *ifSome="(fields$ | async); let fields">
+<ng-container *ifSome="fields$ | async; let fields">
     <app-modeldetail
         [fields]="fields"
         [model]="data"

@@ -5,12 +5,11 @@
     <mat-card-content>
         <form novalidate [formGroup]="form" (ngSubmit)="submit$.emit(model)">
             <formly-form [form]="form" [fields]="fields" [model]="model">
-                <button mat-raised-button [disabled]="form.invalid" color="primary" type="submit">Sign in
-                </button>
+                <button mat-raised-button [disabled]="form.invalid" color="primary" type="submit">Sign in</button>
             </formly-form>
         </form>
     </mat-card-content>
     <div *ifSome="error$ | async; let error">
-        {{error}}
+        {{ error }}
     </div>
 </mat-card>

@@ -6,6 +6,6 @@ export const catalogRoutes: Routes = [
     {
         path: 'catalog',
         component: CatalogPageComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
     },
 ];

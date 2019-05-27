@@ -11,6 +11,6 @@ export class HeaderComponent {
     @Input() model: HeaderModel;
     @Output() logoutClicked = new EventEmitter();
 
-    navigationSideMenu = [{ label: 'Label 1' }, { label: 'Label2'}];
+    navigationSideMenu = [{ label: 'Label 1' }, { label: 'Label2' }];
     navigation = [{ label: 'Catalog', link: '../catalog' }];
 }
