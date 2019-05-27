@@ -43,7 +43,7 @@
             </table>
         </ng-container>
     </mat-expansion-panel>
-    <ng-container *ngIf="(selectedColumns$ | async); let selectedColumns">
+    <ng-container *ngIf="selectedColumns$ | async; let selectedColumns">
         <table *ngIf="dataSource.length > 0" mat-table [dataSource]="dataSource" class="mat-elevation-z8 model-table">
             <ng-container *ngFor="let col of selectedColumns; let i = index" matColumnDef="{{ col }}">
                 <th mat-header-cell *matHeaderCellDef>{{ col }}</th>

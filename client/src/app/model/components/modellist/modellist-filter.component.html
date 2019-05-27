@@ -1,7 +1,7 @@
 <form [formGroup]="filterForm" class="filter-form">
     <mat-form-field class="filter-field-30 ">
         <mat-select placeholder="Field" formControlName="field">
-            <mat-option *ngFor="let col of (filterMetadata | async)" [value]="col">{{ col.name }} </mat-option>
+            <mat-option *ngFor="let col of filterMetadata | async" [value]="col">{{ col.name }} </mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -22,7 +22,7 @@
         </mat-select>
     </mat-form-field>
 
-    <ng-container *ifSome="(filterChange$ | async); let filterChange">
+    <ng-container *ifSome="filterChange$ | async; let filterChange">
         <mat-form-field *ngIf="filterForm.controls['operator'].valid" class="filter-field-30 ">
             <input
                 *ngIf="filterChange.viewComponent === ViewComponent.stringInput"

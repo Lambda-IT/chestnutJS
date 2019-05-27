@@ -1,4 +1,4 @@
-<ng-container *ngIf="(model$ | async); let model">
+<ng-container *ngIf="model$ | async; let model">
     <a *ngIf="showBackNavigation" class="nav-back" mat-button color="primary" [routerLink]="['..']">
         <mat-icon>navigate_before</mat-icon>Back to the listing of {{ title | titlecase }}</a
     >
