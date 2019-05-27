@@ -1,9 +1,8 @@
 // libs
-import { Promise as bluebird } from 'bluebird';
 import { transform } from 'lodash/fp';
 import * as mongoose from 'mongoose';
 import * as kebabCase from 'kebab-case';
-import { HttpStatusCode } from '../../../common/http-status-code';
+import { HttpMethod, HttpStatusCode } from '../utils/http-util';
 import { ErrorType } from '../error-type';
 import { Request, Response, NextFunction } from 'express';
 import { Log } from '../../typings/log';
@@ -145,41 +144,6 @@ export function clearCollection(instance: mongoose.Mongoose, name: string): Prom
 export interface HttpResponse {
     status: HttpStatusCode;
     body?: any;
-}
-
-export enum HttpMethod {
-    /**
-     * Represents an HTTP GET protocol method.
-     */
-    Get = 'GET',
-    /**
-     * Represents an HTTP POST protocol method that is used to post a new entity as an addition to a URI.
-     */
-    Post = 'POST',
-    /**
-     * Represents an HTTP DELETE protocol method.
-     */
-    Delete = 'DELETE',
-    /**
-     * Represents an HTTP HEAD protocol method.
-     */
-    Head = 'HEAD',
-    /**
-     * Represents an HTTP PATCH protocol method that is used to replace partially an entity identified by a URI.
-     */
-    Patch = 'PATCH',
-    /**
-     * Represents an HTTP PUT protocol method that is used to replace an entity identified by a URI.
-     */
-    Put = 'PUT',
-    /**
-     * Represents an HTTP OPTIONS protocol method.
-     */
-    Options = 'OPTIONS',
-    /**
-     * Represents an HTTP TRACE protocol method.
-     */
-    Trace = 'TRACE',
 }
 
 export interface HttpRequest {

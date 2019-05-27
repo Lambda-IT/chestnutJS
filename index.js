@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var src_1 = require("./server/src");
 exports.initChestnut = src_1.initChestnut;
 exports.createUserAsync = src_1.createUserAsync;
-__export(require("./common/metadata"));
+__export(require("./client/src/app/shared/contracts/metadata"));
 var decorators_1 = require("./server/src/decorators");
 exports.editor = decorators_1.editor;
 exports.hidden = decorators_1.hidden;

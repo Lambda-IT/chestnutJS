@@ -9,15 +9,14 @@ import {
     Success,
     Failure,
     ModelError,
-    PasswordTokenRequest,
-    RefreshTokenRequest,
     IdentityUser,
     RefreshToken,
     Token,
 } from './identity-lib';
 import { AuthToken, AuthUser, ChestnutPermissions, TokenType } from './models';
-import { isNullOrEmpty } from '../../../common';
 import { ChestnutUser } from '../chestnut-user-type';
+import { isNullOrEmpty } from '../utils/validation';
+import { PasswordTokenRequest, RefreshTokenRequest } from '../shared/contracts/contracts';
 
 export type Result<T> = Success<T> | Failure<string>;
 

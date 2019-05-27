@@ -1,6 +1,7 @@
 import { prop, arrayProp, Ref, Typegoose } from 'typegoose';
-import { hidden, editor, readonly, PropertyType } from '../../..';
+import { hidden, editor } from '../../..';
 import { TranslatedName } from './model-type';
+import { PropertyType } from '../../src/shared/contracts/metadata';
 
 export class Task extends Typegoose {
     @prop() description: string;

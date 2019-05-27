@@ -3,7 +3,7 @@ import { none, Option, some } from 'fp-ts/lib/Option';
 import { ErrorType } from '@shared/bind-functions';
 import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction } from '@shared/state/actions';
 import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
-import { MetadataDto } from '../../../common/metadata';
+import { MetadataDto } from '@shared/contracts/metadata';
 
 export interface AppState {
     loaded: boolean;

@@ -1,4 +1,4 @@
-import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
+import { MetadataDto, PropertyDescription, PropertyType } from '@shared/contracts/metadata';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldConfigMap } from './model.reducer';
 

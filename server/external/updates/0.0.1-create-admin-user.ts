@@ -1,7 +1,7 @@
-import { UpdateFunction, createUserAsync } from '../../..';
 import { Store } from '../../src/store';
 import { Log } from '../../typings/log';
 import { ChestnutPermissions } from '../../src/auth/models';
+import { createUserAsync, UpdateFunction } from '../../src';
 
 export const update: UpdateFunction = async function(store: Store, logger: Log) {
     await createUserAsync(store, {

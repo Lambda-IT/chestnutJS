@@ -4,7 +4,7 @@ import { createFeatureSelector, createSelector, Action } from '@ngrx/store';
 import { ErrorType } from '@shared/bind-functions';
 import { ApplyMetadataLoadingAction, ApplyMetadataLoadedAction } from '@shared/state/actions';
 import { Either } from 'fp-ts/lib/Either';
-import { MetadataDto } from '../../../../../common/metadata';
+import { MetadataDto } from '@shared/contracts/metadata';
 
 export interface CatalogModel {
     name: string;

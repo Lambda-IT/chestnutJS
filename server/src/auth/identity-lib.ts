@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
 import { Observable, of } from 'rxjs';
 import { filter, map, merge, flatMap, catchError, tap } from 'rxjs/operators';
+import { PasswordTokenRequest, RefreshTokenRequest } from '../shared/contracts/contracts';
 
 export type Success<T> = {
     isSuccess: true;
@@ -60,19 +61,6 @@ export type IdentityUser = {
     _id: string;
     email: string;
     permissions: string;
-};
-
-export type PasswordTokenRequest = {
-    username: string;
-    password: string;
-    client_id: string;
-    grant_type: 'password';
-};
-
-export type RefreshTokenRequest = {
-    refresh_token: string;
-    grant_type: 'refresh_token';
-    client_id: string;
 };
 
 export type TokenRequest = PasswordTokenRequest | RefreshTokenRequest;

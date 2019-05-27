@@ -1,6 +1,6 @@
 import { Either } from 'fp-ts/lib/Either';
 import { ErrorType } from '@shared/bind-functions';
-import { MetadataDto } from '../../../../../common/metadata';
+import { MetadataDto } from '../contracts/metadata';
 
 export class ApplyUserVisibleColumnsAction {
     readonly type = 'APPLY_USERVISIBLECOLUMNS';

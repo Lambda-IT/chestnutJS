@@ -1,7 +1,7 @@
 import { Request, Response, Express } from 'express';
-import { ModelDescription, PropertyDescription } from '../../../common/metadata';
 import { Store } from '../store';
-import { registry, isHidden, isReadonly } from '../decorators/type-registry';
+import { registry, isHidden, isReadonly } from '../decorators';
+import { ModelDescription, PropertyDescription } from '../shared/contracts/metadata';
 
 export function createMetadataController(app: Express, store: Store, baseUrl: string) {
     app.get(baseUrl + '/metadata', (req: Request, res: Response) => {

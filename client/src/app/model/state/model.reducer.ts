@@ -15,7 +15,7 @@ import {
     transformMetadataToProperties,
     transformMetadataToPropertyDefinition,
 } from './data-transformations';
-import { MetadataDto, PropertyDescription, PropertyType } from '../../../../../common/metadata';
+import { MetadataDto, PropertyDescription, PropertyType } from '@shared/contracts/metadata';
 import { insert, lookup, remove } from 'fp-ts/lib/Record';
 import { FilterItem, FilterMetadataModel, ViewComponent } from '../types/model-types';
 

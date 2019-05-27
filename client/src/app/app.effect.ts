@@ -6,7 +6,7 @@ import { State } from './app.module';
 import { AppConfigService } from '@shared/services/app-config.service';
 import { HttpClient } from '@angular/common/http';
 import { bindRemoteCall } from '@shared/bind-functions';
-import { ModelDescription } from '../../../common/metadata';
+import { ModelDescription } from '@shared/contracts/metadata';
 import {
     ApplyMetadataLoadedAction,
     ApplyMetadataLoadingAction,
