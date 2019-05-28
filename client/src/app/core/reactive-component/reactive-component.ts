@@ -1,8 +1,6 @@
-import { SimpleChange, OnChanges, SimpleChanges } from '@angular/core';
-
+import { OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { ConnectableObservable, Observable, Observer } from 'rxjs';
 import { filter, map, publishReplay, refCount } from 'rxjs/operators';
-
 import { DestroyableComponent } from './destroyable-component';
 
 export interface TypedSimpleChange<T> {
@@ -26,7 +24,7 @@ export abstract class ReactiveComponent<T> extends DestroyableComponent implemen
     observeProperty<K extends keyof T>(propertyName: K): Observable<TypedSimpleChange<T[K]>> {
         return this.changes$.pipe(
             filter(changes => changes.hasOwnProperty(propertyName)),
-            map(changes => changes[propertyName]),
+            map((changes: any) => changes[propertyName]),
             publishReplay(1),
             refCount()
         );

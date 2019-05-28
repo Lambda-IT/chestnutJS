@@ -8,7 +8,6 @@ import { loginSelectors } from './login/state/login-reducer';
 import { HeaderModel } from './login/login.model';
 import { takeUntil, map } from 'rxjs/operators';
 import { LogoutAction } from '@shared/state/actions';
-import 'unknown-ts';
 
 @Component({
     selector: 'app-root',
@@ -34,28 +33,6 @@ export class AppComponent implements OnDestroy {
                 takeUntil(this.destroying$)
             )
             .subscribe();
-
-        // const onLogin$ = new EventEmitter<LoginDialogData>();
-        // const loginResult$ = of({ error: '  Ohhh neiiin' });
-
-        // this.loginClicked$
-        //     .pipe(
-        //         tap(x => console.log('------loginClicked------', x)),
-        //         map(_ =>
-        //             this.dialog.open(LoginDialogComponent, {
-        //                 width: '400px',
-        //                 data: {
-        //                     loginDialogData: { username: '', password: '' },
-        //                     loginResult: loginResult$,
-        //                     login: onLogin$,
-        //                 },
-        //             })
-        //         ),
-        //         takeUntil(this.destroying$)
-        //     )
-        //     .subscribe();
-
-        // onLogin$.pipe(takeUntil(this.destroying$)).subscribe(x => this.store.dispatch(new Login(x)));
     }
 
     ngOnDestroy(): void {
