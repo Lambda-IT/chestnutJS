@@ -9,6 +9,7 @@ export enum PropertyType {
     array = 'Array',
     embedded = 'Embedded',
     mixed = 'Mixed',
+    file = 'File',
 }
 
 export interface PropertyDescription {

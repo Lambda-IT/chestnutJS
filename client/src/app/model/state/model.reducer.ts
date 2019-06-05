@@ -17,7 +17,14 @@ import {
 } from './data-transformations';
 import { MetadataDto, PropertyDescription, PropertyType } from '@shared/contracts/metadata';
 import { insert, lookup, remove } from 'fp-ts/lib/Record';
-import { FilterItem, FilterMetadataModel, ViewComponent } from '../types/model-types';
+import {
+    FilterItem,
+    FilterMetadataModel,
+    LoadFileResponse,
+    SaveFileResponse,
+    ViewComponent,
+} from '../types/model-types';
+import { ChestnutRemoteData, initial } from '@core/remote-data';
 
 export interface ModelPageModel {
     availableColumnMap: Option<{ [key: string]: string[] }>;
@@ -26,7 +33,6 @@ export interface ModelPageModel {
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
-    // filterItem: StrMap<FilterItem[]>;
     filterItem: { [key: string]: FilterItem[] };
 
     model: Option<MetadataDto>;
@@ -43,6 +49,7 @@ export interface ModelDetailPageModel {
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
+    fileId: ChestnutRemoteData<SaveFileResponse>;
 }
 
 export interface FormlyFieldConfigMap {
@@ -62,6 +69,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 error: some(l),
                 formFieldConfigMap: none,
                 propertyMap: none,
+                fileId: initial,
             },
             modelPageModel: {
                 loaded: false,
@@ -81,6 +89,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 formFieldConfigMap: some(transformMetadataToForm(r)),
                 propertyMap: some(transformMetadataToPropertyDefinition(r)),
                 error: none,
+                fileId: initial,
             },
             modelPageModel: {
                 loaded: true,
@@ -111,6 +120,21 @@ export class ApplyRemoveFilterItemAction {
     constructor(public payload: FilterPayload) {}
 }
 
+export class ApplySavedFileAction {
+    public readonly type = 'APPLY_SAVED_FILE';
+    constructor(public data: ChestnutRemoteData<SaveFileResponse>) {}
+}
+
+export class ApplyDeleteFileAction {
+    public readonly type = 'APPLY_DELETE_FILE';
+    constructor(public data: ChestnutRemoteData<null>) {}
+}
+
+export class ApplyLoadFileAction {
+    public readonly type = 'APPLY_LOAD_FILE';
+    constructor(public data: ChestnutRemoteData<LoadFileResponse>) {}
+}
+
 export const reducer = new ReducerBuilder<ModelState>()
     .handle(
         ApplyMetadataLoadingAction,
@@ -120,9 +144,30 @@ export const reducer = new ReducerBuilder<ModelState>()
                 modelDetailPageModel: { ...state.modelDetailPageModel, loading: true },
             }
     )
-    .handle(ApplyMetadataLoadedAction, (state, action) => ({
-        ...transformMetadata(action.payload),
-    }))
+    .handle(ApplyMetadataLoadedAction, (state, action) => {
+        return {
+            ...transformMetadata(action.payload),
+        };
+    })
+    .handle(ApplySavedFileAction, (state, action) => {
+        return {
+            ...state,
+            modelDetailPageModel: {
+                ...state.modelDetailPageModel,
+                fileId: action.data,
+            },
+        };
+    })
+    .handle(ApplyDeleteFileAction, (state, action) => {
+        return {
+            ...state,
+            modelDetailPageModel: {
+                ...state.modelDetailPageModel,
+                fileId: initial,
+            },
+        };
+    })
+
     .handle(ApplyUserVisibleColumnsAction, (state, action) => ({
         ...state,
         modelPageModel: {
@@ -178,6 +223,7 @@ export const reducer = new ReducerBuilder<ModelState>()
             error: none,
             formFieldConfigMap: none,
             propertyMap: none,
+            fileId: initial,
         },
         modelPageModel: {
             loaded: false,
@@ -213,6 +259,10 @@ export const modelSelectors = {
     getColumsForGraphql: createSelector(
         getModelState,
         state => state.modelPageModel.graphqlColumnMap
+    ),
+    getFileId: createSelector(
+        getModelState,
+        state => state.modelDetailPageModel.fileId
     ),
     getItemFilters: field =>
         createSelector(

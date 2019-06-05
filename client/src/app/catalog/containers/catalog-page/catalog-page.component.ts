@@ -3,10 +3,10 @@ import { Store } from '@ngrx/store';
 import { Observable, forkJoin } from 'rxjs';
 import { ApplyCountQueryExecutedAction, getCatalogState, CatalogPageState } from '../../state/catalog.reducer';
 import { composeCountQuery } from '@shared/graphql';
-import { fromFilteredSome } from '@shared/effects-helper';
 import { mergeMap, takeUntil, map, take } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
 import { bindToOptionData } from '@shared/bind-functions';
+import { fromFilteredSome } from '@core/rx-helpers';
 
 @Component({
     selector: 'app-catalog-page',

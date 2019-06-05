@@ -15,11 +15,6 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
 
         compositions[modelName] = modelComposition;
 
-        // console.log('compose', {
-        //     key: key,
-        //     modelName: modelName,
-        // });
-
         Object.keys(mongooseModel.schema.paths)
             .filter(k => k !== '__v')
             .forEach(p => {
@@ -36,12 +31,6 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                                 rawQuery[property.path] = new RegExp(value, 'i');
                             },
                         })
-                        // .wrapResolve(next => rp => {
-                        //     const r = next(rp);
-                        //     console.log('RawQuery:', rp.rawQuery);
-                        //     console.log('Mongoose query:', rp.query);
-                        //     return r;
-                        // })
                     );
                 }
             });
@@ -60,11 +49,7 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
         GQC.rootMutation().addFields({
             [modelName + 'Create']: modelComposition.getResolver('createOne'),
             [modelName + 'UpdateById']: modelComposition.getResolver('updateById'),
-            // [modelName + 'UpdateOne']: modelComposition.getResolver('updateOne'),
-            // [modelName + 'UpdateMany']: modelComposition.getResolver('updateMany'),
             [modelName + 'RemoveById']: modelComposition.getResolver('removeById'),
-            // [modelName + 'RemoveOne']: modelComposition.getResolver('removeOne'),
-            // [modelName + 'RemoveMany']: modelComposition.getResolver('removeMany'),
         });
     });
 
@@ -80,15 +65,6 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
 
                 if (objProperty && objProperty.ref) {
                     const refName = camelcase(objProperty.ref);
-
-                    // console.log('addParentRelation', {
-                    //     reference: objProperty ? objProperty.ref : null,
-                    //     name: p,
-                    //     refName: refName,
-                    //     modelName: modelName,
-                    //     propertyName: p,
-                    // });
-
                     compositions[modelName].addRelation(refName + 'Ref', {
                         resolver: compositions[refName].getResolver('findById'),
                         prepareArgs: {
@@ -97,13 +73,6 @@ export function initGraphQLSchema(store: Store, options: ChestnutOptions): Graph
                         projection: { [p]: 1 },
                     });
                 } else if (objProperty && Array.isArray(objProperty) && objProperty.length > 0) {
-                    // console.log('addChildRelation', {
-                    //     reference: objProperty[0].ref,
-                    //     name: p,
-                    //     modelName: modelName,
-                    //     propertyName: p,
-                    // });
-
                     if (objProperty[0].ref !== 'String') {
                         const refName = camelcase(objProperty[0].ref);
 

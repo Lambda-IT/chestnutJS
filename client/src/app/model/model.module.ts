@@ -15,6 +15,9 @@ import { CreateModelDetailPageComponent } from './containers/create-model-detail
 import { ModelEffects } from './state/model.effects';
 import { ModellistFilterComponent } from './components/modellist/modellist-filter.component';
 import { PanelWrapperComponent } from './components/modeldetail/panel-wrapper.component';
+import { FormlyFileUploadComponent } from './components/modeldetail/formly-file-upload.component';
+import { FormlyFileUploadPageComponent } from './containers/model-detail-page/formly-file-upload-page.component';
+import { ModelService } from './services/model-service';
 
 @NgModule({
     imports: [
@@ -25,6 +28,7 @@ import { PanelWrapperComponent } from './components/modeldetail/panel-wrapper.co
         StoreModule.forFeature('model', modelReducer),
         EffectsModule.forFeature([ModelEffects]),
         FormlyModule.forRoot({
+            types: [{ name: 'file', component: FormlyFileUploadPageComponent, wrappers: ['form-field'] }],
             wrappers: [{ name: 'panel', component: PanelWrapperComponent }],
         }),
     ],
@@ -36,6 +40,9 @@ import { PanelWrapperComponent } from './components/modeldetail/panel-wrapper.co
         CreateModelDetailPageComponent,
         ModellistFilterComponent,
         PanelWrapperComponent,
+        FormlyFileUploadComponent,
+        FormlyFileUploadPageComponent,
     ],
+    providers: [ModelService],
 })
 export class ModelModule {}

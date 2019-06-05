@@ -26,6 +26,7 @@ import { ChestnutUser } from './chestnut-user-type';
 import { createAuthUserRepository } from './auth/repositories';
 import { Server } from 'http';
 import { updateServer, createServerConfigRepository, ServerConfig } from './server-update-service';
+import { createFileUploadController } from './controller/file-service';
 
 export const BASE_URL = '/chestnut';
 const fs = <any>bluePromise.promisifyAll(_fs);
@@ -180,6 +181,7 @@ export async function initChestnut(
 
     const schema = initGraphQLSchema(store, options);
     createMetadataController(app, store, BASE_URL);
+    createFileUploadController(app, store, BASE_URL);
 
     app.use(`${BASE_URL}/graphql`, authHandler.ensureAuthorized, graphqlExpress({ schema })); // authHandler.ensureAuthorized,
     app.get(`${BASE_URL}/graphiql`, graphiqlExpress({ endpointURL: `${BASE_URL}/graphql` }));

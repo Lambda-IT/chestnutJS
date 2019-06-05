@@ -1,3 +1,5 @@
+import * as t from 'io-ts';
+
 export interface FilterMetadataModel {
     name: string;
     values: string | boolean[];
@@ -18,4 +20,25 @@ export enum ViewComponent {
     select = 'Select',
     number = 'Number',
     date = 'Date',
+}
+
+export const initialFile = { fileId: '', inProgress: false };
+
+export class FileUploadModel {
+    inProgress: boolean;
+    fileId: string;
+}
+
+export const SaveFileResponse = t.type({
+    fileId: t.string,
+});
+export interface SaveFileResponse {
+    fileId: string;
+}
+
+export const LoadFileResponse = t.type({
+    fileId: t.string,
+});
+export interface LoadFileResponse {
+    fileId: string;
 }

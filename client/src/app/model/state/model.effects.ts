@@ -1,23 +1,57 @@
 import { Actions, Effect } from '@ngrx/effects';
 import { instanceOf } from 'ngrx-reducer-builder';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { ApplyColumnsChangedAction } from './model.reducer';
+import { ApplyColumnsChangedAction, ApplyDeleteFileAction, ApplySavedFileAction } from './model.reducer';
+import { makeRemoteDataCall } from '@core/effects-helper';
+import { ModelService } from '../services/model-service';
+import { toPayload } from '@core/rx-helpers';
 
 export class ColumnsChangedAction {
     public readonly type = 'COLUMNS_CHANGED';
     constructor(public payload: { [model: string]: string[] }) {}
 }
 
+export class SaveFileAction {
+    public readonly type = 'SAVE_FILE';
+    constructor(public payload: File) {}
+}
+
+export class DeleteFileAction {
+    public readonly type = 'DELETE_FILE';
+    constructor(public payload: { fileId: string }) {}
+}
+
 @Injectable()
 export class ModelEffects {
-    constructor(private actions$: Actions) {}
+    constructor(private actions$: Actions, private modelService: ModelService) {}
 
     @Effect()
     onSelectedColumnsChanged$ = this.actions$.pipe(
         instanceOf(ColumnsChangedAction),
         tap(saveToLocalStorage),
         map(action => new ApplyColumnsChangedAction(action.payload))
+    );
+
+    @Effect()
+    onSavedFile$ = this.actions$.pipe(
+        instanceOf(SaveFileAction),
+        toPayload(),
+        switchMap(payload =>
+            makeRemoteDataCall(this.modelService.saveFileToDb(payload), respond => new ApplySavedFileAction(respond))
+        )
+    );
+
+    @Effect()
+    onDeleteFile$ = this.actions$.pipe(
+        instanceOf(DeleteFileAction),
+        toPayload(),
+        switchMap(payload =>
+            makeRemoteDataCall(
+                this.modelService.deleteFileFromDb(payload.fileId),
+                respond => new ApplyDeleteFileAction(respond)
+            )
+        )
     );
 }
 

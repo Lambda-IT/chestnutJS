@@ -66,9 +66,6 @@ export async function createStoreAsync(
         // Typegoose models
         const modelName = camelcase(key);
         const model = models[key];
-        console.log('Key', key);
-        console.log('modelName', modelName);
-        console.log('model', model);
         // returns the corresponding Mongoose Model
         database.models[modelName] = new model().getModelForClass(
             model,
@@ -76,10 +73,6 @@ export async function createStoreAsync(
         );
     });
 
-    // database.pinboard.createIndex({ lastModified: -1 });
-    // database.pinboard.createIndex({ id: 1, validUntil: 1, owner: 1 });
-    // database.assetStats.createIndex({ assetId: 1 }, { unique: true });
-    // database.assets.createIndex({ imageHash: 1 });
 
     return database;
 }

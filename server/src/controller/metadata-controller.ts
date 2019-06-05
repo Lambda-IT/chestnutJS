@@ -21,7 +21,6 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
         res.send(metadata).end();
     });
 }
-
 export function createProperties(path, modelName: string) {
     return Object.keys(path)
         .filter(k => k !== '__v')

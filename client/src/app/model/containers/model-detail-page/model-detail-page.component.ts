@@ -8,7 +8,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { composeByIdQuery, composeUpdateMutation } from '@shared/graphql';
-import { fromFilteredSome } from '@shared/effects-helper';
+import { fromFilteredSome } from '@core/rx-helpers';
 import { bindToOptionData } from '@shared/bind-functions';
 import { filterProperties } from '@shared/helper-functions';
 import { Either } from 'decode-ts';

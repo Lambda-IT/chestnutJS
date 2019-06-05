@@ -18,6 +18,7 @@ import {
     MatDialogModule,
     MatExpansionModule,
     MatSnackBarModule,
+    MatProgressBarModule,
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { NgxFpTsModule } from 'ngx-fp-ts';
@@ -31,10 +32,12 @@ import { FormlyTinyMCEComponent } from '@shared/formly/tinymce.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
         CommonModule,
+        BrowserAnimationsModule,
         MatButtonModule,
         MatToolbarModule,
         MatTooltipModule,
@@ -50,6 +53,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         MatCardModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule,
         MatDialogModule,
         RouterModule,
         NgxFpTsModule,
@@ -64,6 +68,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
     ],
     exports: [
         CommonModule,
+        BrowserAnimationsModule,
         MatButtonModule,
         MatToolbarModule,
         MatTooltipModule,
@@ -80,6 +85,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
         MatCardModule,
         MatProgressSpinnerModule,
         MatDialogModule,
+        MatProgressBarModule,
         RouterModule,
         NgxFpTsModule,
         EditorModule,

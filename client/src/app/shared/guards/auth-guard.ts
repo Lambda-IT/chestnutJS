@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Store } from '@ngrx/store';
 import { sharedStateSelectors } from '../state/reducers';
 import { map } from 'rxjs/operators';
-import { fromFilteredSome } from '@shared/effects-helper';
+import { fromFilteredSome } from '@core/rx-helpers';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

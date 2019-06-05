@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ApplyAddFilterItemAction, ApplyRemoveFilterItemAction, modelSelectors } from '../../state/model.reducer';
-import { fromFilteredSome } from '@shared/effects-helper';
+import { fromFilteredSome } from '@core/rx-helpers';
 import { composeFilteredManyQuery, composeManyQuery } from '@shared/graphql';
 import { bindToOptionData } from '@shared/bind-functions';
 import { Option } from 'fp-ts/lib/Option';

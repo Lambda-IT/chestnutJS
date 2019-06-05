@@ -53,7 +53,8 @@
         "zone.js": "0.8.26",
         "fp-ts": "1.18.2",
         "monocle-ts": "1.7.2",
-        "newtype-ts": "0.2.4"
+        "newtype-ts": "0.2.4",
+        "angular-material-fileupload": "2.0.0"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "~0.13.0",

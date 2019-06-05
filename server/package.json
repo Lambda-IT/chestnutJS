@@ -37,6 +37,7 @@
         "graphql-compose-pagination": "1.1.2",
         "graphql-extensions": "0.0.5",
         "graphql-subscriptions": "0.5.4",
+        "gridfs-stream": "1.1.1",
         "helmet": "^3.9.0",
         "jsonwebtoken": "^8.1.0",
         "kebab-case": "^1.0.0",

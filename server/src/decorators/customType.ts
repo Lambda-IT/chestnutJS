@@ -1,7 +1,7 @@
-import { registry, initModel } from './type-registry';
+import { initModel, registry } from './type-registry';
 import { PropertyType } from '../../../client/src/app/shared/contracts/metadata';
 
-export function editor(type: PropertyType) {
+export function customType(type: PropertyType) {
     return function(target: any, key: any) {
         const modelName = target.constructor.name.toLowerCase();
         initModel(modelName, key);

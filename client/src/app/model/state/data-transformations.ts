@@ -3,8 +3,8 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldConfigMap } from './model.reducer';
 
 interface FormMappingType {
-    type: 'input' | 'textarea' | 'checkbox' | 'html' | 'embedded';
-    templateType?: 'text' | 'date' | 'number' | 'datetime-local' | 'embedded';
+    type: 'input' | 'textarea' | 'checkbox' | 'html' | 'embedded' | 'file';
+    templateType?: 'text' | 'date' | 'number' | 'datetime-local' | 'embedded' | 'file';
 }
 
 const typeMap: { [key in PropertyType]: FormMappingType } = {
@@ -17,6 +17,7 @@ const typeMap: { [key in PropertyType]: FormMappingType } = {
     [PropertyType.objectID]: { type: 'input', templateType: 'text' },
     [PropertyType.array]: { type: 'input', templateType: 'text' },
     [PropertyType.embedded]: { type: 'input', templateType: 'text' },
+    [PropertyType.file]: { type: 'file', templateType: 'file' },
     [PropertyType.mixed]: { type: 'input', templateType: 'text' },
 };
 
@@ -36,8 +37,6 @@ export const createForm = (acc, model) => {
             .map(x => {
                 if (!typeMap[x.type]) {
                     console.log(`Property: ${x.name} has a wrong type!`, x);
-                }
-                if (x.type === PropertyType.embedded) {
                 }
                 return x;
             })

@@ -1,0 +1,18 @@
+.delete-button {
+    cursor: pointer;
+    margin-left: 20px;
+    mat-icon {
+        font-size: 18px;
+    }
+}
+
+.file-info {
+    width: 300px;
+    height: 300px;
+    display: flex;
+}
+
+.file {
+    object-fit: scale-down;
+    object-position: left;
+}
