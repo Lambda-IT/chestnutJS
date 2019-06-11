@@ -59,7 +59,8 @@
         "prestart": "cpx \"../client/src/app/shared/contracts/**/*.ts\" src/shared/contracts --clean",
         "start": "tsc -p . && node external",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "tsc -p ."
+        "build": "tsc -p .",
+        "build:npm": "tsc -p . --outDir ../dist/server"
     },
     "author": "",
     "license": "ISC"

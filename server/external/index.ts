@@ -1,7 +1,6 @@
-export { Chestnut, Response, Request } from '../..';
 import * as models from './models/models';
-import { initChestnut } from '../..';
 import * as path from 'path';
+import { initChestnut } from '../..';
 
 const PORT = +(process.env.PORT || 9000);
 let server;
