@@ -14,12 +14,12 @@ export class ColumnsChangedAction {
 
 export class SaveFileAction {
     public readonly type = 'SAVE_FILE';
-    constructor(public payload: File) {}
+    constructor(public payload: { id: string; file: File }) {}
 }
 
 export class DeleteFileAction {
     public readonly type = 'DELETE_FILE';
-    constructor(public payload: { fileId: string }) {}
+    constructor(public payload: { id: string; fileId: string }) {}
 }
 
 @Injectable()
@@ -38,7 +38,14 @@ export class ModelEffects {
         instanceOf(SaveFileAction),
         toPayload(),
         switchMap(payload =>
-            makeRemoteDataCall(this.modelService.saveFileToDb(payload), respond => new ApplySavedFileAction(respond))
+            makeRemoteDataCall(this.modelService.saveFileToDb(payload.file), response => {
+                if (response.data.isSome) {
+                    return new ApplySavedFileAction({
+                        key: payload.id,
+                        data: response.data.map(x => x.fileId).getOrElse(''),
+                    });
+                }
+            })
         )
     );
 
@@ -49,7 +56,7 @@ export class ModelEffects {
         switchMap(payload =>
             makeRemoteDataCall(
                 this.modelService.deleteFileFromDb(payload.fileId),
-                respond => new ApplyDeleteFileAction(respond)
+                respond => new ApplyDeleteFileAction({ key: payload.id })
             )
         )
     );

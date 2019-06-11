@@ -1,6 +1,6 @@
-import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { map, withLatestFrom, tap, filter } from 'rxjs/operators';
 import { merge, Observable } from 'rxjs';
 import { fromInput } from '@shared/rxjs-utils';
@@ -30,6 +30,7 @@ export class ModeldetailComponent extends ReactiveComponent<ModeldetailComponent
     @Output()
     submit$ = new EventEmitter();
 
+    options: FormlyFormOptions = {};
     model$: Observable<memento.Mementoable<any>>;
     reset$ = new EventEmitter();
     form = new FormGroup({});

@@ -1,22 +1,17 @@
-<ng-container *ifSome="(savedFileId | async).data; else noneTemplate; let data">
+<ng-container *ngIf="form.get('fileId').value">
     <div>
         <span id="file-label">
-            {{ data.fileId }}
-            <a class="delete-button" title="Delete" (click)="deleteFile.emit(data.fileId)">
-                <mat-icon>cancel</mat-icon></a
-            >
+            <input id="fileId" type="text" [formControl]="formControl" class="file_id" readonly />
+            <a class="delete-button" title="Delete" (click)="deleteFileClick()"> <mat-icon>cancel</mat-icon></a>
         </span>
-        <div class="file-info"><img [src]="getUrl(data.fileId)" class="file" /></div>
+        <div class="file-info"><img [src]="getUrl()" class="file" /></div>
     </div>
 </ng-container>
 
 <input type="file" #fileUpload name="fileUpload" accept="{{ accept }}" style="display:none;" />
 
-<ng-template #noneTemplate>
-    <button *ngIf="!(savedFileId | async).loading" mat-raised-button color="accent" (click)="onClick()">
+<ng-container *ngIf="!form.get('fileId').value">
+    <button mat-raised-button color="accent" (click)="onClick()">
         Upload
     </button>
-    <div class="spinner-container">
-        <mat-spinner class="spinner" *ngIf="(savedFileId | async).loading"></mat-spinner>
-    </div>
-</ng-template>
+</ng-container>

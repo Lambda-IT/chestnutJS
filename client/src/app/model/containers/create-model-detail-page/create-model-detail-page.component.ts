@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Option } from 'fp-ts/lib/Option';
 import { ActivatedRoute } from '@angular/router';
 import { modelSelectors } from '../../state/model.reducer';
-import { map, withLatestFrom, mergeMap, takeUntil } from 'rxjs/operators';
+import { map, mergeMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Apollo } from 'apollo-angular';
@@ -45,26 +45,22 @@ export class CreateModelDetailPageComponent implements OnDestroy {
             .pipe(
                 withLatestFrom(properties$.pipe(fromFilteredSome())),
                 map(filterProperties),
-                mergeMap(p => {
-                    const mutation = this.apollo.mutate({
+                mergeMap(p =>
+                    this.apollo.mutate({
                         mutation: composeCreateMutation(modelNameParam),
                         variables: { input: p },
-                    });
-
-                    mutation.subscribe(
-                        _data => {
-                            return this.mutationSuccess$.emit(right(null));
-                        },
-                        error => {
-                            return this.mutationSuccess$.emit(left(error.toString));
-                        }
-                    );
-
-                    return mutation;
-                }),
+                    })
+                ),
                 takeUntil(this.destroying$)
             )
-            .subscribe();
+            .subscribe(
+                _data => {
+                    this.mutationSuccess$.emit(right(null));
+                },
+                error => {
+                    this.mutationSuccess$.emit(left(error.toString));
+                }
+            );
     }
 
     ngOnDestroy() {

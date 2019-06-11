@@ -49,7 +49,7 @@ export interface ModelDetailPageModel {
     loaded: boolean;
     loading: boolean;
     error: Option<ErrorType>;
-    fileId: ChestnutRemoteData<SaveFileResponse>;
+    fileId: { [key: string]: string };
 }
 
 export interface FormlyFieldConfigMap {
@@ -69,7 +69,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 error: some(l),
                 formFieldConfigMap: none,
                 propertyMap: none,
-                fileId: initial,
+                fileId: {},
             },
             modelPageModel: {
                 loaded: false,
@@ -89,7 +89,7 @@ const transformMetadata = (metadata: Either<ErrorType, MetadataDto>) =>
                 formFieldConfigMap: some(transformMetadataToForm(r)),
                 propertyMap: some(transformMetadataToPropertyDefinition(r)),
                 error: none,
-                fileId: initial,
+                fileId: {},
             },
             modelPageModel: {
                 loaded: true,
@@ -122,12 +122,12 @@ export class ApplyRemoveFilterItemAction {
 
 export class ApplySavedFileAction {
     public readonly type = 'APPLY_SAVED_FILE';
-    constructor(public data: ChestnutRemoteData<SaveFileResponse>) {}
+    constructor(public payload: { key: string; data: string }) {}
 }
 
 export class ApplyDeleteFileAction {
     public readonly type = 'APPLY_DELETE_FILE';
-    constructor(public data: ChestnutRemoteData<null>) {}
+    constructor(public payload: { key: string }) {}
 }
 
 export class ApplyLoadFileAction {
@@ -154,7 +154,7 @@ export const reducer = new ReducerBuilder<ModelState>()
             ...state,
             modelDetailPageModel: {
                 ...state.modelDetailPageModel,
-                fileId: action.data,
+                fileId: insert(action.payload.key, action.payload.data, state.modelDetailPageModel.fileId),
             },
         };
     })
@@ -163,7 +163,7 @@ export const reducer = new ReducerBuilder<ModelState>()
             ...state,
             modelDetailPageModel: {
                 ...state.modelDetailPageModel,
-                fileId: initial,
+                fileId: remove(action.payload.key, state.modelDetailPageModel.fileId),
             },
         };
     })
@@ -223,7 +223,7 @@ export const reducer = new ReducerBuilder<ModelState>()
             error: none,
             formFieldConfigMap: none,
             propertyMap: none,
-            fileId: initial,
+            fileId: null,
         },
         modelPageModel: {
             loaded: false,
@@ -260,10 +260,12 @@ export const modelSelectors = {
         getModelState,
         state => state.modelPageModel.graphqlColumnMap
     ),
-    getFileId: createSelector(
-        getModelState,
-        state => state.modelDetailPageModel.fileId
-    ),
+    getFileId: id =>
+        createSelector(
+            getModelState,
+            (state: ModelState) => getModelState(state).modelDetailPageModel.fileId,
+            state => lookup(`${id}`, state.modelDetailPageModel.fileId)
+        ),
     getItemFilters: field =>
         createSelector(
             getModelState,

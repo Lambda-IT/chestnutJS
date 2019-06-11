@@ -50,3 +50,8 @@ export class Texte extends Typegoose {
 
     @prop() name: TranslatedName;
 }
+
+export class Test extends Typegoose {
+    @prop()
+    titel: string;
+}

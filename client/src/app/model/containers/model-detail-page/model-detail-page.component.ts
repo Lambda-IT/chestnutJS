@@ -48,7 +48,7 @@ export class ModelDetailPageComponent implements OnDestroy {
                 this.apollo
                     .watchQuery({
                         query: composeByIdQuery(idParam, this.modelNameParam, p),
-                        fetchPolicy: 'cache-and-network',
+                        // fetchPolicy: 'cache-and-network',
                     })
                     .valueChanges.pipe(bindToOptionData(this.modelNameParam, 'ById'))
             )
