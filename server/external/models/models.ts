@@ -1,7 +1,7 @@
 import { prop, arrayProp, Ref, Typegoose } from 'typegoose';
-import { hidden, editor } from '../../..';
-import { TranslatedName } from './model-type';
 import { PropertyType } from '../../src/shared/contracts/metadata';
+import { customType, hidden } from '../../src/decorators';
+import { TranslatedName } from './model-type';
 
 export class Task extends Typegoose {
     @prop() description: string;
@@ -18,7 +18,7 @@ export class User extends Typegoose {
     @prop({ default: 'test' })
     description?: string;
 
-    @editor(PropertyType.html)
+    @customType(PropertyType.html)
     @prop({ default: '<test>hm</test>' })
     webText?: string;
 
