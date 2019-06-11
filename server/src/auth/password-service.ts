@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import { AuthUser } from './models';
 import { success, failure } from './identity-lib';
-import { PasswordTokenRequest } from '../shared/contracts/contracts';
+import { PasswordTokenRequest } from '../utils/auth-requests';
 
 export const createSalt = () => {
     const len = 8;

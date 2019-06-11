@@ -16,7 +16,7 @@ import {
 import { AuthToken, AuthUser, ChestnutPermissions, TokenType } from './models';
 import { ChestnutUser } from '../chestnut-user-type';
 import { isNullOrEmpty } from '../utils/validation';
-import { PasswordTokenRequest, RefreshTokenRequest } from '../shared/contracts/contracts';
+import { PasswordTokenRequest, RefreshTokenRequest } from '../utils/auth-requests';
 
 export type Result<T> = Success<T> | Failure<string>;
 

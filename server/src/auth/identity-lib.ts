@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
 import { Observable, of } from 'rxjs';
 import { filter, map, merge, flatMap, catchError, tap } from 'rxjs/operators';
-import { PasswordTokenRequest, RefreshTokenRequest } from '../shared/contracts/contracts';
+import { PasswordTokenRequest, RefreshTokenRequest } from '../utils/auth-requests';
 
 export type Success<T> = {
     isSuccess: true;
