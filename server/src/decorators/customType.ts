@@ -1,5 +1,5 @@
 import { initModel, registry } from './type-registry';
-import { PropertyType } from '../../../client/src/app/shared/contracts/metadata';
+import { PropertyType } from '../shared/contracts';
 
 export function customType(type: PropertyType) {
     return function(target: any, key: any) {

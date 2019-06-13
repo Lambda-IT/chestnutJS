@@ -1,5 +1,5 @@
 import { prop, arrayProp, Ref, Typegoose } from 'typegoose';
-import { PropertyType } from '../../src/shared/contracts/metadata';
+import { PropertyType } from '../../src/shared/contracts';
 import { customType, hidden } from '../../src/decorators';
 import { TranslatedName } from './model-type';
 

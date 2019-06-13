@@ -1,16 +1,26 @@
 {
-    "name": "client",
-    "version": "0.0.0",
+    "name": "chestnutjs-client",
+    "version": "1.2.0",
+    "description": "Client bundle for chestnutjs",
+    "files": [
+        "dist/**/*"
+    ],
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
     "scripts": {
         "ng": "ng",
         "start": "ng serve --base-href /chestnut/admin/",
         "build": "ng build --prod",
-        "build:npm": "ng build --prod --output-path=../dist/client",
+        "build:npm": "npm install && ng build --prod",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "prepublishOnly": "node .scripts/cleanse-pkg",
+        "postpublish": "node .scripts/restore-pkg",
+        "prepack": "node .scripts/cleanse-pkg",
+        "postpack": "node .scripts/restore-pkg"
     },
-    "private": true,
     "dependencies": {
         "@angular/animations": "^7.2.15",
         "@angular/cdk": "7.3.7",

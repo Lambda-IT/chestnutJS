@@ -32,6 +32,8 @@ export const BASE_URL = '/chestnut';
 const fs = <any>bluePromise.promisifyAll(_fs);
 
 export { UpdateFunction } from './server-update-service';
+export { Store } from './store';
+export { Log } from '../typings/log';
 
 const WS_GQL_PATH = '/subscriptions';
 (<any>mongoose).Promise = bluePromise;

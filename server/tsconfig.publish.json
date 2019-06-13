@@ -8,7 +8,9 @@
         "declaration": true,
         "declarationDir": "dist",
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "node"
     },
-    "include": ["server/**/*", "common/**/*", "index.ts"]
+    "include": ["**/*", "index.ts"],
+    "exclude": ["external/**/*"]
 }
