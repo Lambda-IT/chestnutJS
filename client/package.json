@@ -17,7 +17,7 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "prepublishOnly": "node .scripts/cleanse-pkg",
-        "postpublish": "node .scripts/restore-pkg",
+        "postpublish": "node .scripts/restore-pkg"
     },
     "dependencies": {
         "@angular/animations": "^7.2.15",
