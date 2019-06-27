@@ -13,6 +13,7 @@ initChestnut(
         sessionSecret: '___feifji$gö$gsdfgprüi45u834u584wtti',
         modelName: { prefix: 'dev', kebabCase: true },
         apiUrl: 'http://localhost:9000',
+        clientPath: '../../client',
         updatesFolder: path.join(__dirname, '../external/updates'),
     },
     _ => Promise.resolve()

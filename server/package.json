@@ -1,6 +1,6 @@
 {
   "name": "chestnutjs-server",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Server bundle for chestnutjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

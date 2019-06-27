@@ -17,16 +17,14 @@ import { Log } from '../typings/log';
 import { createLogger } from './logger';
 import { createStoreAsync, Store, COULD_NOT_WRITE_TO_SERVER } from './store';
 import { initGraphQLSchema } from './schema';
-import { createMetadataController } from './controller';
+import { createMetadataController, createFileUploadController } from './controller';
 import { correlationId, registerGlobalExceptionHandler, resultProcessor } from './middleware';
-import { createApi } from './api/model-api';
 import { createAuth } from './auth/auth-api';
 import { createAuthorizationHandler } from './auth/token-validation';
 import { ChestnutUser } from './chestnut-user-type';
 import { createAuthUserRepository } from './auth/repositories';
 import { Server } from 'http';
 import { updateServer, createServerConfigRepository, ServerConfig } from './server-update-service';
-import { createFileUploadController } from './controller/file-service';
 
 export const BASE_URL = '/chestnut';
 const fs = <any>bluePromise.promisifyAll(_fs);
@@ -50,6 +48,7 @@ export type ChestnutOptions = {
     };
     publicFolder?: string;
     sessionSecret: string;
+    clientPath: string;
     apiUrl: string;
     updatesFolder?: string;
     cors?: any;
@@ -97,19 +96,16 @@ export async function initChestnut(
     app.use(resultProcessor);
 
     app.use(express.static(options.publicFolder || 'public'));
-    let adminAppPath = path.join(__dirname, '../../client');
 
-    if (options.apiUrl.indexOf('localhost') > 0) adminAppPath = path.join(adminAppPath, 'dist', 'client');
+    await replaceApiUrl(options.clientPath, options.apiUrl);
 
-    await replaceApiUrl(adminAppPath, options.apiUrl);
-
-    app.use(BASE_URL + '/admin', express.static(adminAppPath, { fallthrough: true }), (req, res, next) => {
+    app.use(BASE_URL + '/admin', express.static(options.clientPath, { fallthrough: true }), (req, res, next) => {
         logger.warn('not found', { path: req.path, query: req.query, params: req.params, headers: req.headers });
         if (req.path !== '/') return res.redirect(BASE_URL + '/admin');
         res.sendStatus(404);
     });
 
-    console.log('static app', { BASE_URL, adminAppPath });
+    console.log('static app', { BASE_URL, clientPath: options.clientPath });
 
     // Allow cors on all routes
     app.use(
