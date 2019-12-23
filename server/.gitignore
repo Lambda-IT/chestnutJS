@@ -36,11 +36,17 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-server/**/*.js
-external-app/**/*.js
-external-app/**/*.map
-server/**/*.map
-dist
-client/src/app/common/**/*.d.ts
-server/**/*.d.ts
+/src/**/*.js
+/src/**/*.map
+/external/**/*.js
+/external/**/*.map
+/typings/**/*.js
+/typings/**/*.map
+/dist
+/client/src/app/common/**/*.d.ts
+/src/**/*.d.ts
 *.tgz
+*.js
+*.map
+
+/node_modules

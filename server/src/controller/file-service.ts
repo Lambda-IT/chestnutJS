@@ -1,11 +1,15 @@
 import { Express, Request, Response } from 'express';
+import { ObjectID } from 'bson';
+import * as sharp from 'sharp';
+
 import { Store } from '../store';
 import { HttpStatusCode } from '../utils/http-util';
 import { createFileRepository } from '../gridfs-repository';
-import { ObjectID } from 'bson';
 
 export function createFileUploadController(app: Express, store: Store, baseUrl: string) {
     const fileRepository = createFileRepository({ connection: store.connection } as any);
+
+    const imageCache = {};
 
     app.post(baseUrl + '/file', (req: Request, res: Response) => {
         res.header('Access-Control-Allow-Origin', '*');
@@ -58,9 +62,46 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
 
         const objectID: ObjectID = new ObjectID(req.params[0]);
 
-        const filestream = await fileRepository.getFilestreamAsync(objectID);
+        const accept = req.headers.accept;
+        const acceptWebp = accept && accept.indexOf('image/webp') !== -1;
 
-        const imageData = await streamToBufferAsync(filestream);
+        const width = +req.query.width;
+        const imageName = `${acceptWebp}_${objectID}_${width || '0'}`;
+
+        if (imageCache[imageName]) {
+            if (acceptWebp) res.contentType('image/webp');
+            return res.send(imageCache[imageName]);
+        }
+
+        if (width || acceptWebp) {
+            const filestreamReadable = await fileRepository.getFilestreamAsync(objectID);
+            let sharpImgTransformer = sharp();
+            if (width) sharpImgTransformer = sharp().resize(width);
+            if (acceptWebp) {
+                res.contentType('image/webp');
+                sharpImgTransformer = sharpImgTransformer.webp({ nearLossless: true });
+
+                sharpImgTransformer.on('info', function(info) {
+                    console.log('Image height is ' + info.height);
+                });
+            }
+
+            const bufs: any[] = [];
+            sharpImgTransformer.on('data', (d: any) => {
+                console.log('data', bufs.length);
+                bufs.push(d);
+            });
+
+            sharpImgTransformer.on('end', () => {
+                imageCache[imageName] = Buffer.concat(bufs);
+                return res.end();
+            });
+
+            return filestreamReadable.pipe(sharpImgTransformer).pipe(res);
+        }
+
+        const filestream = await fileRepository.getFilestreamAsync(objectID);
+        let imageData = await streamToBufferAsync(filestream);
         res.send(imageData);
     });
 }

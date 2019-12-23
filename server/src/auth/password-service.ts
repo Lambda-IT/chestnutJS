@@ -11,7 +11,7 @@ export const createSalt = () => {
         .substring(0, len);
 };
 
-export const computeHash = (source: string, salt: string) => {
+export const computeHash = (source: string, salt: string | Buffer) => {
     const hmac = crypto.createHmac('sha1', salt);
     const hash = hmac.update(source);
     return hash.digest('hex');
