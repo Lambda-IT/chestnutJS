@@ -79,7 +79,7 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
             if (width) sharpImgTransformer = sharp().resize(width);
             if (acceptWebp) {
                 res.contentType('image/webp');
-                sharpImgTransformer = sharpImgTransformer.webp();
+                sharpImgTransformer = sharpImgTransformer.webp({ lossless: true, quality: 90, smartSubsample: true });
 
                 sharpImgTransformer.on('info', function(info) {
                     console.log('Image height is ' + info.height);
