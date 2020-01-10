@@ -11,6 +11,8 @@ export const update: UpdateFunction = async function(store: Store, logger: Log) 
         lastname: 'admin',
         password: 'admin',
         permissions: ChestnutPermissions.write,
+        tenant: 'chestnut',
+        type: 'chestnut',
     });
 
     logger.info('created admin, with pw admin');

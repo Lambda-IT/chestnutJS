@@ -32,6 +32,12 @@ export class AuthUser extends Typegoose {
     @prop({ required: true })
     language: string;
 
+    @prop({ required: true, default: 'chestnut' })
+    type: string;
+
+    @prop({ required: true, default: 'chestnut' })
+    tenant: string;
+
     @prop({ required: true })
     passwordHash: string;
 

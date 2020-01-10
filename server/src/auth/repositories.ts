@@ -52,6 +52,8 @@ export const createAuthUserRepository = (store: Store): AuthUserRepository => ({
             email: chestnutUser.email,
             language: chestnutUser.language,
             permissions: chestnutUser.permissions,
+            type: chestnutUser.type,
+            tenant: chestnutUser.tenant,
             passwordHash: computeHash(chestnutUser.password, salt),
             salt,
             failedLoginAttemps: 0,

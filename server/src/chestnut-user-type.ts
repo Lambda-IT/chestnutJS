@@ -7,4 +7,6 @@ export type ChestnutUser = {
     language: string;
     password: string;
     permissions: ChestnutPermissions;
+    type: string;
+    tenant: string;
 };
