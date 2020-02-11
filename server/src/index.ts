@@ -95,15 +95,7 @@ export async function initChestnut(
     app.use(correlationId);
     app.use(resultProcessor);
 
-    app.use(express.static(options.publicFolder || 'public'));
-
     await replaceApiUrl(options.clientPath, options.apiUrl);
-
-    app.use(BASE_URL + '/admin', express.static(options.clientPath, { fallthrough: true }), (req, res, next) => {
-        logger.warn('not found', { path: req.path, query: req.query, params: req.params, headers: req.headers });
-        if (req.path !== '/') return res.redirect(BASE_URL + '/admin');
-        res.sendStatus(404);
-    });
 
     console.log('static app', { BASE_URL, clientPath: options.clientPath });
 
@@ -204,6 +196,13 @@ export async function initChestnut(
     }
 
     if (initMiddleware) await initMiddleware(app, store, logger);
+
+    app.use(express.static(options.publicFolder || 'public'));
+    app.use(BASE_URL + '/admin', express.static(options.clientPath, { fallthrough: true }), (req, res, next) => {
+        logger.warn('not found', { path: req.path, query: req.query, params: req.params, headers: req.headers });
+        if (req.path !== '/') return res.redirect(BASE_URL + '/admin');
+        res.sendStatus(404);
+    });
 
     logger.info('server initialized successfull');
 
