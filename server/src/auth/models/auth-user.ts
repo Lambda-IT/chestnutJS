@@ -26,7 +26,7 @@ export class AuthUser extends Typegoose {
     @prop({ required: true })
     lastname: string;
 
-    @prop({ required: true, unique: true })
+    @prop({ required: true })
     email: string;
 
     @prop({ required: true })
