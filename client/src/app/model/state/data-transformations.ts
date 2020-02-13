@@ -4,11 +4,12 @@ import { FormlyFieldConfigMap } from './model.reducer';
 
 interface FormMappingType {
     type: 'input' | 'textarea' | 'checkbox' | 'html' | 'embedded' | 'file';
-    templateType?: 'text' | 'date' | 'number' | 'datetime-local' | 'embedded' | 'file';
+    templateType?: 'text' | 'password' | 'date' | 'number' | 'datetime-local' | 'embedded' | 'file';
 }
 
 const typeMap: { [key in PropertyType]: FormMappingType } = {
     [PropertyType.string]: { type: 'input', templateType: 'text' },
+    [PropertyType.password]: { type: 'input', templateType: 'password' },
     [PropertyType.html]: { type: 'html', templateType: 'date' },
     [PropertyType.boolean]: { type: 'checkbox', templateType: 'date' },
     [PropertyType.date]: { type: 'input', templateType: 'date' },

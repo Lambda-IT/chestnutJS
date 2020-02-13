@@ -1,5 +1,6 @@
 export enum PropertyType {
     string = 'String',
+    password = 'Password',
     html = 'html',
     boolean = 'Boolean',
     date = 'Date',

@@ -1,6 +1,7 @@
 import { prop, pre, Typegoose, ModelType, InstanceType, index } from 'typegoose';
 import { createSalt, computeHash } from '../password-service';
-import { hidden, readonly } from '../../decorators';
+import { customType, hidden, readonly } from '../../decorators';
+import { PropertyType } from '../../shared/contracts';
 
 export enum ChestnutPermissions {
     read = 'read',
@@ -10,12 +11,15 @@ export enum ChestnutPermissions {
 @pre<AuthUser>('save', function(next) {
     if (this.isNew) {
         this.salt = createSalt();
-        this.passwordHash = computeHash(this.passwordHash, this.salt);
         this.failedLoginAttemps = 0;
         this.locked = false;
         this.deleted = false;
         this.activated = true;
         this.lastLoginAttempt = new Date('01-01-1970');
+    }
+    if (this.password.length > 0) {
+        this.passwordHash = computeHash(this.password, this.salt);
+        this.password = '';
     }
     next();
 })
@@ -38,7 +42,12 @@ export class AuthUser extends Typegoose {
     @prop({ required: true, default: 'chestnut' })
     tenant: string;
 
-    @prop({ required: true })
+    @customType(PropertyType.password)
+    @prop({})
+    password: string;
+
+    @readonly()
+    @prop({})
     passwordHash: string;
 
     @hidden()
