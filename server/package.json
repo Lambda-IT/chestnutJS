@@ -22,6 +22,7 @@
         "@types/uuid": "^3.4.3",
         "cpx": "^1.5.0",
         "mongoose": "5.3.3",
+        "nodemon": "^2.0.2",
         "shx": "0.3.2",
         "tslint": "^5.11.0",
         "typegoose": "5.4.1",
@@ -70,7 +71,8 @@
         "typegoose": "5.4.1"
     },
     "scripts": {
-        "start": "tsc -p . && node external",
+        "start": "tsc -p . && node dist/external",
+        "start:watch": "nodemon -e ts --exec \"npm run start\"",
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "cpx \"../client/src/app/shared/contracts/**/*.ts\" src/shared/contracts --clean && tsc -p .",
         "build:npm": "shx rm -rf dist && tsc -p ./tsconfig.publish.json"
