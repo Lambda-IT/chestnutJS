@@ -1,0 +1,13 @@
+:host {
+    display: inherit;
+    flex-direction: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1520px;
+    margin: 0 auto;
+
+    @media (min-width: 1920px) {
+        max-width: 1920px;
+        padding-right: 400px;
+    }
+}
