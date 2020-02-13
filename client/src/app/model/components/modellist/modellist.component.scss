@@ -4,6 +4,15 @@
 
 .model-table {
     width: 100%;
+
+    td,
+    th {
+        padding-right: 24px;
+    }
+    .model-table-value {
+        max-height: 100px;
+        overflow-y: auto;
+    }
 }
 
 .menu-list {

@@ -40,7 +40,6 @@ export class ModellistComponent extends DestroyableComponent {
         this.selectedColumns$ = fromInput<ModellistComponent>(this)('visibleColumns').pipe(
             tap(x => this.selectedColumnsForm.setValue(x))
         );
-        console.log('FilterItems', this.filters);
     }
 
     public expandPanel() {
