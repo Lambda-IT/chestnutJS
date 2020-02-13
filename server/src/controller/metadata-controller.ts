@@ -22,7 +22,7 @@ export function createMetadataController(app: Express, store: Store, baseUrl: st
     });
 }
 export function createProperties(path, modelName: string) {
-    return Object.keys(path)
+    const props = Object.keys(path)
         .filter(k => k !== '__v')
         .map(p => {
             const property = path[p];
@@ -48,4 +48,6 @@ export function createProperties(path, modelName: string) {
 
             return desc;
         });
+    const idIndex = props.findIndex(p => p.name === '_id');
+    return idIndex !== -1 ? [...props.splice(idIndex, 1), ...props] : props;
 }
