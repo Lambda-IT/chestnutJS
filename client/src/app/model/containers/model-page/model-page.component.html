@@ -9,6 +9,7 @@
         <ng-container *ifSome="availableColumns$ | async; else noneTemplate; let availableColumns">
             <ng-container *ifSome="visibleColumns$ | async; else noneTemplate; let visibleColumns">
                 <app-modellist
+                    [modelName]="modelNameParam"
                     [availableColumns]="availableColumns"
                     [visibleColumns]="visibleColumns"
                     [dataSource]="data"

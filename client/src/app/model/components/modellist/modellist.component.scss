@@ -24,3 +24,14 @@
     margin: 20px 0;
     min-width: 0;
 }
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .visible-columns {
+        width: 500px;
+    }
+}

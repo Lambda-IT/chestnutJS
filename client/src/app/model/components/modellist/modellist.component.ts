@@ -14,6 +14,7 @@ import { DestroyableComponent } from '@core/reactive-component/destroyable-compo
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModellistComponent extends DestroyableComponent {
+    @Input() modelName: string;
     @Input() availableColumns: string[];
     @Input() visibleColumns: string[];
     @Input() dataSource: any[];

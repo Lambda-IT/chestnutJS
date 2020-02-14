@@ -3,7 +3,7 @@ import { merge, Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom, tap } from 'rxjs/operators';
 import { ApplyAddFilterItemAction, ApplyRemoveFilterItemAction, modelSelectors } from '../../state/model.reducer';
 import { fromFilteredSome } from '@core/rx-helpers';
 import { composeFilteredManyQuery, composeManyQuery } from '@shared/graphql';
@@ -29,39 +29,40 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
     selectedColumnsChanged$ = new EventEmitter<string[]>();
     addFilter$ = new EventEmitter<FilterItem>();
     removeFilter$ = new EventEmitter<FilterItem>();
+    modelNameParam: string;
 
     constructor(private store: Store<any>, private activatedRoute: ActivatedRoute, private apollo: Apollo) {
         super(store.dispatch.bind(store));
-        const modelNameParam = this.activatedRoute.snapshot.params['modelName'];
+        this.modelNameParam = this.activatedRoute.snapshot.params['modelName'];
 
         this.availableColumns$ = this.store.pipe(
             select(modelSelectors.getAvailableColumns),
-            map(x => x.map(p => p[modelNameParam]))
+            map(x => x.map(p => p[this.modelNameParam]))
         );
 
         this.visibleColumns$ = this.store.pipe(
             select(modelSelectors.getVisibleColumns),
-            map(x => x.map(p => p[modelNameParam]))
+            map(x => x.map(p => p[this.modelNameParam]))
         );
 
         this.columsForGraphQL$ = this.store.pipe(
             select(modelSelectors.getColumsForGraphql),
-            map(x => x.map(p => p[modelNameParam]))
+            map(x => x.map(p => p[this.modelNameParam]))
         );
 
-        this.filterMetadata$ = this.store.pipe(select(modelSelectors.getMetadataForFilter(modelNameParam)));
+        this.filterMetadata$ = this.store.pipe(select(modelSelectors.getMetadataForFilter(this.modelNameParam)));
 
-        this.filters$ = this.store.pipe(select(modelSelectors.getItemFilters(modelNameParam)));
+        this.filters$ = this.store.pipe(select(modelSelectors.getItemFilters(this.modelNameParam)));
 
         const modelTriggeredByColumnChanged$ = this.columsForGraphQL$.pipe(
             fromFilteredSome(),
             mergeMap(p => {
                 return this.apollo
                     .watchQuery({
-                        query: composeManyQuery(modelNameParam, p),
+                        query: composeManyQuery(this.modelNameParam, p),
                         fetchPolicy: 'cache-and-network',
                     })
-                    .valueChanges.pipe(bindToOptionData(modelNameParam, 'Many'));
+                    .valueChanges.pipe(bindToOptionData(this.modelNameParam, 'Many'));
             })
         );
 
@@ -80,23 +81,23 @@ export class ModelPageComponent extends ContainerComponent implements OnDestroy 
             mergeMap(x => {
                 return this.apollo
                     .watchQuery({
-                        query: composeFilteredManyQuery(modelNameParam, x.columns, x.filterItems),
+                        query: composeFilteredManyQuery(this.modelNameParam, x.columns, x.filterItems),
                         fetchPolicy: 'cache-and-network',
                     })
-                    .valueChanges.pipe(bindToOptionData(modelNameParam, 'Many'));
+                    .valueChanges.pipe(bindToOptionData(this.modelNameParam, 'Many'));
             })
         );
 
         this.model$ = merge(modelTriggeredByColumnChanged$, modelTriggeredByFilterChange$);
 
         const selectedColumnsChangedAction = this.selectedColumnsChanged$.pipe(
-            map(columns => new ColumnsChangedAction({ [modelNameParam]: columns }))
+            map(columns => new ColumnsChangedAction({ [this.modelNameParam]: columns }))
         );
         const addFilterAction = this.addFilter$.pipe(
-            map(filterItem => new ApplyAddFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
+            map(filterItem => new ApplyAddFilterItemAction({ key: this.modelNameParam, filterItem: filterItem }))
         );
         const removeFilterAction = this.removeFilter$.pipe(
-            map(filterItem => new ApplyRemoveFilterItemAction({ key: modelNameParam, filterItem: filterItem }))
+            map(filterItem => new ApplyRemoveFilterItemAction({ key: this.modelNameParam, filterItem: filterItem }))
         );
 
         this.dispatch(selectedColumnsChangedAction, addFilterAction, removeFilterAction);

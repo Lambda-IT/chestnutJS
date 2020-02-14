@@ -1,9 +1,14 @@
 <div class="model-container">
-    <mat-form-field>
-        <mat-select placeholder="Visible columns" [formControl]="selectedColumnsForm" multiple>
-            <mat-option *ngFor="let col of availableColumns" [value]="col">{{ col }}</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <div class="actions">
+        <mat-form-field class="visible-columns">
+            <mat-select placeholder="Visible columns" [formControl]="selectedColumnsForm" multiple>
+                <mat-option *ngFor="let col of availableColumns" [value]="col">{{ col }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <a mat-button href="" [routerLink]="['/model/add', modelName]">
+            <mat-icon>add_circle</mat-icon>
+        </a>
+    </div>
 
     <mat-expansion-panel class="filter-panel" [expanded]="expandPanel()">
         <mat-expansion-panel-header>
