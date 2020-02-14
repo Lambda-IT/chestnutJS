@@ -1,7 +1,7 @@
-<app-header (logoutClicked)="logoutClicked$.emit()" [model]="headerModel$ | async">
-    <div *ifSome="error$ | async; let error">Error: {{ error }}</div>
+<app-header (logoutClicked)="logoutClicked$.emit()" [model]="headerModel$ | async"></app-header>
 
-    <app-layout-container class="content">
-        <router-outlet></router-outlet>
-    </app-layout-container>
-</app-header>
+<div *ifSome="error$ | async; let error">Error: {{ error }}</div>
+
+<app-layout-container class="content">
+    <router-outlet></router-outlet>
+</app-layout-container>
