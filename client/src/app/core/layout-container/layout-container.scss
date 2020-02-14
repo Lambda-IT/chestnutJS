@@ -4,7 +4,8 @@
     box-sizing: border-box;
     width: 100%;
     max-width: 1520px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 
     @media (min-width: 1920px) {
         max-width: 1920px;
