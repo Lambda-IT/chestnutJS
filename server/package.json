@@ -21,7 +21,7 @@
         "@types/node": "^10.17.27",
         "@types/uuid": "^3.4.9",
         "cpx": "^1.5.0",
-        "mongoose": "5.3.3",
+        "mongoose": "5.7.5",
         "nodemon": "^2.0.4",
         "shx": "0.3.2",
         "tslint": "^5.20.1",
@@ -67,7 +67,7 @@
         "uuid": "^3.4.0"
     },
     "peerDependencies": {
-        "mongoose": "5.3.3",
+        "mongoose": "5.7.5",
         "typegoose": "5.4.1"
     },
     "scripts": {
