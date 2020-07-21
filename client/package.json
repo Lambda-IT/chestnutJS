@@ -13,7 +13,8 @@
         "start": "ng serve --base-href /chestnut/admin/",
         "start:watch": "ng build --watch --base-href /chestnut/admin/",
         "build": "ng build --prod",
-        "build:npm": "npm install && ng build --prod",
+        "prebuild:npm": "npm ci",
+        "build:npm": "ng build --prod",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"
