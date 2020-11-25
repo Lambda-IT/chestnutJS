@@ -22,7 +22,7 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
         }
 
         const chunks = [];
-        req.on('data', chunk => {
+        req.on('data', (chunk) => {
             chunks.push(chunk);
         });
 
@@ -31,10 +31,10 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
 
             fileRepository
                 .insertFileAsync(data, mimeType.toString(), fileName.toString())
-                .then(x => {
+                .then((x) => {
                     res.send({ fileId: x });
                 })
-                .catch(error => res.send(error));
+                .catch((error) => res.send(error));
         });
     });
 
@@ -50,7 +50,7 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
         fileRepository
             .deleteFileAsync(objectID)
             .then(() => res.send(HttpStatusCode.OK))
-            .catch(error => res.send(error));
+            .catch((error) => res.send(error));
     });
 
     app.get(baseUrl + '/file/*', async (req: Request, res: Response) => {
@@ -66,6 +66,7 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
         const acceptWebp = accept && accept.indexOf('image/webp') !== -1;
 
         const width = +req.query.width;
+        const lossless = req.query.lossless ? req.query.lossless.toLowerCase() === 'true' : true;
         const imageName = `${acceptWebp}_${objectID}_${width || '0'}`;
 
         if (imageCache[imageName]) {
@@ -79,9 +80,13 @@ export function createFileUploadController(app: Express, store: Store, baseUrl: 
             if (width) sharpImgTransformer = sharp().resize(width);
             if (acceptWebp) {
                 res.contentType('image/webp');
-                sharpImgTransformer = sharpImgTransformer.webp({ lossless: true, quality: 90, smartSubsample: true });
+                sharpImgTransformer = sharpImgTransformer.webp({
+                    lossless,
+                    quality: 90,
+                    smartSubsample: true,
+                });
 
-                sharpImgTransformer.on('info', function(info) {
+                sharpImgTransformer.on('info', function (info) {
                     console.log('Image height is ' + info.height);
                 });
             }
