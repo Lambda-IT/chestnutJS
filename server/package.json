@@ -61,7 +61,7 @@
         "passport-oauth2-client-password": "^0.1.2",
         "reflect-metadata": "^0.1.12",
         "rxjs": "6.3.2",
-        "sharp": "^0.23.4",
+        "sharp": "^0.30.5",
         "subscriptions-transport-ws": "^0.9.17",
         "url-join": "^4.0.1",
         "uuid": "^3.4.0"
